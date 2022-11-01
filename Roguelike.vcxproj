@@ -69,12 +69,12 @@
     <LinkIncremental>true</LinkIncremental>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-    <IncludePath>C:\Users\alexp\Desktop\Roguelike\libs\SDL\SDL2-2.24.0\include;$(IncludePath)</IncludePath>
-    <LibraryPath>C:\Users\alexp\Desktop\Roguelike\libs\SDL\SDL2-2.24.0\lib\x64;$(LibraryPath)</LibraryPath>
+    <IncludePath>C:\Users\alexp\Desktop\Roguelike\libs\SDL\SDL2-2.24.0\include;C:\Users\alexp\Desktop\Roguelike\libs\glew-2.1.0\include;$(IncludePath)</IncludePath>
+    <LibraryPath>C:\Users\alexp\Desktop\Roguelike\libs\SDL\SDL2-2.24.0\lib\x64;C:\Users\alexp\Desktop\Roguelike\libs\glew-2.1.0\lib\Release\x64;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
-    <IncludePath>C:\Users\alexp\Desktop\Roguelike\libs\SDL\SDL2-2.24.0\include;$(IncludePath)</IncludePath>
-    <LibraryPath>C:\Users\alexp\Desktop\Roguelike\libs\SDL\SDL2-2.24.0\lib\x64;$(LibraryPath)</LibraryPath>
+    <IncludePath>C:\Users\alexp\Desktop\Roguelike\libs\SDL\SDL2-2.24.0\include;C:\Users\alexp\Desktop\Roguelike\libs\glew-2.1.0\include;$(IncludePath)</IncludePath>
+    <LibraryPath>C:\Users\alexp\Desktop\Roguelike\libs\SDL\SDL2-2.24.0\lib\x64;C:\Users\alexp\Desktop\Roguelike\libs\glew-2.1.0\lib\Release\x64;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
@@ -109,7 +109,7 @@
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <Link>
-      <AdditionalDependencies>SDL2.lib;SDL2main.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>opengl32.lib;glu32.lib;glew32s.lib;SDL2.lib;SDL2main.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <EntryPointSymbol>
       </EntryPointSymbol>
       <SubSystem>Console</SubSystem>
@@ -117,7 +117,7 @@
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <Link>
-      <AdditionalDependencies>SDL2.lib;SDL2main.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>opengl32.lib;glu32.lib;glew32s.lib;SDL2.lib;SDL2main.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <EntryPointSymbol>
       </EntryPointSymbol>
       <SubSystem>Console</SubSystem>
@@ -125,6 +125,8 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="src\core\Game.cpp" />
+    <ClCompile Include="src\core\systems\video\VideoSystem.cpp" />
+    <ClCompile Include="src\core\systems\video\Window.cpp" />
     <ClCompile Include="src\main.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -217,6 +219,9 @@
     <ClInclude Include="libs\sdl\sdl2-2.24.0\include\SDL_video.h" />
     <ClInclude Include="libs\sdl\sdl2-2.24.0\include\SDL_vulkan.h" />
     <ClInclude Include="src\core\Game.h" />
+    <ClInclude Include="src\core\systems\ISystem.h" />
+    <ClInclude Include="src\core\systems\video\VideoSystem.h" />
+    <ClInclude Include="src\core\systems\video\Window.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

@@ -15,6 +15,9 @@
     <Filter Include="Source Files\core\systems">
       <UniqueIdentifier>{56fdefc4-5bc1-4199-94b9-13c24eb921aa}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\core\systems\video">
+      <UniqueIdentifier>{09bd874c-9117-4fc4-bb26-c14404169072}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\main.cpp">
@@ -22,6 +25,12 @@
     </ClCompile>
     <ClCompile Include="src\core\Game.cpp">
       <Filter>Source Files\core</Filter>
+    </ClCompile>
+    <ClCompile Include="src\core\systems\video\VideoSystem.cpp">
+      <Filter>Source Files\core\systems\video</Filter>
+    </ClCompile>
+    <ClCompile Include="src\core\systems\video\Window.cpp">
+      <Filter>Source Files\core\systems\video</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -291,6 +300,15 @@
     </ClInclude>
     <ClInclude Include="src\core\Game.h">
       <Filter>Source Files\core</Filter>
+    </ClInclude>
+    <ClInclude Include="src\core\systems\video\VideoSystem.h">
+      <Filter>Source Files\core\systems\video</Filter>
+    </ClInclude>
+    <ClInclude Include="src\core\systems\ISystem.h">
+      <Filter>Source Files\core\systems</Filter>
+    </ClInclude>
+    <ClInclude Include="src\core\systems\video\Window.h">
+      <Filter>Source Files\core\systems\video</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

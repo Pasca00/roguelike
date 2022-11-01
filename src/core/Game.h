@@ -1,13 +1,20 @@
 #pragma once
 
-#include <memory>
 #include <iostream>
+#include <memory>
+#include <vector>
+
+#include "systems/video/VideoSystem.h"
 
 class Game {
 private:
 	static Game* instance;
 
+	std::shared_ptr<VideoSystem> videoSystem;
+
 	Game();
+
+	void initSystems();
 
 public:
 
