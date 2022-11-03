@@ -15,12 +15,12 @@ bool InputSystem::settingsFileExists() {
 	return file.good();
 }
 
-void InputSystem::createDefaultKeyMappings() {
+void InputSystem::readKeyMappings() {
 	auto keyMappingsPath = Paths::SETTINGS_DIR + keyMappingsFilename;
 	std::ifstream in(keyMappingsPath.c_str());
 }
 
-void InputSystem::readKeyMappings() {
+void InputSystem::createDefaultKeyMappings() {
 	// TODO
 	/*
 	if (!this->settingsFileExists()) {
@@ -29,13 +29,45 @@ void InputSystem::readKeyMappings() {
 	*/
 
 	this->keyMappings = {
-		{"UP",    SDLK_w},
-		{"DOWN",  SDLK_s},
-		{"LEFT",  SDLK_a},
-		{"RIGHT", SDLK_d},
+		{SDLK_w, "UP"},
+		{SDLK_s, "DOWN"},
+		{SDLK_a, "LEFT"},
+		{SDLK_d, "RIGHT"},
 
-		{"ENTER", SDLK_RETURN},
+		{SDLK_RETURN, "ENTER"},
 
-		{"PAUSE", SDLK_ESCAPE},
+		{SDLK_ESCAPE, "PAUSE"},
 	};
+
+	this->input = {
+		{"UP",    false},
+		{"DOWN",  false},
+		{"LEFT",  false},
+		{"RIGHT", false},
+
+		{"ENTER", false},
+
+		{"PAUSE", false},
+	};
+}
+
+void InputSystem::collectInput() {
+	SDL_Event e;
+	while (SDL_PollEvent(&e)) {
+		switch (e.type) {
+			case SDL_KEYDOWN: {
+				auto action = this->keyMappings[e.key.keysym.sym];
+				this->input[action] = true;
+
+				break;
+			}
+
+			case SDL_KEYUP: {
+				auto action = this->keyMappings[e.key.keysym.sym];
+				this->input[action] = false;
+
+				break;
+			}
+		}
+	}
 }

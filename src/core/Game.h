@@ -25,6 +25,7 @@ public:
 
 	bool shouldRun();
 
+	void collectInput();
 	void draw();
 
 	~Game();

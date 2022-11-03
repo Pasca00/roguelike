@@ -41,6 +41,10 @@ bool Game::shouldRun() {
 	return true;
 }
 
+void Game::collectInput() {
+	this->inputSystem->collectInput();
+}
+
 void Game::draw() {
 	std::cout << "rendering\n";
 }

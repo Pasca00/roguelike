@@ -4,7 +4,7 @@
 #include <string>
 #include <unordered_map>
 
-#include <SDL_keycode.h>
+#include <SDL.h>
 
 #include "../ISystem.h"
 #include "../../Paths.h"
@@ -13,7 +13,8 @@ class InputSystem : public ISystem {
 private:
 	static const std::string keyMappingsFilename;
 
-	std::unordered_map<std::string, SDL_KeyCode> keyMappings;
+	std::unordered_map<SDL_Keycode, std::string> keyMappings;
+	std::unordered_map<std::string, bool> input;
 
 	bool settingsFileExists();
 	void createDefaultKeyMappings();
@@ -23,4 +24,6 @@ public:
 	InputSystem();
 
 	void init();
+
+	void collectInput();
 };
