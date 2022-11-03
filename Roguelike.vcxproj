@@ -125,6 +125,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="src\core\Game.cpp" />
+    <ClCompile Include="src\core\systems\input\InputSystem.cpp" />
     <ClCompile Include="src\core\systems\video\VideoSystem.cpp" />
     <ClCompile Include="src\core\systems\video\Window.cpp" />
     <ClCompile Include="src\main.cpp" />
@@ -219,6 +220,8 @@
     <ClInclude Include="libs\sdl\sdl2-2.24.0\include\SDL_video.h" />
     <ClInclude Include="libs\sdl\sdl2-2.24.0\include\SDL_vulkan.h" />
     <ClInclude Include="src\core\Game.h" />
+    <ClInclude Include="src\core\Paths.h" />
+    <ClInclude Include="src\core\systems\input\InputSystem.h" />
     <ClInclude Include="src\core\systems\ISystem.h" />
     <ClInclude Include="src\core\systems\video\VideoSystem.h" />
     <ClInclude Include="src\core\systems\video\Window.h" />

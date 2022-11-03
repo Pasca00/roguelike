@@ -17,6 +17,7 @@ struct WindowConfig {
 	int flags;
 
 	WindowConfig();
+	~WindowConfig();
 	WindowConfig(
 		int width, 
 		int height, 
@@ -42,6 +43,7 @@ private:
 
 public:
 	Window(std::unique_ptr<WindowConfig>& config);
+	~Window();
 
 	SDL_Window* getSDLWindow();
 };

@@ -6,6 +6,8 @@ WindowConfig::WindowConfig() {
 	this->resolveDefaultConfig();
 }
 
+WindowConfig::~WindowConfig() { }
+
 void WindowConfig::resolveDefaultConfig() {
 	SDL_DisplayMode displayMode;
 	SDL_GetDesktopDisplayMode(0, &displayMode);
@@ -30,6 +32,10 @@ Window::Window(std::unique_ptr<WindowConfig>& config) {
 		this->config->height, 
 		this->config->flags
 	);
+}
+
+Window::~Window() {
+	SDL_DestroyWindow(this->sdlWindow);
 }
 
 SDL_Window* Window::getSDLWindow() {

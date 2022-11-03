@@ -18,6 +18,9 @@
     <Filter Include="Source Files\core\systems\video">
       <UniqueIdentifier>{09bd874c-9117-4fc4-bb26-c14404169072}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\core\systems\input">
+      <UniqueIdentifier>{d6827015-4e96-483e-ab63-53063861db08}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\main.cpp">
@@ -31,6 +34,9 @@
     </ClCompile>
     <ClCompile Include="src\core\systems\video\Window.cpp">
       <Filter>Source Files\core\systems\video</Filter>
+    </ClCompile>
+    <ClCompile Include="src\core\systems\input\InputSystem.cpp">
+      <Filter>Source Files\core\systems\input</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -309,6 +315,12 @@
     </ClInclude>
     <ClInclude Include="src\core\systems\video\Window.h">
       <Filter>Source Files\core\systems\video</Filter>
+    </ClInclude>
+    <ClInclude Include="src\core\systems\input\InputSystem.h">
+      <Filter>Source Files\core\systems\input</Filter>
+    </ClInclude>
+    <ClInclude Include="src\core\Paths.h">
+      <Filter>Source Files\core</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
