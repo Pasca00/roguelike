@@ -2,11 +2,35 @@
 
 #include <iostream>
 
+Input::Input() {
+	this->actions = {
+		{"UP",		 false},
+		{"DOWN",	 false},
+		{"LEFT",	 false},
+		{"RIGHT",	 false},
+		{"INTERACT", false},
+
+		{"ENTER",	 false},
+
+		{"PAUSE",	 false},
+		{"QUIT",	 false},
+	};
+}
+
+void Input::setActionValue(const std::string& action, bool value) {
+	this->actions[action] = value;
+}
+
+bool Input::getAction(const std::string& action) {
+	return this->actions[action];
+}
+
 const std::string InputSystem::keyMappingsFilename = "keys";
 
 InputSystem::InputSystem() { }
 
 void InputSystem::init() {
+	this->input = std::make_shared<Input>();
 	this->createDefaultKeyMappings();
 }
 
@@ -28,7 +52,7 @@ void InputSystem::createDefaultKeyMappings() {
 	}
 	*/
 
-	this->keyMappings = {
+	this->keyActionMappings = {
 		{SDLK_w, "UP"},
 		{SDLK_s, "DOWN"},
 		{SDLK_a, "LEFT"},
@@ -38,17 +62,6 @@ void InputSystem::createDefaultKeyMappings() {
 
 		{SDLK_ESCAPE, "PAUSE"},
 	};
-
-	this->input = {
-		{"UP",    false},
-		{"DOWN",  false},
-		{"LEFT",  false},
-		{"RIGHT", false},
-
-		{"ENTER", false},
-
-		{"PAUSE", false},
-	};
 }
 
 void InputSystem::collectInput() {
@@ -56,17 +69,21 @@ void InputSystem::collectInput() {
 	while (SDL_PollEvent(&e)) {
 		switch (e.type) {
 			case SDL_KEYDOWN: {
-				auto action = this->keyMappings[e.key.keysym.sym];
-				this->input[action] = true;
+				auto action = this->keyActionMappings[e.key.keysym.sym];
+				this->input->setActionValue(action, true);
 
 				break;
 			}
 
 			case SDL_KEYUP: {
-				auto action = this->keyMappings[e.key.keysym.sym];
-				this->input[action] = false;
+				auto action = this->keyActionMappings[e.key.keysym.sym];
+				this->input->setActionValue(action, false);
 
 				break;
+			}
+
+			case SDL_QUIT: {
+				this->input->setActionValue("QUIT", true);
 			}
 		}
 	}

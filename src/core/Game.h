@@ -27,6 +27,7 @@ public:
 
 	void collectInput();
 	void draw();
+	void clearScreen();
 
 	~Game();
 };

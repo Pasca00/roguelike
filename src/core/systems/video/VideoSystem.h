@@ -18,6 +18,7 @@ private:
 	std::unique_ptr<Window> window;
 
 	void initSDL();
+	void setGLAttributes();
 	void initWindow();
 	void initGL();
 	void initShaders();
@@ -25,4 +26,6 @@ private:
 
 public:
 	void init();
+
+	void clearScreen();
 };

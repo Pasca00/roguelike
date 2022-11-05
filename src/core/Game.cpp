@@ -48,3 +48,7 @@ void Game::collectInput() {
 void Game::draw() {
 	std::cout << "rendering\n";
 }
+
+void Game::clearScreen() {
+	videoSystem->clearScreen();
+}
