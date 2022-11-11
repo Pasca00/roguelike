@@ -46,4 +46,7 @@ public:
 	~Window();
 
 	SDL_Window* getSDLWindow();
+
+	int getWidth();
+	int getHeight();
 };

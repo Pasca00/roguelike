@@ -15,6 +15,8 @@ Game*& Game::getInstance() {
 Game::Game() {
 	this->createSystems();
 	this->initSystems();
+
+	this->currentState = std::make_unique<MainMenuState>(this->inputSystem, this->videoSystem);
 }
 
 void Game::createSystems() {

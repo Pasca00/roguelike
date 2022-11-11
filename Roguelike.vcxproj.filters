@@ -21,6 +21,18 @@
     <Filter Include="Source Files\core\systems\input">
       <UniqueIdentifier>{d6827015-4e96-483e-ab63-53063861db08}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\glm">
+      <UniqueIdentifier>{5e58adce-cf9e-43a5-9d6f-8c2dead4a290}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\stb">
+      <UniqueIdentifier>{4c395804-f002-4663-a218-de4070d15acf}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\core\states">
+      <UniqueIdentifier>{57565598-1d61-451f-a7e7-c4d5cc63df69}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\core\systems\video\views">
+      <UniqueIdentifier>{40394990-cc7b-4210-a749-899ded5817f9}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\main.cpp">
@@ -37,6 +49,12 @@
     </ClCompile>
     <ClCompile Include="src\core\systems\input\InputSystem.cpp">
       <Filter>Source Files\core\systems\input</Filter>
+    </ClCompile>
+    <ClCompile Include="src\core\states\MainMenuState.cpp">
+      <Filter>Source Files\core\states</Filter>
+    </ClCompile>
+    <ClCompile Include="src\core\systems\video\Texture.cpp">
+      <Filter>Source Files\core\systems\video</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -322,5 +340,91 @@
     <ClInclude Include="src\core\Paths.h">
       <Filter>Source Files\core</Filter>
     </ClInclude>
+    <ClInclude Include="src\glm\common.hpp">
+      <Filter>Source Files\glm</Filter>
+    </ClInclude>
+    <ClInclude Include="src\glm\exponential.hpp">
+      <Filter>Source Files\glm</Filter>
+    </ClInclude>
+    <ClInclude Include="src\glm\ext.hpp">
+      <Filter>Source Files\glm</Filter>
+    </ClInclude>
+    <ClInclude Include="src\glm\fwd.hpp">
+      <Filter>Source Files\glm</Filter>
+    </ClInclude>
+    <ClInclude Include="src\glm\geometric.hpp">
+      <Filter>Source Files\glm</Filter>
+    </ClInclude>
+    <ClInclude Include="src\glm\glm.hpp">
+      <Filter>Source Files\glm</Filter>
+    </ClInclude>
+    <ClInclude Include="src\glm\integer.hpp">
+      <Filter>Source Files\glm</Filter>
+    </ClInclude>
+    <ClInclude Include="src\glm\mat2x2.hpp">
+      <Filter>Source Files\glm</Filter>
+    </ClInclude>
+    <ClInclude Include="src\glm\mat2x3.hpp">
+      <Filter>Source Files\glm</Filter>
+    </ClInclude>
+    <ClInclude Include="src\glm\mat2x4.hpp">
+      <Filter>Source Files\glm</Filter>
+    </ClInclude>
+    <ClInclude Include="src\glm\mat3x2.hpp">
+      <Filter>Source Files\glm</Filter>
+    </ClInclude>
+    <ClInclude Include="src\glm\mat3x3.hpp">
+      <Filter>Source Files\glm</Filter>
+    </ClInclude>
+    <ClInclude Include="src\glm\mat3x4.hpp">
+      <Filter>Source Files\glm</Filter>
+    </ClInclude>
+    <ClInclude Include="src\glm\mat4x2.hpp">
+      <Filter>Source Files\glm</Filter>
+    </ClInclude>
+    <ClInclude Include="src\glm\mat4x3.hpp">
+      <Filter>Source Files\glm</Filter>
+    </ClInclude>
+    <ClInclude Include="src\glm\mat4x4.hpp">
+      <Filter>Source Files\glm</Filter>
+    </ClInclude>
+    <ClInclude Include="src\glm\matrix.hpp">
+      <Filter>Source Files\glm</Filter>
+    </ClInclude>
+    <ClInclude Include="src\glm\packing.hpp">
+      <Filter>Source Files\glm</Filter>
+    </ClInclude>
+    <ClInclude Include="src\glm\trigonometric.hpp">
+      <Filter>Source Files\glm</Filter>
+    </ClInclude>
+    <ClInclude Include="src\glm\vec2.hpp">
+      <Filter>Source Files\glm</Filter>
+    </ClInclude>
+    <ClInclude Include="src\glm\vec3.hpp">
+      <Filter>Source Files\glm</Filter>
+    </ClInclude>
+    <ClInclude Include="src\glm\vec4.hpp">
+      <Filter>Source Files\glm</Filter>
+    </ClInclude>
+    <ClInclude Include="src\glm\vector_relational.hpp">
+      <Filter>Source Files\glm</Filter>
+    </ClInclude>
+    <ClInclude Include="src\stb\stb_image.h">
+      <Filter>Source Files\stb</Filter>
+    </ClInclude>
+    <ClInclude Include="src\core\states\IState.h">
+      <Filter>Source Files\core\states</Filter>
+    </ClInclude>
+    <ClInclude Include="src\core\states\MainMenuState.h">
+      <Filter>Source Files\core\states</Filter>
+    </ClInclude>
+    <ClInclude Include="src\core\systems\video\Texture.h">
+      <Filter>Source Files\core\systems\video</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <Text Include="src\glm\CMakeLists.txt">
+      <Filter>Source Files\glm</Filter>
+    </Text>
   </ItemGroup>
 </Project>

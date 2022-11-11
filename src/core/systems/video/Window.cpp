@@ -41,3 +41,11 @@ Window::~Window() {
 SDL_Window* Window::getSDLWindow() {
 	return this->sdlWindow;
 }
+
+int Window::getHeight() {
+	return this->config->height;
+}
+
+int Window::getWidth() {
+	return this->config->width;
+}

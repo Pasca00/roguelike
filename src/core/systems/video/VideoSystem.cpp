@@ -1,4 +1,5 @@
 #include "VideoSystem.h"
+#include "../../../glm/glm.hpp"
 
 #include <iostream>
 
@@ -49,6 +50,8 @@ void VideoSystem::initGL() {
 	if (error != GLEW_OK) {
 		std::cout << "ERROR ON GLEW INIT " << glewGetErrorString(error) << std::endl;
 	}
+
+	glViewport(0, 0, this->window->getWidth(), this->window->getHeight());
 }
 
 void VideoSystem::initShaders() {}

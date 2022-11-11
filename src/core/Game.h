@@ -4,8 +4,8 @@
 #include <memory>
 #include <vector>
 
-#include "systems/video/VideoSystem.h"
-#include "systems/input/InputSystem.h"
+#include "states/IState.h"
+#include "states/MainMenuState.h"
 
 class Game {
 private:
@@ -13,6 +13,8 @@ private:
 
 	std::shared_ptr<VideoSystem> videoSystem;
 	std::shared_ptr<InputSystem> inputSystem;
+
+	std::unique_ptr<IState> currentState;
 
 	Game();
 
