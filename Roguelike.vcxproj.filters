@@ -30,7 +30,7 @@
     <Filter Include="Source Files\core\states">
       <UniqueIdentifier>{57565598-1d61-451f-a7e7-c4d5cc63df69}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Source Files\core\systems\video\views">
+    <Filter Include="Source Files\core\systems\video\textures">
       <UniqueIdentifier>{40394990-cc7b-4210-a749-899ded5817f9}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
@@ -53,8 +53,11 @@
     <ClCompile Include="src\core\states\MainMenuState.cpp">
       <Filter>Source Files\core\states</Filter>
     </ClCompile>
-    <ClCompile Include="src\core\systems\video\Texture.cpp">
-      <Filter>Source Files\core\systems\video</Filter>
+    <ClCompile Include="src\core\systems\video\textures\Texture.cpp">
+      <Filter>Source Files\core\systems\video\textures</Filter>
+    </ClCompile>
+    <ClCompile Include="src\core\systems\video\textures\TextureManager.cpp">
+      <Filter>Source Files\core\systems\video\textures</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -418,8 +421,11 @@
     <ClInclude Include="src\core\states\MainMenuState.h">
       <Filter>Source Files\core\states</Filter>
     </ClInclude>
-    <ClInclude Include="src\core\systems\video\Texture.h">
-      <Filter>Source Files\core\systems\video</Filter>
+    <ClInclude Include="src\core\systems\video\textures\Texture.h">
+      <Filter>Source Files\core\systems\video\textures</Filter>
+    </ClInclude>
+    <ClInclude Include="src\core\systems\video\textures\TextureManager.h">
+      <Filter>Source Files\core\systems\video\textures</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

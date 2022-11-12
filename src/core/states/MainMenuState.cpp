@@ -6,7 +6,7 @@ MainMenuState::MainMenuState(
 ) : IState(inputSystem, videoSystem) {
 	
 
-}
+}	
 
 void MainMenuState::handleInput() {}
 

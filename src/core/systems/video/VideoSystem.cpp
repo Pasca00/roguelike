@@ -10,6 +10,7 @@ void VideoSystem::init() {
 	this->setGLAttributes();
 	this->initWindow();
 	this->initGL();
+	this->initComponents();
 }
 
 void VideoSystem::initSDL() {
@@ -20,18 +21,6 @@ void VideoSystem::initWindow() {
 	this->window = std::make_unique<Window>(
 		std::make_unique<WindowConfig>()
 	);
-}
-
-void VideoSystem::setGLAttributes() {
-	SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 3);
-	SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 3);
-
-	SDL_GL_SetAttribute(SDL_GL_RED_SIZE, 5);
-	SDL_GL_SetAttribute(SDL_GL_GREEN_SIZE, 5);
-	SDL_GL_SetAttribute(SDL_GL_BLUE_SIZE, 5);
-	SDL_GL_SetAttribute(SDL_GL_ALPHA_SIZE, 5);
-	SDL_GL_SetAttribute(SDL_GL_DEPTH_SIZE, 16);
-	SDL_GL_SetAttribute(SDL_GL_DOUBLEBUFFER, 1);
 }
 
 void VideoSystem::initGL() {
@@ -54,7 +43,23 @@ void VideoSystem::initGL() {
 	glViewport(0, 0, this->window->getWidth(), this->window->getHeight());
 }
 
+void VideoSystem::initComponents() {
+	this->textureManager = std::make_unique<TextureManager>();
+}
+
 void VideoSystem::initShaders() {}
+
+void VideoSystem::setGLAttributes() {
+	SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 3);
+	SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 3);
+
+	SDL_GL_SetAttribute(SDL_GL_RED_SIZE, 5);
+	SDL_GL_SetAttribute(SDL_GL_GREEN_SIZE, 5);
+	SDL_GL_SetAttribute(SDL_GL_BLUE_SIZE, 5);
+	SDL_GL_SetAttribute(SDL_GL_ALPHA_SIZE, 5);
+	SDL_GL_SetAttribute(SDL_GL_DEPTH_SIZE, 16);
+	SDL_GL_SetAttribute(SDL_GL_DOUBLEBUFFER, 1);
+}
 
 void VideoSystem::loadInitialTextures() {}
 

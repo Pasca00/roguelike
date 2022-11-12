@@ -12,15 +12,18 @@
 
 #include "../ISystem.h"
 #include "Window.h"
+#include "textures/TextureManager.h"
 
 class VideoSystem : public ISystem {
 private:
 	std::unique_ptr<Window> window;
+	std::unique_ptr<TextureManager> textureManager;
 
 	void initSDL();
 	void setGLAttributes();
 	void initWindow();
 	void initGL();
+	void initComponents();
 	void initShaders();
 	void loadInitialTextures();
 
