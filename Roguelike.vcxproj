@@ -129,6 +129,7 @@
     <ClCompile Include="src\core\Game.cpp" />
     <ClCompile Include="src\core\states\MainMenuState.cpp" />
     <ClCompile Include="src\core\systems\input\InputSystem.cpp" />
+    <ClCompile Include="src\core\systems\video\Renderer.cpp" />
     <ClCompile Include="src\core\systems\video\textures\Texture.cpp" />
     <ClCompile Include="src\core\systems\video\textures\TextureManager.cpp" />
     <ClCompile Include="src\core\systems\video\VideoSystem.cpp" />
@@ -230,6 +231,7 @@
     <ClInclude Include="src\core\states\MainMenuState.h" />
     <ClInclude Include="src\core\systems\input\InputSystem.h" />
     <ClInclude Include="src\core\systems\ISystem.h" />
+    <ClInclude Include="src\core\systems\video\Renderer.h" />
     <ClInclude Include="src\core\systems\video\textures\Texture.h" />
     <ClInclude Include="src\core\systems\video\textures\TextureManager.h" />
     <ClInclude Include="src\core\systems\video\VideoSystem.h" />
