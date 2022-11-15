@@ -28,6 +28,7 @@ public:
 	bool shouldRun();
 
 	void collectInput();
+	void update();
 	void draw();
 	void clearScreen();
 

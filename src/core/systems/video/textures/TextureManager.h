@@ -30,5 +30,5 @@ public:
 
 	std::shared_ptr<Texture> makeTexture(unsigned char* textureData);
 
-	std::shared_ptr<Texture> getSingleTextureFromFile(std::string& filename);
+	std::shared_ptr<Texture> getSingleTextureFromFile(std::string filename);
 };

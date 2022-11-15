@@ -47,8 +47,12 @@ void Game::collectInput() {
 	this->inputSystem->collectInput();
 }
 
+void Game::update() {
+
+}
+
 void Game::draw() {
-	std::cout << "rendering\n";
+
 }
 
 void Game::clearScreen() {

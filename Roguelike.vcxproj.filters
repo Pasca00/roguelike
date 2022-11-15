@@ -33,6 +33,9 @@
     <Filter Include="Source Files\core\systems\video\textures">
       <UniqueIdentifier>{40394990-cc7b-4210-a749-899ded5817f9}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\core\shaders">
+      <UniqueIdentifier>{3b4f160d-52c3-48c6-952e-67d08149eb6d}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\main.cpp">
@@ -60,6 +63,9 @@
       <Filter>Source Files\core\systems\video\textures</Filter>
     </ClCompile>
     <ClCompile Include="src\core\systems\video\Renderer.cpp">
+      <Filter>Source Files\core\systems\video</Filter>
+    </ClCompile>
+    <ClCompile Include="src\core\systems\video\Shader.cpp">
       <Filter>Source Files\core\systems\video</Filter>
     </ClCompile>
   </ItemGroup>
@@ -431,6 +437,9 @@
       <Filter>Source Files\core\systems\video\textures</Filter>
     </ClInclude>
     <ClInclude Include="src\core\systems\video\Renderer.h">
+      <Filter>Source Files\core\systems\video</Filter>
+    </ClInclude>
+    <ClInclude Include="src\core\systems\video\Shader.h">
       <Filter>Source Files\core\systems\video</Filter>
     </ClInclude>
   </ItemGroup>

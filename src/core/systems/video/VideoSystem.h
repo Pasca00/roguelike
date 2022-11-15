@@ -13,6 +13,7 @@
 #include "../ISystem.h"
 #include "Window.h"
 #include "Renderer.h"
+#include "Shader.h"
 #include "textures/TextureManager.h"
 
 class VideoSystem : public ISystem {
@@ -30,6 +31,10 @@ private:
 	void loadInitialTextures();
 
 public:
+	std::shared_ptr<Texture> test;
+	Shader* testShader;
+	void renderTest();
+
 	void init();
 
 	void clearScreen();

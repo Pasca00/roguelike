@@ -42,7 +42,7 @@ std::shared_ptr<Texture> TextureManager::makeTexture(unsigned char* textureData)
 	return std::make_shared<Texture>(textureID, this->width, this->height, this->channels);
 }
 
-std::shared_ptr<Texture> TextureManager::getSingleTextureFromFile(std::string& filename) {
+std::shared_ptr<Texture> TextureManager::getSingleTextureFromFile(std::string filename) {
 	auto data = this->loadImageData(filename);
 	if (data == NULL) {
 		std::cout << "FAILED TO LOAD IMAGE DATA FOR :: " << filename << "\n";

@@ -11,6 +11,7 @@ void VideoSystem::init() {
 	this->initWindow();
 	this->initGL();
 	this->initComponents();
+	this->loadInitialTextures();
 }
 
 void VideoSystem::initSDL() {
@@ -62,11 +63,17 @@ void VideoSystem::setGLAttributes() {
 	SDL_GL_SetAttribute(SDL_GL_DOUBLEBUFFER, 1);
 }
 
-void VideoSystem::loadInitialTextures() {}
+void VideoSystem::loadInitialTextures() {
+	this->test = textureManager->getSingleTextureFromFile("C:/Users/alexp/Desktop/Roguelike/resources/characters/rogue.png");
+}
 
 void VideoSystem::clearScreen() {
 	glClearColor(0.5f, 0.1f, 0.5f, 1.0f);
 	glClear(GL_COLOR_BUFFER_BIT);
 
 	SDL_GL_SwapWindow(this->window->getSDLWindow());
+}
+
+void VideoSystem::renderTest() {
+
 }

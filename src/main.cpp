@@ -8,7 +8,9 @@ int main(int argc, char** argv) {
 
 	while (game->shouldRun()) {
 		game->collectInput();
+		game->update();
 		game->clearScreen();
+		game->draw();
 	}
 
 	delete game;
