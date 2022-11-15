@@ -1,6 +1,6 @@
 #include "Shader.h"
 
-Shader::Shader(const char* basePath, std::string& name) {
+Shader::Shader(const char* basePath, std::string name) {
 	this->name = name;
 
 	std::string vertexCode;
@@ -17,6 +17,7 @@ Shader::Shader(const char* basePath, std::string& name) {
 	vShaderFile.exceptions(std::ifstream::failbit | std::ifstream::badbit);
 	fShaderFile.exceptions(std::ifstream::failbit | std::ifstream::badbit);
 	try {
+		printf("--%s--\n", vFileName.c_str());
 		vShaderFile.open(vFileName.append("VertexShader.glsl"));
 		fShaderFile.open(fFileName.append("FragmentShader.glsl"));
 

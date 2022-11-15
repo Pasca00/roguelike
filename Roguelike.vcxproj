@@ -266,6 +266,10 @@
   <ItemGroup>
     <Text Include="src\glm\CMakeLists.txt" />
   </ItemGroup>
+  <ItemGroup>
+    <None Include="src\core\shaders\BaseFragmentShader.glsl" />
+    <None Include="src\core\shaders\BaseVertexShader.glsl" />
+  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>

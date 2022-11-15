@@ -11,6 +11,7 @@ void VideoSystem::init() {
 	this->initWindow();
 	this->initGL();
 	this->initComponents();
+	this->initShaders();
 	this->loadInitialTextures();
 }
 
@@ -49,7 +50,6 @@ void VideoSystem::initComponents() {
 	this->renderer = std::make_unique<Renderer>(this->window->getHeight(), this->window->getWidth());
 }
 
-void VideoSystem::initShaders() {}
 
 void VideoSystem::setGLAttributes() {
 	SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 3);
@@ -63,17 +63,21 @@ void VideoSystem::setGLAttributes() {
 	SDL_GL_SetAttribute(SDL_GL_DOUBLEBUFFER, 1);
 }
 
+void VideoSystem::initShaders() {
+	this->testShader = std::make_shared<Shader>("C:/Users/alexp/Desktop/Roguelike/src/core/shaders/", "Base");
+}
+
 void VideoSystem::loadInitialTextures() {
-	this->test = textureManager->getSingleTextureFromFile("C:/Users/alexp/Desktop/Roguelike/resources/characters/rogue.png");
+	this->testTexture = textureManager->getSingleTextureFromFile("C:/Users/alexp/Desktop/Roguelike/resources/characters/rogue.png");
 }
 
 void VideoSystem::clearScreen() {
-	glClearColor(0.5f, 0.1f, 0.5f, 1.0f);
+	glClearColor(0.1f, 0.1f, 0.1f, 1.0f);
 	glClear(GL_COLOR_BUFFER_BIT);
 
 	SDL_GL_SwapWindow(this->window->getSDLWindow());
 }
 
 void VideoSystem::renderTest() {
-
+	this->renderer->draw(this->testTexture, this->testShader);
 }

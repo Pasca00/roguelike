@@ -31,8 +31,8 @@ private:
 	void loadInitialTextures();
 
 public:
-	std::shared_ptr<Texture> test;
-	Shader* testShader;
+	std::shared_ptr<Texture> testTexture;
+	std::shared_ptr<Shader> testShader;
 	void renderTest();
 
 	void init();

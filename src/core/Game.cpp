@@ -52,7 +52,7 @@ void Game::update() {
 }
 
 void Game::draw() {
-
+	this->videoSystem->renderTest();
 }
 
 void Game::clearScreen() {

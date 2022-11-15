@@ -18,7 +18,7 @@ private:
 	const char* fShaderCode;
 
 public:
-	Shader(const char* basePath, std::string& name);
+	Shader(const char* basePath, std::string name);
 
 	void use();
 	void compile();

@@ -448,4 +448,12 @@
       <Filter>Source Files\glm</Filter>
     </Text>
   </ItemGroup>
+  <ItemGroup>
+    <None Include="src\core\shaders\BaseFragmentShader.glsl">
+      <Filter>Source Files\core\shaders</Filter>
+    </None>
+    <None Include="src\core\shaders\BaseVertexShader.glsl">
+      <Filter>Source Files\core\shaders</Filter>
+    </None>
+  </ItemGroup>
 </Project>

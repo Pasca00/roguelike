@@ -57,3 +57,22 @@ Renderer::Renderer(int windowHeight, int windowWidth) {
 
 	projectionMatrix = glm::ortho(0.f, (float)windowHeight, 0.f, (float)windowWidth, -0.01f, 10.f);
 }
+
+void Renderer::draw(std::shared_ptr<Texture>& texture, std::shared_ptr<Shader>& shader) {
+	glm::mat4 modelMatrix(1);
+	//modelMatrix = glm::translate(modelMatrix, glm::vec3(0, 0, 0));
+	modelMatrix = glm::scale(modelMatrix, glm::vec3(texture->getWidth(), texture->getHeight(), 1));
+
+	shader->use();
+	shader->setModelMatrix(modelMatrix);
+	shader->setProjectionMatrix(projectionMatrix);
+
+	glActiveTexture(GL_TEXTURE0);
+	glBindTexture(GL_TEXTURE_2D, texture->getTextureId());
+
+	glBindVertexArray(quad->getVAO());
+
+	glDrawArrays(GL_QUADS, 0, quad->getIndices().size());
+
+	glBindVertexArray(0);
+}

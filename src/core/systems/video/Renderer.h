@@ -3,6 +3,10 @@
 #include <memory>
 #include <vector>
 #include <gl/glew.h>
+
+#include "Shader.h"
+#include "textures/Texture.h"
+
 #include "../../../glm/glm.hpp"
 #include "../../../glm/gtc/matrix_transform.hpp"
 
@@ -38,4 +42,6 @@ private:
 
 public:
 	Renderer(int windowWidth, int windowHeight);
+
+	void draw(std::shared_ptr<Texture>& texture, std::shared_ptr<Shader>& shader);
 };
