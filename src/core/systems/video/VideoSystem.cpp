@@ -45,7 +45,7 @@ void VideoSystem::initGL() {
 
 void VideoSystem::initComponents() {
 	this->textureManager = std::make_unique<TextureManager>();
-	this->renderer = std::make_unique<Renderer>();
+	this->renderer = std::make_unique<Renderer>(this->window->getHeight(), this->window->getWidth());
 }
 
 void VideoSystem::initShaders() {}
