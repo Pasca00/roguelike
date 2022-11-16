@@ -17,7 +17,6 @@ Shader::Shader(const char* basePath, std::string name) {
 	vShaderFile.exceptions(std::ifstream::failbit | std::ifstream::badbit);
 	fShaderFile.exceptions(std::ifstream::failbit | std::ifstream::badbit);
 	try {
-		printf("--%s--\n", vFileName.c_str());
 		vShaderFile.open(vFileName.append("VertexShader.glsl"));
 		fShaderFile.open(fFileName.append("FragmentShader.glsl"));
 
@@ -28,15 +27,14 @@ Shader::Shader(const char* basePath, std::string name) {
 
 		vertexCode = vShaderStream.str();
 		fragmentCode = fShaderStream.str();
-	}
-	catch (std::ifstream::failure e) {
+	} catch (std::ifstream::failure e) {
 		printf("ERROR OPENING SHADER FILE::%s\n", name.c_str());
 	}
 
 	vShaderCode = vertexCode.c_str();
 	fShaderCode = fragmentCode.c_str();
 
-	compile();
+	this->compile();
 }
 
 void Shader::compile() {

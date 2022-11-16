@@ -72,12 +72,13 @@ void VideoSystem::loadInitialTextures() {
 }
 
 void VideoSystem::clearScreen() {
-	glClearColor(0.1f, 0.1f, 0.1f, 1.0f);
+	glClearColor(0.5f, 0.1f, 0.1f, 1.0f);
 	glClear(GL_COLOR_BUFFER_BIT);
-
-	SDL_GL_SwapWindow(this->window->getSDLWindow());
 }
 
 void VideoSystem::renderTest() {
 	this->renderer->draw(this->testTexture, this->testShader);
+
+	// TODO: find a better place for this call
+	SDL_GL_SwapWindow(this->window->getSDLWindow());
 }

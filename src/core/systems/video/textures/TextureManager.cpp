@@ -16,6 +16,8 @@ TextureManager::TextureManager() {
 	this->wrappingMode = GL_REPEAT;
 	this->textureMinFilter = GL_NEAREST_MIPMAP_NEAREST;
 	this->textureMagFilter = GL_NEAREST;
+
+	stbi_set_flip_vertically_on_load(true);
 }
 
 unsigned char* TextureManager::loadImageData(std::string& filename) {
@@ -27,8 +29,8 @@ std::shared_ptr<Texture> TextureManager::makeTexture(unsigned char* textureData)
 	glGenTextures(1, &textureID);
 	glBindTexture(GL_TEXTURE_2D, textureID);
 
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, textureMinFilter);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, textureMagFilter);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST_MIPMAP_NEAREST);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
 
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);

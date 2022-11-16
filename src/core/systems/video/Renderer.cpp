@@ -9,7 +9,6 @@ Quad::Quad(std::vector<Vertex>& vertices, std::vector<unsigned int>& indices) {
 
 	glBindVertexArray(VAO);
 
-
 	glBindBuffer(GL_ARRAY_BUFFER, VBO[0]);
 	glBufferData(GL_ARRAY_BUFFER, sizeof(vertices[0]) * vertices.size(), &vertices[0], GL_STATIC_DRAW);
 
@@ -55,13 +54,13 @@ Renderer::Renderer(int windowHeight, int windowWidth) {
 
 	quad = std::make_unique<Quad>(vertices, indices);
 
-	projectionMatrix = glm::ortho(0.f, (float)windowHeight, 0.f, (float)windowWidth, -0.01f, 10.f);
+	projectionMatrix = glm::ortho(0.f, (float)windowWidth, 0.f, (float)windowHeight, -0.01f, 10.f);
 }
 
 void Renderer::draw(std::shared_ptr<Texture>& texture, std::shared_ptr<Shader>& shader) {
 	glm::mat4 modelMatrix(1);
-	//modelMatrix = glm::translate(modelMatrix, glm::vec3(0, 0, 0));
-	modelMatrix = glm::scale(modelMatrix, glm::vec3(texture->getWidth(), texture->getHeight(), 1));
+	modelMatrix = glm::translate(modelMatrix, glm::vec3(0, 0, 0));
+	modelMatrix = glm::scale(modelMatrix, glm::vec3(texture->getWidth() * 2, texture->getHeight() * 2, 1));
 
 	shader->use();
 	shader->setModelMatrix(modelMatrix);
