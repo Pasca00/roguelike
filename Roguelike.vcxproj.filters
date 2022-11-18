@@ -442,6 +442,9 @@
     <ClInclude Include="src\core\systems\video\Shader.h">
       <Filter>Source Files\core\systems\video</Filter>
     </ClInclude>
+    <ClInclude Include="src\stb\stb_image_write.h">
+      <Filter>Source Files\stb</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Text Include="src\glm\CMakeLists.txt">

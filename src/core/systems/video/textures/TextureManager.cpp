@@ -24,7 +24,7 @@ unsigned char* TextureManager::loadImageData(std::string& filename) {
 	return stbi_load(filename.c_str(), &this->width, &this->height, &this->channels, 0);
 }
 
-std::shared_ptr<Texture> TextureManager::makeTexture(unsigned char* textureData) {
+std::shared_ptr<Texture> TextureManager::makeTexture(unsigned char* textureData, int width, int height, int channels) {
 	GLuint textureID;
 	glGenTextures(1, &textureID);
 	glBindTexture(GL_TEXTURE_2D, textureID);
@@ -36,6 +36,7 @@ std::shared_ptr<Texture> TextureManager::makeTexture(unsigned char* textureData)
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
 
 	glTexImage2D(targetType, 0, internalFormat[0][channels], width, height, 0, pixelFormat[channels], GL_UNSIGNED_BYTE, textureData);
+	
 	glGenerateMipmap(targetType);
 	glBindTexture(targetType, 0);
 
@@ -51,5 +52,40 @@ std::shared_ptr<Texture> TextureManager::getSingleTextureFromFile(std::string fi
 		return NULL;
 	}
 
-	return this->makeTexture(data);
+	return this->makeTexture(data, width, height, channels);
+}
+
+std::vector<std::vector<std::shared_ptr<Texture>>> TextureManager::getTexturesFromSpriteSheet(
+	std::string filename,
+	std::vector<int> framesPerSprite,
+	unsigned int spriteWidth,
+	unsigned int spriteHeight
+) {
+	auto spritesheetData = this->loadImageData(filename);
+	if (spritesheetData == NULL) {
+		std::cout << "FAILED TO LOAD IMAGE DATA FOR :: " << filename << "\n";
+		return {};
+	}
+
+	unsigned long size = spriteWidth * spriteHeight * channels;
+	std::vector<std::vector<std::shared_ptr<Texture>>> sprites(framesPerSprite.size());
+	for (int sprite = 0; sprite < framesPerSprite.size(); sprite++) {
+		std::vector<std::shared_ptr<Texture>> frames(framesPerSprite[sprite]);
+		for (int frame = 0; frame < framesPerSprite[sprite]; frame++) {
+			unsigned char* data = new unsigned char[size];
+			for (int row = 0; row < spriteHeight; row++) {
+				memcpy(
+					data + row * spriteWidth * channels, 
+					spritesheetData + row * width * channels + frame * spriteWidth * channels + sprite * width * spriteHeight * channels,
+					spriteWidth * channels
+				);
+			}
+
+			frames[frame] = this->makeTexture(data, spriteWidth, spriteHeight, channels);
+		}
+
+		sprites[sprite] = frames;
+	}
+	
+	return sprites;
 }

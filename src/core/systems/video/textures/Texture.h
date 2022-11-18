@@ -12,6 +12,7 @@ private:
 
 public:
 	Texture(GLuint textureId, int width, int height, int channels);
+    ~Texture();
 
     int getWidth();
     int getHeight();

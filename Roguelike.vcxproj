@@ -262,6 +262,7 @@
     <ClInclude Include="src\glm\vec4.hpp" />
     <ClInclude Include="src\glm\vector_relational.hpp" />
     <ClInclude Include="src\stb\stb_image.h" />
+    <ClInclude Include="src\stb\stb_image_write.h" />
   </ItemGroup>
   <ItemGroup>
     <Text Include="src\glm\CMakeLists.txt" />

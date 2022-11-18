@@ -10,6 +10,10 @@ Texture::Texture(
 	height(height), 
 	channels(channels) { }
 
+Texture::~Texture() {
+	glDeleteTextures(1, &this->textureId);
+}
+
 int Texture::getWidth()   {
 	return this->width;
 }

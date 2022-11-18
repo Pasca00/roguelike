@@ -32,6 +32,7 @@ private:
 
 public:
 	std::shared_ptr<Texture> testTexture;
+	std::shared_ptr<Texture> testTexture2;
 	std::shared_ptr<Shader> testShader;
 	void renderTest();
 
