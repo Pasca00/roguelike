@@ -84,7 +84,9 @@ std::vector<std::vector<std::shared_ptr<Texture>>> TextureManager::getTexturesFr
 			frames[frame] = this->makeTexture(data, spriteWidth, spriteHeight, channels);
 		}
 
-		sprites[sprite] = frames;
+		// The image pixels are stored bottom-up 
+		// so we need to reverse the order
+		sprites[framesPerSprite.size() - sprite - 1] = frames;
 	}
 	
 	return sprites;

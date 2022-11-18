@@ -75,9 +75,10 @@ void VideoSystem::loadInitialTextures() {
 			10,
 			10,
 			10,
+			10,
 			10
 		}
-	)[0][0];
+	)[4][7];
 }
 	
 void VideoSystem::clearScreen() {
