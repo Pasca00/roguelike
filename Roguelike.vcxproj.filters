@@ -36,6 +36,12 @@
     <Filter Include="Source Files\core\shaders">
       <UniqueIdentifier>{3b4f160d-52c3-48c6-952e-67d08149eb6d}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\core\gameplay">
+      <UniqueIdentifier>{d783d242-b37d-4b37-a877-44c4b61b32ed}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\core\systems\video\views">
+      <UniqueIdentifier>{71c19b28-3311-4c80-ba5c-91c1819f683a}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\main.cpp">
@@ -67,6 +73,9 @@
     </ClCompile>
     <ClCompile Include="src\core\systems\video\Shader.cpp">
       <Filter>Source Files\core\systems\video</Filter>
+    </ClCompile>
+    <ClCompile Include="src\core\systems\video\views\View.cpp">
+      <Filter>Source Files\core\systems\video\views</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -444,6 +453,12 @@
     </ClInclude>
     <ClInclude Include="src\stb\stb_image_write.h">
       <Filter>Source Files\stb</Filter>
+    </ClInclude>
+    <ClInclude Include="src\core\gameplay\Hitbox.h">
+      <Filter>Source Files\core\gameplay</Filter>
+    </ClInclude>
+    <ClInclude Include="src\core\systems\video\views\View.h">
+      <Filter>Source Files\core\systems\video\views</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

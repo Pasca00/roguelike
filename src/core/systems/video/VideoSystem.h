@@ -1,6 +1,7 @@
 #pragma once
 
 #include <memory>
+#include <unordered_map>
 
 #define GLEW_STATIC
 #include <gl/glew.h>
@@ -15,12 +16,15 @@
 #include "Renderer.h"
 #include "Shader.h"
 #include "textures/TextureManager.h"
+#include "../../Paths.h"
 
 class VideoSystem : public ISystem {
 private:
 	std::unique_ptr<Window> window;
 	std::unique_ptr<TextureManager> textureManager;
 	std::unique_ptr<Renderer> renderer;
+
+	std::unordered_map<std::string, std::shared_ptr<Shader>> shaders;
 
 	void initSDL();
 	void setGLAttributes();
@@ -31,12 +35,9 @@ private:
 	void loadInitialTextures();
 
 public:
-	std::shared_ptr<Texture> testTexture;
-	std::shared_ptr<Texture> testTexture2;
-	std::shared_ptr<Shader> testShader;
-	void renderTest();
-
 	void init();
 
 	void clearScreen();
+
+
 };

@@ -134,6 +134,7 @@
     <ClCompile Include="src\core\systems\video\textures\Texture.cpp" />
     <ClCompile Include="src\core\systems\video\textures\TextureManager.cpp" />
     <ClCompile Include="src\core\systems\video\VideoSystem.cpp" />
+    <ClCompile Include="src\core\systems\video\views\View.cpp" />
     <ClCompile Include="src\core\systems\video\Window.cpp" />
     <ClCompile Include="src\main.cpp" />
   </ItemGroup>
@@ -227,6 +228,7 @@
     <ClInclude Include="libs\sdl\sdl2-2.24.0\include\SDL_video.h" />
     <ClInclude Include="libs\sdl\sdl2-2.24.0\include\SDL_vulkan.h" />
     <ClInclude Include="src\core\Game.h" />
+    <ClInclude Include="src\core\gameplay\Hitbox.h" />
     <ClInclude Include="src\core\Paths.h" />
     <ClInclude Include="src\core\states\IState.h" />
     <ClInclude Include="src\core\states\MainMenuState.h" />
@@ -237,6 +239,7 @@
     <ClInclude Include="src\core\systems\video\textures\Texture.h" />
     <ClInclude Include="src\core\systems\video\textures\TextureManager.h" />
     <ClInclude Include="src\core\systems\video\VideoSystem.h" />
+    <ClInclude Include="src\core\systems\video\views\View.h" />
     <ClInclude Include="src\core\systems\video\Window.h" />
     <ClInclude Include="src\glm\common.hpp" />
     <ClInclude Include="src\glm\exponential.hpp" />

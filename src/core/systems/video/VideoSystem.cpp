@@ -64,31 +64,16 @@ void VideoSystem::setGLAttributes() {
 }
 
 void VideoSystem::initShaders() {
-	this->testShader = std::make_shared<Shader>("C:/Users/alexp/Desktop/Roguelike/src/core/shaders/", "Base");
+	this->shaders["base"] = std::make_shared<Shader>(Paths::SHADERS_DIR.c_str(), "Base");
 }
 
 void VideoSystem::loadInitialTextures() {
-	this->testTexture = textureManager->getSingleTextureFromFile("C:/Users/alexp/Desktop/Roguelike/resources/characters/rogue.png");
-	this->testTexture2 = textureManager->getTexturesFromSpriteSheet(
-		"C:/Users/alexp/Desktop/Roguelike/resources/characters/rogue.png",
-		{
-			10,
-			10,
-			10,
-			10,
-			10
-		}
-	)[4][7];
+	
 }
 	
 void VideoSystem::clearScreen() {
 	glClearColor(0.5f, 0.1f, 0.1f, 1.0f);
 	glClear(GL_COLOR_BUFFER_BIT);
-}
 
-void VideoSystem::renderTest() {
-	this->renderer->draw(this->testTexture2, this->testShader);
-
-	// TODO: find a better place for this call
 	SDL_GL_SwapWindow(this->window->getSDLWindow());
 }
