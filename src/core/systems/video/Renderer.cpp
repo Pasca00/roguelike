@@ -75,3 +75,22 @@ void Renderer::draw(std::shared_ptr<Texture>& texture, std::shared_ptr<Shader>& 
 
 	glBindVertexArray(0);
 }
+
+void Renderer::draw(std::shared_ptr<View>& view, std::shared_ptr<Shader>& shader) {
+	glm::mat4 modelMatrix(1);
+	modelMatrix = glm::translate(modelMatrix, glm::vec3(view->getX(), view->getY(), 0));
+	modelMatrix = glm::scale(modelMatrix, glm::vec3(view->getWidth(), view->getHeight(), 1));
+
+	shader->use();
+	shader->setModelMatrix(modelMatrix);
+	shader->setProjectionMatrix(this->projectionMatrix);
+
+	glActiveTexture(GL_TEXTURE0);
+	glBindTexture(GL_TEXTURE_2D, view->getTextureId());
+
+	glBindVertexArray(quad->getVAO());
+
+	glDrawArrays(GL_QUADS, 0, quad->getIndices().size());
+
+	glBindVertexArray(0);
+}

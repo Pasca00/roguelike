@@ -77,6 +77,12 @@
     <ClCompile Include="src\core\systems\video\views\View.cpp">
       <Filter>Source Files\core\systems\video\views</Filter>
     </ClCompile>
+    <ClCompile Include="src\core\systems\video\views\IView.cpp">
+      <Filter>Source Files\core\systems\video\views</Filter>
+    </ClCompile>
+    <ClCompile Include="src\core\systems\video\views\AnimationView.cpp">
+      <Filter>Source Files\core\systems\video\views</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="libs\sdl\sdl2-2.24.0\include\begin_code.h">
@@ -458,6 +464,12 @@
       <Filter>Source Files\core\gameplay</Filter>
     </ClInclude>
     <ClInclude Include="src\core\systems\video\views\View.h">
+      <Filter>Source Files\core\systems\video\views</Filter>
+    </ClInclude>
+    <ClInclude Include="src\core\systems\video\views\IView.h">
+      <Filter>Source Files\core\systems\video\views</Filter>
+    </ClInclude>
+    <ClInclude Include="src\core\systems\video\views\AnimationView.h">
       <Filter>Source Files\core\systems\video\views</Filter>
     </ClInclude>
   </ItemGroup>

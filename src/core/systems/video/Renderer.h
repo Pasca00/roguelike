@@ -6,6 +6,7 @@
 
 #include "Shader.h"
 #include "textures/Texture.h"
+#include "views/View.h"
 
 #include "../../../glm/glm.hpp"
 #include "../../../glm/gtc/matrix_transform.hpp"
@@ -44,4 +45,5 @@ public:
 	Renderer(int windowWidth, int windowHeight);
 
 	void draw(std::shared_ptr<Texture>& texture, std::shared_ptr<Shader>& shader);
+	void draw(std::shared_ptr<View>& view, std::shared_ptr<Shader>& shader);
 };

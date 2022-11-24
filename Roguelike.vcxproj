@@ -126,6 +126,8 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="src\core\systems\video\views\IView.cpp" />
+    <ClCompile Include="src\core\systems\video\views\AnimationView.cpp" />
     <ClCompile Include="src\core\Game.cpp" />
     <ClCompile Include="src\core\states\MainMenuState.cpp" />
     <ClCompile Include="src\core\systems\input\InputSystem.cpp" />
@@ -139,6 +141,8 @@
     <ClCompile Include="src\main.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="src\core\systems\video\views\IView.h" />
+    <ClInclude Include="src\core\systems\video\views\AnimationView.h" />
     <ClInclude Include="libs\sdl\sdl2-2.24.0\include\begin_code.h" />
     <ClInclude Include="libs\sdl\sdl2-2.24.0\include\close_code.h" />
     <ClInclude Include="libs\sdl\sdl2-2.24.0\include\SDL.h" />
