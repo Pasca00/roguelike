@@ -13,7 +13,7 @@ public:
 
 private:
 	AnimationView(
-		std::vector<std::unique_ptr<Texture>>& frames, 
+		std::vector<std::unique_ptr<Texture>>& frames,
 		float frameTime = 60,
 		float x = 0,
 		float y = 0,

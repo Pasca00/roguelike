@@ -13,7 +13,7 @@ View::View(
 	std::unique_ptr<Texture>& texture,
 	std::unique_ptr<Hitbox>& hitbox, 
 	float size
-) : IView(hitbox, size) {
+) : IView(std::move(hitbox), size) {
 	this->texture = std::move(texture);
 }
 
