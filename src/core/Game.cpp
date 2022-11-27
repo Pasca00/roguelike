@@ -16,18 +16,20 @@ Game::Game() {
 	this->createSystems();
 	this->initSystems();
 
-	this->currentState = std::make_unique<MainMenuState>(this->inputSystem, this->videoSystem);
+	this->currentState = std::make_unique<MainMenuState>(this->inputSystem, this->videoSystem, this->physicsSystem);
 }
 
 void Game::createSystems() {
 	videoSystem = std::make_shared<VideoSystem>();
 	inputSystem = std::make_shared<InputSystem>();
+	physicsSystem = std::make_shared<PhysicsSystem>();
 }
 
 void Game::initSystems() {
 	std::vector<std::shared_ptr<ISystem>> systems = {
 		videoSystem,
 		inputSystem,
+		physicsSystem,
 	};
 
 	for (const auto& system : systems) {
@@ -48,11 +50,13 @@ void Game::collectInput() {
 }
 
 void Game::update() {
-
+	this->physicsSystem->computeFrameDeltaTime();
+	this->currentState->update(this->physicsSystem->getFrameDeltaTime());
 }
 
 void Game::draw() {
 	// TODO: make render() call to the state
+	this->currentState->render();
 }
 
 void Game::clearScreen() {

@@ -13,6 +13,7 @@ private:
 
 	std::shared_ptr<VideoSystem> videoSystem;
 	std::shared_ptr<InputSystem> inputSystem;
+	std::shared_ptr<PhysicsSystem> physicsSystem;
 
 	std::unique_ptr<IState> currentState;
 

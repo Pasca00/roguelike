@@ -42,6 +42,9 @@
     <Filter Include="Source Files\core\systems\video\views">
       <UniqueIdentifier>{71c19b28-3311-4c80-ba5c-91c1819f683a}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\core\systems\physics">
+      <UniqueIdentifier>{fda3cc30-9c0a-4aef-bf5e-ae123faeb595}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\main.cpp">
@@ -82,6 +85,9 @@
     </ClCompile>
     <ClCompile Include="src\core\systems\video\views\AnimationView.cpp">
       <Filter>Source Files\core\systems\video\views</Filter>
+    </ClCompile>
+    <ClCompile Include="src\core\systems\physics\PhysicsSystem.cpp">
+      <Filter>Source Files\core\systems\physics</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -471,6 +477,9 @@
     </ClInclude>
     <ClInclude Include="src\core\systems\video\views\AnimationView.h">
       <Filter>Source Files\core\systems\video\views</Filter>
+    </ClInclude>
+    <ClInclude Include="src\core\systems\physics\PhysicsSystem.h">
+      <Filter>Source Files\core\systems\physics</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

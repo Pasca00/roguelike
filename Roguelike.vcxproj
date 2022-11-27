@@ -126,6 +126,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="src\core\systems\physics\PhysicsSystem.cpp" />
     <ClCompile Include="src\core\systems\video\views\IView.cpp" />
     <ClCompile Include="src\core\systems\video\views\AnimationView.cpp" />
     <ClCompile Include="src\core\Game.cpp" />
@@ -141,6 +142,7 @@
     <ClCompile Include="src\main.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="src\core\systems\physics\PhysicsSystem.h" />
     <ClInclude Include="src\core\systems\video\views\IView.h" />
     <ClInclude Include="src\core\systems\video\views\AnimationView.h" />
     <ClInclude Include="libs\sdl\sdl2-2.24.0\include\begin_code.h" />

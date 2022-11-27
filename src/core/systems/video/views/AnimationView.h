@@ -7,9 +7,10 @@
 class AnimationView : public IView {
 public:
 	std::vector<std::unique_ptr<Texture>> frames;
-	uint8_t current_frame;
+	uint8_t currentFrame;
 
 	float frameTime;
+	float timeSinceLastFrame;
 
 private:
 	AnimationView(
@@ -27,5 +28,7 @@ private:
 	);
 
 	GLuint getTextureId();
+
+	void update(float dTime);
 };
 
