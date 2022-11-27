@@ -54,7 +54,7 @@ Renderer::Renderer(int windowHeight, int windowWidth) {
 
 	quad = std::make_unique<Quad>(vertices, indices);
 
-	projectionMatrix = glm::ortho(0.f, (float)windowWidth, 0.f, (float)windowHeight, -0.01f, 10.f);
+	projectionMatrix = glm::ortho(0.f, static_cast<float>(windowWidth), 0.f, static_cast<float>(windowHeight), -0.01f, 10.f);
 }
 
 void Renderer::draw(std::shared_ptr<Texture>& texture, std::shared_ptr<Shader>& shader) {
@@ -76,10 +76,10 @@ void Renderer::draw(std::shared_ptr<Texture>& texture, std::shared_ptr<Shader>& 
 	glBindVertexArray(0);
 }
 
-void Renderer::draw(std::shared_ptr<View>& view, std::shared_ptr<Shader>& shader) {
+void Renderer::draw(std::shared_ptr<IView>& view, std::shared_ptr<Shader>& shader) {
 	glm::mat4 modelMatrix(1);
 	modelMatrix = glm::translate(modelMatrix, glm::vec3(view->getX(), view->getY(), 0));
-	modelMatrix = glm::scale(modelMatrix, glm::vec3(view->getWidth(), view->getHeight(), 1));
+	modelMatrix = glm::scale(modelMatrix, glm::vec3(view->getWidth() * view->getSize(), view->getHeight() * view->getSize(), 1));
 
 	shader->use();
 	shader->setModelMatrix(modelMatrix);

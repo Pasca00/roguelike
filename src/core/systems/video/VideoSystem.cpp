@@ -74,6 +74,20 @@ void VideoSystem::loadInitialTextures() {
 void VideoSystem::clearScreen() {
 	glClearColor(0.5f, 0.1f, 0.1f, 1.0f);
 	glClear(GL_COLOR_BUFFER_BIT);
+}
 
+void VideoSystem::draw(std::shared_ptr<IView> view, std::string shaderName) {
+	this->renderer->draw(view, this->shaders[shaderName]);
+}
+
+void VideoSystem::draw(std::shared_ptr<Texture> texture, std::string shaderName) {
+	this->renderer->draw(texture, this->shaders[shaderName]);
+}
+
+std::shared_ptr<TextureManager> VideoSystem::getTextureManager() {
+	return textureManager;
+}
+
+void VideoSystem::swapWindow() {
 	SDL_GL_SwapWindow(this->window->getSDLWindow());
 }

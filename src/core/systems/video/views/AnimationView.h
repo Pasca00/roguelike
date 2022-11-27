@@ -5,26 +5,26 @@
 #include <vector>
 
 class AnimationView : public IView {
-public:
-	std::vector<std::unique_ptr<Texture>> frames;
+private:
+	std::vector<std::shared_ptr<Texture>> frames;
 	uint8_t currentFrame;
 
 	float frameTime;
 	float timeSinceLastFrame;
 
-private:
+public:
 	AnimationView(
-		std::vector<std::unique_ptr<Texture>>& frames,
-		float frameTime = 60,
-		float x = 0,
-		float y = 0,
-		float size = 1
+		std::vector<std::shared_ptr<Texture>>& frames,
+		float frameTime = 0.2f,
+		float x = 0.f,
+		float y = 0.f,
+		float size = 10.f
 	);
 	AnimationView(
-		std::vector<std::unique_ptr<Texture>>& frames,
+		std::vector<std::shared_ptr<Texture>>& frames,
 		std::unique_ptr<Hitbox>& hitbox,
-		float frameTime = 60,
-		float size = 1
+		float frameTime = 0.2f,
+		float size = 10.f
 	);
 
 	GLuint getTextureId();

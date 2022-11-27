@@ -45,5 +45,5 @@ public:
 	Renderer(int windowWidth, int windowHeight);
 
 	void draw(std::shared_ptr<Texture>& texture, std::shared_ptr<Shader>& shader);
-	void draw(std::shared_ptr<View>& view, std::shared_ptr<Shader>& shader);
+	void draw(std::shared_ptr<IView>& view, std::shared_ptr<Shader>& shader);
 };

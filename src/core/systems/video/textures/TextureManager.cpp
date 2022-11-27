@@ -42,7 +42,7 @@ std::shared_ptr<Texture> TextureManager::makeTexture(unsigned char* textureData,
 
 	stbi_image_free(textureData);
 
-	return std::make_shared<Texture>(textureID, this->width, this->height, this->channels);
+	return std::make_shared<Texture>(textureID, width, height, channels);
 }
 
 std::shared_ptr<Texture> TextureManager::getSingleTextureFromFile(std::string filename) {

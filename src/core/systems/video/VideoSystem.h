@@ -21,8 +21,8 @@
 class VideoSystem : public ISystem {
 private:
 	std::unique_ptr<Window> window;
-	std::unique_ptr<TextureManager> textureManager;
 	std::unique_ptr<Renderer> renderer;
+	std::shared_ptr<TextureManager> textureManager;
 
 	std::unordered_map<std::string, std::shared_ptr<Shader>> shaders;
 
@@ -39,5 +39,10 @@ public:
 
 	void clearScreen();
 
+	std::shared_ptr<TextureManager> getTextureManager();
 
+	void draw(std::shared_ptr<IView> view, std::string shaderName = "base");
+	void draw(std::shared_ptr<Texture> texture, std::string shaderName = "base");
+
+	void swapWindow();
 };

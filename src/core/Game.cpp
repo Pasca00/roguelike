@@ -62,3 +62,7 @@ void Game::draw() {
 void Game::clearScreen() {
 	videoSystem->clearScreen();
 }
+
+void Game::swapWindow() {
+	this->videoSystem->swapWindow();
+}

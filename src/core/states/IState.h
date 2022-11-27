@@ -5,7 +5,7 @@
 #include "../systems/physics/PhysicsSystem.h"
 
 class IState {
-private:
+protected:
 	std::shared_ptr<InputSystem> inputSystem;
 	std::shared_ptr<VideoSystem> videoSystem;
 	std::shared_ptr<PhysicsSystem> physicsSystem;

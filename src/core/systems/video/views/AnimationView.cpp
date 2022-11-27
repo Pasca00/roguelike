@@ -1,25 +1,31 @@
 #include "AnimationView.h"
 
 AnimationView::AnimationView(
-	std::vector<std::unique_ptr<Texture>>& frames,
+	std::vector<std::shared_ptr<Texture>>& frames,
 	float frameTime,
 	float x,
 	float y,
 	float size
-) : IView(x, y, frames[0]->getWidth(), frames[0]->getHeight(), size) {
-	this->frames = std::move(frames);
+) : IView(
+	x, 
+	y, 
+	static_cast<float>(frames[0]->getWidth()),
+	static_cast<float>(frames[0]->getHeight()),
+	size
+) {
+	this->frames = frames;
 	this->frameTime = frameTime;
 	this->currentFrame = 0;
 	this->timeSinceLastFrame = 0;
 }
 
 AnimationView::AnimationView(
-	std::vector<std::unique_ptr<Texture>>& frames,
+	std::vector<std::shared_ptr<Texture>>& frames,
 	std::unique_ptr<Hitbox>& hitbox,
 	float frameTime,
 	float size
 ) : IView(std::move(hitbox), size) {
-	this->frames = std::move(frames);
+	this->frames = frames;
 	this->frameTime = frameTime;
 	this->currentFrame = 0;
 	this->timeSinceLastFrame = 0;

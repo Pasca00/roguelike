@@ -33,5 +33,7 @@ public:
 	void draw();
 	void clearScreen();
 
+	void swapWindow();
+
 	~Game();
 };
