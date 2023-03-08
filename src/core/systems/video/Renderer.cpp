@@ -57,7 +57,13 @@ Renderer::Renderer(int windowHeight, int windowWidth) {
 	projectionMatrix = glm::ortho(0.f, static_cast<float>(windowWidth), 0.f, static_cast<float>(windowHeight), -0.01f, 10.f);
 }
 
-void Renderer::draw(std::shared_ptr<Texture>& texture, std::shared_ptr<Shader>& shader) {
+void Renderer::draw(
+	std::shared_ptr<Texture>& texture, 
+	std::shared_ptr<Shader>& shader,
+	std::unordered_map<std::string, unsigned int>& uintUniforms,
+	std::unordered_map<std::string, int>& intUniforms,
+	std::unordered_map<std::string, float>& floatUniforms
+) {
 	glm::mat4 modelMatrix(1);
 	modelMatrix = glm::translate(modelMatrix, glm::vec3(0, 0, 0));
 	modelMatrix = glm::scale(modelMatrix, glm::vec3(texture->getWidth(), texture->getHeight(), 1));
@@ -76,7 +82,13 @@ void Renderer::draw(std::shared_ptr<Texture>& texture, std::shared_ptr<Shader>& 
 	glBindVertexArray(0);
 }
 
-void Renderer::draw(std::shared_ptr<IView>& view, std::shared_ptr<Shader>& shader) {
+void Renderer::draw(
+	std::shared_ptr<IView>& view,
+	std::shared_ptr<Shader>& shader,
+	std::unordered_map<std::string, unsigned int>& uintUniforms,
+	std::unordered_map<std::string, int>& intUniforms,
+	std::unordered_map<std::string, float>& floatUniforms
+) {
 	glm::mat4 modelMatrix(1);
 	modelMatrix = glm::translate(modelMatrix, glm::vec3(view->getX(), view->getY(), 0));
 	modelMatrix = glm::scale(modelMatrix, glm::vec3(view->getWidth() * view->getSize(), view->getHeight() * view->getSize(), 1));
@@ -84,6 +96,10 @@ void Renderer::draw(std::shared_ptr<IView>& view, std::shared_ptr<Shader>& shade
 	shader->use();
 	shader->setModelMatrix(modelMatrix);
 	shader->setProjectionMatrix(this->projectionMatrix);
+
+	this->setUintUniforms(shader, uintUniforms);
+	this->setIntUniforms(shader, intUniforms);
+	this->setFloatUniforms(shader, floatUniforms);
 
 	glActiveTexture(GL_TEXTURE0);
 	glBindTexture(GL_TEXTURE_2D, view->getTextureId());
@@ -93,4 +109,22 @@ void Renderer::draw(std::shared_ptr<IView>& view, std::shared_ptr<Shader>& shade
 	glDrawArrays(GL_QUADS, 0, quad->getIndices().size());
 
 	glBindVertexArray(0);
+}
+
+void Renderer::setUintUniforms(std::shared_ptr<Shader>& shader, std::unordered_map<std::string, unsigned int>& uniforms) {
+	for (auto it = uniforms.begin(); it != uniforms.end(); it++) {
+		glUniform1ui(shader->getUniformLocation(it->first), it->second);
+	}
+}
+
+void Renderer::setIntUniforms(std::shared_ptr<Shader>& shader, std::unordered_map<std::string, int>& uniforms) {
+	for (auto it = uniforms.begin(); it != uniforms.end(); it++) {
+		glUniform1i(shader->getUniformLocation(it->first), it->second);
+	}
+}
+
+void Renderer::setFloatUniforms(std::shared_ptr<Shader>& shader, std::unordered_map<std::string, float>& uniforms) {
+	for (auto it = uniforms.begin(); it != uniforms.end(); it++) {
+		glUniform1f(shader->getUniformLocation(it->first), it->second);
+	}
 }

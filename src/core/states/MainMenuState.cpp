@@ -39,5 +39,6 @@ void MainMenuState::render() {
 	this->videoSystem->draw(this->views["idle"]);
 	this->videoSystem->unbindFramebuffer();
 
-	this->videoSystem->drawFrameBuffer("rain", physicsSystem->getTotalTime());
+	this->videoSystem->setUintUniform("time", this->physicsSystem->getTotalTime());
+	this->videoSystem->drawFrameBuffer("rain");
 };

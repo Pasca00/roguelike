@@ -13,6 +13,7 @@ void VideoSystem::init() {
 	this->initComponents();
 	this->initShaders();
 	this->loadInitialTextures();
+	this->initUniforms();
 }
 
 void VideoSystem::initSDL() {
@@ -75,18 +76,46 @@ void VideoSystem::initShaders() {
 void VideoSystem::loadInitialTextures() {
 	
 }
-	
+
+void VideoSystem::initUniforms() {
+	this->uintUniforms = std::unordered_map<std::string, unsigned int>();
+	this->intUniforms = std::unordered_map<std::string, int>();
+	this->floatUniforms = std::unordered_map<std::string, float>();
+}
+
+void VideoSystem::clearUniforms() {
+	this->uintUniforms.clear();
+	this->intUniforms.clear();
+	this->floatUniforms.clear();
+}
+
 void VideoSystem::clearScreen() {
 	glClearColor(0.5f, 0.1f, 0.1f, 1.0f);
 	glClear(GL_COLOR_BUFFER_BIT);
 }
 
 void VideoSystem::draw(std::shared_ptr<IView> view, std::string shaderName) {
-	this->renderer->draw(view, this->shaders[shaderName]);
+	this->renderer->draw(
+		view, 
+		this->shaders[shaderName],
+		this->uintUniforms,
+		this->intUniforms,
+		this->floatUniforms
+	);
+
+	this->clearUniforms();
 }
 
 void VideoSystem::draw(std::shared_ptr<Texture> texture, std::string shaderName) {
-	this->renderer->draw(texture, this->shaders[shaderName]);
+	this->renderer->draw(
+		texture, 
+		this->shaders[shaderName],
+		this->uintUniforms,
+		this->intUniforms,
+		this->floatUniforms
+	);
+
+	this->clearUniforms();
 }
 
 std::shared_ptr<TextureManager> VideoSystem::getTextureManager() {
@@ -94,7 +123,7 @@ std::shared_ptr<TextureManager> VideoSystem::getTextureManager() {
 }
 
 void VideoSystem::swapWindow() {
-	SDL_GL_SwapWindow(this->window->getSDLWindow());
+	SDL_GL_SwapWindow(this->window->getSDLWindow());	
 }
 
 int VideoSystem::getWindowWidth() {
@@ -124,9 +153,18 @@ void VideoSystem::unbindFramebuffer() {
 	this->clearScreen();
 }
 
-void VideoSystem::drawFrameBuffer(std::string shaderName, unsigned int time) {
-	shaders[shaderName]->use();
-	glUniform1ui(shaders[shaderName]->getUniformLocation("time"), time);
-
+void VideoSystem::drawFrameBuffer(std::string shaderName) {
 	this->draw(this->framebuffer->getView(), shaderName);
+}
+
+void VideoSystem::setUintUniform(std::string key, unsigned int value) {
+	this->uintUniforms[key] = value;
+}
+
+void VideoSystem::setIntUniform(std::string key, int value) {
+	this->intUniforms[key] = value;
+}
+
+void VideoSystem::setFloatUniform(std::string key, float value) {
+	this->floatUniforms[key] = value;
 }

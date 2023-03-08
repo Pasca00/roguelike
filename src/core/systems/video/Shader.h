@@ -24,6 +24,7 @@ public:
 	void compile();
 
 	GLint getUniformLocation(const char* name);
+	GLint getUniformLocation(const std::string& name);
 
 	void setModelMatrix(glm::mat4& modelMatrix);
 	void setProjectionMatrix(glm::mat4& projectionMatrix);

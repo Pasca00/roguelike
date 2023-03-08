@@ -29,6 +29,10 @@ private:
 
 	std::unique_ptr<Framebuffer> framebuffer;
 
+	std::unordered_map<std::string, unsigned int> uintUniforms;
+	std::unordered_map<std::string, int> intUniforms;
+	std::unordered_map<std::string, float> floatUniforms;
+
 	GLint window_fbo;
 
 	void initSDL();
@@ -38,6 +42,9 @@ private:
 	void initComponents();
 	void initShaders();
 	void loadInitialTextures();
+	void initUniforms();
+
+	void clearUniforms();
 
 public:
 	void init();
@@ -57,5 +64,9 @@ public:
 	void initFramebuffer();
 	void bindFrameBuffer(bool clearBuffer = true);
 	void unbindFramebuffer();
-	void drawFrameBuffer(std::string shaderName = "base", unsigned int time = 0);
+	void drawFrameBuffer(std::string shaderName = "base");
+
+	void setUintUniform(std::string key, unsigned int value);
+	void setIntUniform(std::string key, int value);
+	void setFloatUniform(std::string key, float value);
 };

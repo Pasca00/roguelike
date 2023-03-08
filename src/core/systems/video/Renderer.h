@@ -2,6 +2,7 @@
 
 #include <memory>
 #include <vector>
+#include <unordered_map>
 #include <gl/glew.h>
 
 #include "Shader.h"
@@ -41,9 +42,25 @@ private:
 	std::unique_ptr<Quad> quad;
 	glm::mat4 projectionMatrix;
 
+	void setUintUniforms(std::shared_ptr<Shader>& shader, std::unordered_map<std::string, unsigned int>& uniforms);
+	void setIntUniforms(std::shared_ptr<Shader>& shader, std::unordered_map<std::string, int>& uniforms);
+	void setFloatUniforms(std::shared_ptr<Shader>& shader, std::unordered_map<std::string, float>& uniforms);
+
 public:
 	Renderer(int windowWidth, int windowHeight);
 
-	void draw(std::shared_ptr<Texture>& texture, std::shared_ptr<Shader>& shader);
-	void draw(std::shared_ptr<IView>& view, std::shared_ptr<Shader>& shader);
+	void draw(
+		std::shared_ptr<Texture>& texture, 
+		std::shared_ptr<Shader>& shader,
+		std::unordered_map<std::string, unsigned int>& uintUniforms,
+		std::unordered_map<std::string, int>& intUniforms,
+		std::unordered_map<std::string, float>& floatUniforms
+	);
+	void draw(
+		std::shared_ptr<IView>& view, 
+		std::shared_ptr<Shader>& shader,
+		std::unordered_map<std::string, unsigned int>& uintUniforms,
+		std::unordered_map<std::string, int>& intUniforms,
+		std::unordered_map<std::string, float>& floatUniforms
+	);
 };
