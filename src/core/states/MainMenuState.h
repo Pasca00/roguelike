@@ -5,8 +5,7 @@
 
 class MainMenuState : public IState {
 private:
-	std::shared_ptr<AnimationView> test;
-	std::shared_ptr<Texture> test_t;
+	std::unordered_map<std::string, std::shared_ptr<IView>> views;
 	
 public:
 	MainMenuState(

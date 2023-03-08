@@ -15,7 +15,7 @@ private:
 public:
 	AnimationView(
 		std::vector<std::shared_ptr<Texture>>& frames,
-		float frameTime = 0.2f,
+		float frameTime = 0.15f,
 		float x = 0.f,
 		float y = 0.f,
 		float size = 10.f
@@ -23,12 +23,12 @@ public:
 	AnimationView(
 		std::vector<std::shared_ptr<Texture>>& frames,
 		std::unique_ptr<Hitbox>& hitbox,
-		float frameTime = 0.2f,
+		float frameTime = 0.15f,
 		float size = 10.f
 	);
 
 	GLuint getTextureId();
 
-	void update(float dTime);
+	void update(float dTime) override;
 };
 

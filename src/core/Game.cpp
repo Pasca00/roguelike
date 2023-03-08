@@ -42,7 +42,7 @@ Game::~Game() {
 }
 
 bool Game::shouldRun() {
-	return true;
+	return !this->inputSystem->getInput()->getAction("QUIT");
 }
 
 void Game::collectInput() {

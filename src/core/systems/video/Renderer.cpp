@@ -80,7 +80,7 @@ void Renderer::draw(std::shared_ptr<IView>& view, std::shared_ptr<Shader>& shade
 	glm::mat4 modelMatrix(1);
 	modelMatrix = glm::translate(modelMatrix, glm::vec3(view->getX(), view->getY(), 0));
 	modelMatrix = glm::scale(modelMatrix, glm::vec3(view->getWidth() * view->getSize(), view->getHeight() * view->getSize(), 1));
-
+	
 	shader->use();
 	shader->setModelMatrix(modelMatrix);
 	shader->setProjectionMatrix(this->projectionMatrix);

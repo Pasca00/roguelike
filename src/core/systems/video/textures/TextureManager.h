@@ -12,10 +12,9 @@
 
 class TextureManager {
 private:
-    int width;
+    int width = 0;
     int height = 0;
     int channels = 0;
-    int textureID = 0;
 
 	GLuint targetType;
 
@@ -37,4 +36,6 @@ public:
 		unsigned int spriteWidth = 32, 
 		unsigned int spriteHeight = 32
 	);
+
+	std::shared_ptr<Texture> makeFramebufferTexture(int width, int height, int channels = 4);
 };

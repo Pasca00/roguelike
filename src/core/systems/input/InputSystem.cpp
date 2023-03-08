@@ -88,3 +88,7 @@ void InputSystem::collectInput() {
 		}
 	}
 }
+
+std::shared_ptr<Input> InputSystem::getInput() {
+	return this->input;
+}

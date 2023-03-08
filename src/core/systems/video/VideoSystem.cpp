@@ -34,6 +34,9 @@ void VideoSystem::initGL() {
 		std::cout << "Failed to create OpenGL context\n";
 	}
 
+	this->window_fbo = 0;
+	glGetIntegerv(GL_FRAMEBUFFER_BINDING, &this->window_fbo);
+
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 	glEnable(GL_BLEND);
 
@@ -55,16 +58,18 @@ void VideoSystem::setGLAttributes() {
 	SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 3);
 	SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 3);
 
-	SDL_GL_SetAttribute(SDL_GL_RED_SIZE, 5);
-	SDL_GL_SetAttribute(SDL_GL_GREEN_SIZE, 5);
-	SDL_GL_SetAttribute(SDL_GL_BLUE_SIZE, 5);
-	SDL_GL_SetAttribute(SDL_GL_ALPHA_SIZE, 5);
+	SDL_GL_SetAttribute(SDL_GL_RED_SIZE, 8);
+	SDL_GL_SetAttribute(SDL_GL_GREEN_SIZE, 8);
+	SDL_GL_SetAttribute(SDL_GL_BLUE_SIZE, 8);
+	SDL_GL_SetAttribute(SDL_GL_ALPHA_SIZE, 8);
 	SDL_GL_SetAttribute(SDL_GL_DEPTH_SIZE, 16);
 	SDL_GL_SetAttribute(SDL_GL_DOUBLEBUFFER, 1);
+	//SDL_GL_SetAttribute(SDL_GL_ACCELERATED_VISUAL, 1);
 }
 
 void VideoSystem::initShaders() {
 	this->shaders["base"] = std::make_shared<Shader>(Paths::SHADERS_DIR.c_str(), "Base");
+	this->shaders["rain"] = std::make_shared<Shader>(Paths::SHADERS_DIR.c_str(), "Rain");
 }
 
 void VideoSystem::loadInitialTextures() {
@@ -90,4 +95,38 @@ std::shared_ptr<TextureManager> VideoSystem::getTextureManager() {
 
 void VideoSystem::swapWindow() {
 	SDL_GL_SwapWindow(this->window->getSDLWindow());
+}
+
+int VideoSystem::getWindowWidth() {
+	return this->window->getWidth();
+}
+
+int VideoSystem::getWindowHeight() {
+	return this->window->getHeight();
+}
+
+void VideoSystem::initFramebuffer() {
+	this->framebuffer = std::make_unique<Framebuffer>(
+		this->window_fbo,
+		this->textureManager, 
+		getWindowWidth(),
+		getWindowHeight(),
+		4
+	);
+}
+
+void VideoSystem::bindFrameBuffer(bool clearBuffer) {
+	this->framebuffer->bind(clearBuffer);
+}
+
+void VideoSystem::unbindFramebuffer() {
+	this->framebuffer->unbind();
+	this->clearScreen();
+}
+
+void VideoSystem::drawFrameBuffer(std::string shaderName, unsigned int time) {
+	shaders[shaderName]->use();
+	glUniform1ui(shaders[shaderName]->getUniformLocation("time"), time);
+
+	this->draw(this->framebuffer->getView(), shaderName);
 }

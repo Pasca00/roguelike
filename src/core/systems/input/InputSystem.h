@@ -35,4 +35,6 @@ public:
 	void init();
 
 	void collectInput();
+
+	std::shared_ptr<Input> getInput();
 };

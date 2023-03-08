@@ -29,3 +29,5 @@ float IView::getY() {
 float IView::getSize() {
 	return this->size;
 }
+
+void IView::update(float dTime) { }

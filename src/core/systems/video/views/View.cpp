@@ -1,20 +1,20 @@
 #include "View.h"
 
 View::View(
-	std::unique_ptr<Texture>& texture, 
+	std::shared_ptr<Texture>& texture, 
 	float x, 
 	float y, 
 	float size
-) : IView(x, y, texture->getWidth(), texture->getHeight()) {
-	this->texture = std::move(texture);
+) : IView(x, y, texture->getWidth(), texture->getHeight(), size) {
+	this->texture = texture;
 }
 
 View::View(
-	std::unique_ptr<Texture>& texture,
+	std::shared_ptr<Texture>& texture,
 	std::unique_ptr<Hitbox>& hitbox, 
 	float size
 ) : IView(std::move(hitbox), size) {
-	this->texture = std::move(texture);
+	this->texture = texture;
 }
 
 GLuint View::getTextureId() {

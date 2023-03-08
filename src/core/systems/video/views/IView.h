@@ -23,5 +23,7 @@ public:
 	float getSize();
 
 	virtual GLuint getTextureId() = 0;
+
+	virtual void update(float dTime);
 };
 

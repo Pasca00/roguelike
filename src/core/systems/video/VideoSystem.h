@@ -17,6 +17,7 @@
 #include "Shader.h"
 #include "textures/TextureManager.h"
 #include "../../Paths.h"
+#include "Framebuffer.h"
 
 class VideoSystem : public ISystem {
 private:
@@ -25,6 +26,10 @@ private:
 	std::shared_ptr<TextureManager> textureManager;
 
 	std::unordered_map<std::string, std::shared_ptr<Shader>> shaders;
+
+	std::unique_ptr<Framebuffer> framebuffer;
+
+	GLint window_fbo;
 
 	void initSDL();
 	void setGLAttributes();
@@ -45,4 +50,12 @@ public:
 	void draw(std::shared_ptr<Texture> texture, std::string shaderName = "base");
 
 	void swapWindow();
+
+	int getWindowWidth();
+	int getWindowHeight();
+
+	void initFramebuffer();
+	void bindFrameBuffer(bool clearBuffer = true);
+	void unbindFramebuffer();
+	void drawFrameBuffer(std::string shaderName = "base", unsigned int time = 0);
 };

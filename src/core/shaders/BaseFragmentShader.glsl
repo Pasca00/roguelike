@@ -7,10 +7,12 @@ uniform float time;
 
 uniform int render_flipped;
 
+layout(location = 0) out vec4 out_color;
+
 void main() {
 	if (render_flipped == 1) {
-		gl_FragColor = texture2D(in_texture, vec2(1 - tex_coord.x, tex_coord.y));
+		out_color = texture2D(in_texture, vec2(1 - tex_coord.x, tex_coord.y));
 	} else {
-		gl_FragColor = texture2D(in_texture, tex_coord);
+		out_color = texture2D(in_texture, tex_coord);
 	}
 }

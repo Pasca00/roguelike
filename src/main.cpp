@@ -7,12 +7,12 @@ int main(int argc, char** argv) {
 	Game* game = Game::getInstance();
 
 	while (game->shouldRun()) {
-		game->swapWindow();
-
 		game->collectInput();
 		game->update();
 		game->clearScreen();
 		game->draw();
+
+		game->swapWindow();
 	}
 
 	delete game;

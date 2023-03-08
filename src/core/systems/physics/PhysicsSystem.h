@@ -10,6 +10,7 @@ private:
 	uint64_t currTime;
 
 	float dTime;
+	float totalTime;
 
 public:
 	PhysicsSystem();
@@ -18,4 +19,6 @@ public:
 
 	void computeFrameDeltaTime();
 	float getFrameDeltaTime();
+	
+	unsigned int getTotalTime();
 };

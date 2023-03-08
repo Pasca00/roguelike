@@ -12,7 +12,7 @@ void WindowConfig::resolveDefaultConfig() {
 	SDL_DisplayMode displayMode;
 	SDL_GetDesktopDisplayMode(0, &displayMode);
 
-	float displayRatio = 0.8;
+	float displayRatio = 0.75;
 
 	this->width = displayMode.w * displayRatio;
 	this->height = displayMode.h * displayRatio;

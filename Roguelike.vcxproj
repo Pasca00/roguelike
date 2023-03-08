@@ -127,6 +127,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="src\core\systems\physics\PhysicsSystem.cpp" />
+    <ClCompile Include="src\core\systems\video\Framebuffer.cpp" />
     <ClCompile Include="src\core\systems\video\views\IView.cpp" />
     <ClCompile Include="src\core\systems\video\views\AnimationView.cpp" />
     <ClCompile Include="src\core\Game.cpp" />
@@ -143,6 +144,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\core\systems\physics\PhysicsSystem.h" />
+    <ClInclude Include="src\core\systems\video\Framebuffer.h" />
     <ClInclude Include="src\core\systems\video\views\IView.h" />
     <ClInclude Include="src\core\systems\video\views\AnimationView.h" />
     <ClInclude Include="libs\sdl\sdl2-2.24.0\include\begin_code.h" />
@@ -279,6 +281,8 @@
   <ItemGroup>
     <None Include="src\core\shaders\BaseFragmentShader.glsl" />
     <None Include="src\core\shaders\BaseVertexShader.glsl" />
+    <None Include="src\core\shaders\RainFragmentShader.glsl" />
+    <None Include="src\core\shaders\RainVertexShader.glsl" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
