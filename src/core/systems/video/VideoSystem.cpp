@@ -3,6 +3,14 @@
 
 #include <iostream>
 
+#include <ft2build.h>
+#include <freetype/freetype.h>
+#include <freetype/ftmm.h>
+#include <freetype/ftglyph.h>
+
+#define STB_IMAGE_WRITE_IMPLEMENTATION
+#include "../../../stb/stb_image_write.h"
+
 void VideoSystem::init() {
 	std::cout << "Initializing video system\n";
 
@@ -10,6 +18,7 @@ void VideoSystem::init() {
 	this->setGLAttributes();
 	this->initWindow();
 	this->initGL();
+	this->loadGlyphs();
 	this->initComponents();
 	this->initShaders();
 	this->loadInitialTextures();
@@ -51,13 +60,13 @@ void VideoSystem::initGL() {
 
 void VideoSystem::initComponents() {
 	this->textureManager = std::make_unique<TextureManager>();
-	this->renderer = std::make_unique<Renderer>(this->window->getHeight(), this->window->getWidth());
+	this->renderer = std::make_unique<Renderer>(this->window->getHeight(), this->window->getWidth(), this->characters);
 }
-
 
 void VideoSystem::setGLAttributes() {
 	SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 3);
-	SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 3);
+	SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, 3);
+	SDL_GL_SetAttribute(SDL_GL_CONTEXT_PROFILE_MASK, SDL_GL_CONTEXT_PROFILE_COMPATIBILITY);
 
 	SDL_GL_SetAttribute(SDL_GL_RED_SIZE, 8);
 	SDL_GL_SetAttribute(SDL_GL_GREEN_SIZE, 8);
@@ -71,6 +80,7 @@ void VideoSystem::setGLAttributes() {
 void VideoSystem::initShaders() {
 	this->shaders["base"] = std::make_shared<Shader>(Paths::SHADERS_DIR.c_str(), "Base");
 	this->shaders["rain"] = std::make_shared<Shader>(Paths::SHADERS_DIR.c_str(), "Rain");
+	this->shaders["text"] = std::make_shared<Shader>(Paths::SHADERS_DIR.c_str(), "Text");
 }
 
 void VideoSystem::loadInitialTextures() {
@@ -81,6 +91,67 @@ void VideoSystem::initUniforms() {
 	this->uintUniforms = std::unordered_map<std::string, unsigned int>();
 	this->intUniforms = std::unordered_map<std::string, int>();
 	this->floatUniforms = std::unordered_map<std::string, float>();
+}
+
+void VideoSystem::loadGlyphs() {
+	FT_Library library;
+	auto error = FT_Init_FreeType(&library);
+	if (error) {
+		printf("ERROR OCCURED DURING FREETYPE INITIALIZATION\n");
+	}
+
+	FT_Face face;
+	if (FT_New_Face(library, (Paths::FONTS_DIR + "Pixellari.ttf").c_str(), 0, &face)) {
+		printf("ERROR FAILED TO LOAD FREETYPE FONT");
+	}
+
+	glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
+
+	glEnable(GL_BLEND);
+	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+
+	FT_Set_Pixel_Sizes(face, 0, 48);
+	for (unsigned char c = 0; c < 128; c++) {
+		if (FT_Load_Char(face, c, FT_LOAD_RENDER)) {
+			std::cout << "ERROR FAILED TO LOAD GLYPH: " << c << '\n';
+			continue;
+		}
+
+		GLuint textureId;
+		glGenTextures(1, &textureId);
+		glBindTexture(GL_TEXTURE_2D, textureId);
+		glTexImage2D(
+			GL_TEXTURE_2D,
+			0,
+			GL_R8,
+			face->glyph->bitmap.width,
+			face->glyph->bitmap.rows,
+			0,
+			GL_RED,
+			GL_UNSIGNED_BYTE,
+			face->glyph->bitmap.buffer
+		);
+
+		// set texture options
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+		// now store character for later use
+		Character* character = new Character(
+			textureId,
+			glm::ivec2(face->glyph->bitmap.width, face->glyph->bitmap.rows),
+			glm::ivec2(face->glyph->bitmap_left, face->glyph->bitmap_top),
+			face->glyph->advance.x
+		);
+		this->characters[c] = character;
+	}
+
+
+	FT_Done_Face(face);
+	FT_Done_FreeType(library);
+
+	glPixelStorei(GL_PACK_ALIGNMENT, 1);
 }
 
 void VideoSystem::clearUniforms() {
@@ -116,6 +187,16 @@ void VideoSystem::draw(std::shared_ptr<Texture> texture, std::string shaderName)
 	);
 
 	this->clearUniforms();
+}
+
+void VideoSystem::drawText(std::shared_ptr<TextView> textView, std::string shaderName) {
+	this->renderer->drawText(
+		textView, 
+		this->shaders["text"],
+		this->uintUniforms,
+		this->intUniforms,
+		this->floatUniforms
+	);
 }
 
 std::shared_ptr<TextureManager> VideoSystem::getTextureManager() {

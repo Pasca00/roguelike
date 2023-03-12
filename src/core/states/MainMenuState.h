@@ -2,10 +2,13 @@
 
 #include "IState.h"
 #include "../systems/video/views/AnimationView.h"
+#include "../systems/video/views/TextView.h"
 
 class MainMenuState : public IState {
 private:
 	std::unordered_map<std::string, std::shared_ptr<IView>> views;
+
+	std::shared_ptr<TextView> textView;
 	
 public:
 	MainMenuState(

@@ -3,14 +3,28 @@
 
 #include "core/Game.h"
 
+const int SCREEN_FPS = 60;
+const float SCREEN_TICKS_PER_FRAME = 1000.0 / SCREEN_FPS;
+
 int main(int argc, char** argv) {
 	Game* game = Game::getInstance();
 
+	Uint64 start;
+	Uint64 end;
+
 	while (game->shouldRun()) {
+		start = SDL_GetPerformanceCounter();
+
 		game->collectInput();
 		game->update();
 		game->clearScreen();
 		game->draw();
+
+		end = SDL_GetPerformanceCounter();
+
+		float elapsed = (end - start) / (float)SDL_GetPerformanceFrequency() * 1000.f;
+		float delay = SCREEN_TICKS_PER_FRAME - elapsed > 0 ? SCREEN_TICKS_PER_FRAME - elapsed : 0;
+		SDL_Delay(floor(delay));
 
 		game->swapWindow();
 	}

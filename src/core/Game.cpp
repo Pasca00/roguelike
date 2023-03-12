@@ -66,3 +66,7 @@ void Game::clearScreen() {
 void Game::swapWindow() {
 	this->videoSystem->swapWindow();
 }
+
+float Game::getFrameTime() {
+	return this->physicsSystem->getFrameDeltaTime();
+}

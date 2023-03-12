@@ -23,6 +23,8 @@ MainMenuState::MainMenuState(
 	this->views["titlescreen"] = std::static_pointer_cast<IView>(
 		std::make_shared<View>(titlescreen, 0, 0, 5)
 	);
+
+	this->textView = std::make_shared<TextView>("PLAY", 0, 0, 48, 48);
 }
 
 void MainMenuState::handleInput() {
@@ -30,15 +32,18 @@ void MainMenuState::handleInput() {
 }
 
 void MainMenuState::update(float dTime) {
-	this->views["idle"]->update(dTime);
+	this->views["running"]->update(dTime);
 };
 
 void MainMenuState::render() {
 	this->videoSystem->bindFrameBuffer();
+
 	this->videoSystem->draw(this->views["titlescreen"]);
-	this->videoSystem->draw(this->views["idle"]);
+	this->videoSystem->draw(this->views["running"]);
+	this->videoSystem->drawText(this->textView);
+
 	this->videoSystem->unbindFramebuffer();
 
 	this->videoSystem->setUintUniform("time", this->physicsSystem->getTotalTime());
-	this->videoSystem->drawFrameBuffer("rain");
+	this->videoSystem->drawFrameBuffer("base");
 };

@@ -92,6 +92,9 @@
     <ClCompile Include="src\core\systems\video\Framebuffer.cpp">
       <Filter>Source Files\core\systems\video</Filter>
     </ClCompile>
+    <ClCompile Include="src\core\systems\video\views\TextView.cpp">
+      <Filter>Source Files\core\systems\video\views</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="libs\sdl\sdl2-2.24.0\include\begin_code.h">
@@ -487,6 +490,9 @@
     <ClInclude Include="src\core\systems\video\Framebuffer.h">
       <Filter>Source Files\core\systems\video</Filter>
     </ClInclude>
+    <ClInclude Include="src\core\systems\video\views\TextView.h">
+      <Filter>Source Files\core\systems\video\views</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Text Include="src\glm\CMakeLists.txt">
@@ -504,6 +510,12 @@
       <Filter>Source Files\core\shaders</Filter>
     </None>
     <None Include="src\core\shaders\RainVertexShader.glsl">
+      <Filter>Source Files\core\shaders</Filter>
+    </None>
+    <None Include="src\core\shaders\TextFragmentShader.glsl">
+      <Filter>Source Files\core\shaders</Filter>
+    </None>
+    <None Include="src\core\shaders\TextVertexShader.glsl">
       <Filter>Source Files\core\shaders</Filter>
     </None>
   </ItemGroup>

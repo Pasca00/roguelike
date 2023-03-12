@@ -35,5 +35,7 @@ public:
 
 	void swapWindow();
 
+	float getFrameTime();
+
 	~Game();
 };

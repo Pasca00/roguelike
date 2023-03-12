@@ -26,6 +26,8 @@ private:
 	std::shared_ptr<TextureManager> textureManager;
 
 	std::unordered_map<std::string, std::shared_ptr<Shader>> shaders;
+	
+	Character* characters[128];
 
 	std::unique_ptr<Framebuffer> framebuffer;
 
@@ -46,6 +48,8 @@ private:
 
 	void clearUniforms();
 
+	void loadGlyphs();
+
 public:
 	void init();
 
@@ -55,6 +59,7 @@ public:
 
 	void draw(std::shared_ptr<IView> view, std::string shaderName = "base");
 	void draw(std::shared_ptr<Texture> texture, std::string shaderName = "base");
+	void drawText(std::shared_ptr<TextView> textView, std::string shaderName = "base");
 
 	void swapWindow();
 

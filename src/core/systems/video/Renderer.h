@@ -8,6 +8,7 @@
 #include "Shader.h"
 #include "textures/Texture.h"
 #include "views/View.h"
+#include "views/TextView.h"
 
 #include "../../../glm/glm.hpp"
 #include "../../../glm/gtc/matrix_transform.hpp"
@@ -37,17 +38,28 @@ public:
 	std::vector<unsigned int> getIndices();
 };
 
+struct Character {
+	unsigned int TextureID;
+	glm::ivec2   Size;
+	glm::ivec2   Bearing;
+	unsigned int Advance;
+
+	Character(unsigned int TextureID, glm::ivec2 Size, glm::ivec2 Bearing, unsigned int Advance);
+};
+
 class Renderer {
 private:
 	std::unique_ptr<Quad> quad;
 	glm::mat4 projectionMatrix;
+
+	Character** characters;
 
 	void setUintUniforms(std::shared_ptr<Shader>& shader, std::unordered_map<std::string, unsigned int>& uniforms);
 	void setIntUniforms(std::shared_ptr<Shader>& shader, std::unordered_map<std::string, int>& uniforms);
 	void setFloatUniforms(std::shared_ptr<Shader>& shader, std::unordered_map<std::string, float>& uniforms);
 
 public:
-	Renderer(int windowWidth, int windowHeight);
+	Renderer(int windowWidth, int windowHeight, Character** characters);
 
 	void draw(
 		std::shared_ptr<Texture>& texture, 
@@ -58,6 +70,13 @@ public:
 	);
 	void draw(
 		std::shared_ptr<IView>& view, 
+		std::shared_ptr<Shader>& shader,
+		std::unordered_map<std::string, unsigned int>& uintUniforms,
+		std::unordered_map<std::string, int>& intUniforms,
+		std::unordered_map<std::string, float>& floatUniforms
+	);
+	void drawText(
+		std::shared_ptr<TextView>& view,
 		std::shared_ptr<Shader>& shader,
 		std::unordered_map<std::string, unsigned int>& uintUniforms,
 		std::unordered_map<std::string, int>& intUniforms,

@@ -69,12 +69,12 @@
     <LinkIncremental>true</LinkIncremental>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-    <IncludePath>C:\Users\alexp\Desktop\Roguelike\libs\SDL\SDL2-2.24.0\include;C:\Users\alexp\Desktop\Roguelike\libs\glew-2.1.0\include;$(IncludePath)</IncludePath>
-    <LibraryPath>C:\Users\alexp\Desktop\Roguelike\libs\SDL\SDL2-2.24.0\lib\x64;C:\Users\alexp\Desktop\Roguelike\libs\glew-2.1.0\lib\Release\x64;$(LibraryPath)</LibraryPath>
+    <IncludePath>C:\Users\alexp\Desktop\Roguelike\libs\SDL\SDL2-2.24.0\include;C:\Users\alexp\Desktop\Roguelike\libs\glew-2.1.0\include;C:\Users\alexp\Desktop\Roguelike\libs\FreeType\include;$(IncludePath)</IncludePath>
+    <LibraryPath>C:\Users\alexp\Desktop\Roguelike\libs\SDL\SDL2-2.24.0\lib\x64;C:\Users\alexp\Desktop\Roguelike\libs\glew-2.1.0\lib\Release\x64;C:\Users\alexp\Desktop\Roguelike\libs\FreeType\lib;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
-    <IncludePath>C:\Users\alexp\Desktop\Roguelike\libs\SDL\SDL2-2.24.0\include;C:\Users\alexp\Desktop\Roguelike\libs\glew-2.1.0\include;$(IncludePath)</IncludePath>
-    <LibraryPath>C:\Users\alexp\Desktop\Roguelike\libs\SDL\SDL2-2.24.0\lib\x64;C:\Users\alexp\Desktop\Roguelike\libs\glew-2.1.0\lib\Release\x64;$(LibraryPath)</LibraryPath>
+    <IncludePath>C:\Users\alexp\Desktop\Roguelike\libs\SDL\SDL2-2.24.0\include;C:\Users\alexp\Desktop\Roguelike\libs\glew-2.1.0\include;C:\Users\alexp\Desktop\Roguelike\libs\FreeType\include;$(IncludePath)</IncludePath>
+    <LibraryPath>C:\Users\alexp\Desktop\Roguelike\libs\SDL\SDL2-2.24.0\lib\x64;C:\Users\alexp\Desktop\Roguelike\libs\glew-2.1.0\lib\Release\x64;C:\Users\alexp\Desktop\Roguelike\libs\FreeType\lib;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
@@ -109,7 +109,7 @@
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <Link>
-      <AdditionalDependencies>opengl32.lib;glu32.lib;glew32s.lib;SDL2.lib;SDL2main.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>opengl32.lib;glu32.lib;glew32s.lib;SDL2.lib;SDL2main.lib;freetype.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <EntryPointSymbol>
       </EntryPointSymbol>
       <SubSystem>Console</SubSystem>
@@ -118,7 +118,7 @@
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <Link>
-      <AdditionalDependencies>opengl32.lib;glu32.lib;glew32s.lib;SDL2.lib;SDL2main.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>opengl32.lib;glu32.lib;glew32s.lib;SDL2.lib;SDL2main.lib;freetype.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <EntryPointSymbol>
       </EntryPointSymbol>
       <SubSystem>Console</SubSystem>
@@ -138,6 +138,7 @@
     <ClCompile Include="src\core\systems\video\textures\Texture.cpp" />
     <ClCompile Include="src\core\systems\video\textures\TextureManager.cpp" />
     <ClCompile Include="src\core\systems\video\VideoSystem.cpp" />
+    <ClCompile Include="src\core\systems\video\views\TextView.cpp" />
     <ClCompile Include="src\core\systems\video\views\View.cpp" />
     <ClCompile Include="src\core\systems\video\Window.cpp" />
     <ClCompile Include="src\main.cpp" />
@@ -247,6 +248,7 @@
     <ClInclude Include="src\core\systems\video\textures\Texture.h" />
     <ClInclude Include="src\core\systems\video\textures\TextureManager.h" />
     <ClInclude Include="src\core\systems\video\VideoSystem.h" />
+    <ClInclude Include="src\core\systems\video\views\TextView.h" />
     <ClInclude Include="src\core\systems\video\views\View.h" />
     <ClInclude Include="src\core\systems\video\Window.h" />
     <ClInclude Include="src\glm\common.hpp" />
@@ -283,6 +285,8 @@
     <None Include="src\core\shaders\BaseVertexShader.glsl" />
     <None Include="src\core\shaders\RainFragmentShader.glsl" />
     <None Include="src\core\shaders\RainVertexShader.glsl" />
+    <None Include="src\core\shaders\TextFragmentShader.glsl" />
+    <None Include="src\core\shaders\TextVertexShader.glsl" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

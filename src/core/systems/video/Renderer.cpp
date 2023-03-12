@@ -39,8 +39,11 @@ std::vector<unsigned int> Quad::getIndices() {
 	return indices;
 }
 
+Character::Character(unsigned int TextureID, glm::ivec2 Size, glm::ivec2 Bearing, unsigned int Advance)
+	: TextureID(TextureID), Size(Size), Bearing(Bearing), Advance(Advance) {}
+
 /* ------------ Renderer methods ------------ */
-Renderer::Renderer(int windowHeight, int windowWidth) {
+Renderer::Renderer(int windowHeight, int windowWidth, Character** characters) {
 	std::vector<Vertex> vertices = {
 		Vertex(glm::vec3(0.f, 0.f, 0.f), glm::vec3(1), glm::vec2(0.f, 0.f)),
 		Vertex(glm::vec3(0.f, 1.f, 0.f), glm::vec3(1), glm::vec2(0.f, 1.f)),
@@ -55,6 +58,8 @@ Renderer::Renderer(int windowHeight, int windowWidth) {
 	quad = std::make_unique<Quad>(vertices, indices);
 
 	projectionMatrix = glm::ortho(0.f, static_cast<float>(windowWidth), 0.f, static_cast<float>(windowHeight), -0.01f, 10.f);
+
+	this->characters = characters;
 }
 
 void Renderer::draw(
@@ -92,7 +97,7 @@ void Renderer::draw(
 	glm::mat4 modelMatrix(1);
 	modelMatrix = glm::translate(modelMatrix, glm::vec3(view->getX(), view->getY(), 0));
 	modelMatrix = glm::scale(modelMatrix, glm::vec3(view->getWidth() * view->getSize(), view->getHeight() * view->getSize(), 1));
-	
+		
 	shader->use();
 	shader->setModelMatrix(modelMatrix);
 	shader->setProjectionMatrix(this->projectionMatrix);
@@ -111,20 +116,60 @@ void Renderer::draw(
 	glBindVertexArray(0);
 }
 
+void Renderer::drawText(
+	std::shared_ptr<TextView>& view,
+	std::shared_ptr<Shader>& shader,
+	std::unordered_map<std::string, unsigned int>& uintUniforms,
+	std::unordered_map<std::string, int>& intUniforms,
+	std::unordered_map<std::string, float>& floatUniforms
+) {
+	float x = view->getX();
+
+	auto& text = view->getText();
+	for (auto c : text) {
+		Character* ch = this->characters[c];
+		float xpos = x + ch->Bearing.x * view->getSize();
+		float ypos = view->getY() - (ch->Size.y - ch->Bearing.y) * view->getSize();
+
+		float w = ch->Size.x * view->getSize();
+		float h = ch->Size.y * view->getSize();
+
+		glm::mat4 modelMatrix(1);
+		modelMatrix = glm::translate(modelMatrix, glm::vec3(xpos, ypos, 0));
+		modelMatrix = glm::scale(modelMatrix, glm::vec3(w, h, 1));
+
+		shader->use();
+		shader->setModelMatrix(modelMatrix);
+		shader->setProjectionMatrix(this->projectionMatrix);
+
+		glActiveTexture(GL_TEXTURE0);
+		glBindTexture(GL_TEXTURE_2D, ch->TextureID);
+
+		glBindVertexArray(quad->getVAO());
+		glDrawArrays(GL_QUADS, 0, quad->getIndices().size());
+
+		x += (ch->Advance >> 6) * view->getSize();
+	}
+
+	glBindVertexArray(0);
+	glBindTexture(GL_TEXTURE_2D, 0);
+
+}
+
 void Renderer::setUintUniforms(std::shared_ptr<Shader>& shader, std::unordered_map<std::string, unsigned int>& uniforms) {
-	for (auto it = uniforms.begin(); it != uniforms.end(); it++) {
-		glUniform1ui(shader->getUniformLocation(it->first), it->second);
+	for (const auto& u : uniforms) {
+		glUniform1ui(shader->getUniformLocation(u.first), u.second);
 	}
 }
 
 void Renderer::setIntUniforms(std::shared_ptr<Shader>& shader, std::unordered_map<std::string, int>& uniforms) {
-	for (auto it = uniforms.begin(); it != uniforms.end(); it++) {
-		glUniform1i(shader->getUniformLocation(it->first), it->second);
+	for (const auto& u : uniforms) {
+		glUniform1i(shader->getUniformLocation(u.first), u.second);
 	}
 }
 
 void Renderer::setFloatUniforms(std::shared_ptr<Shader>& shader, std::unordered_map<std::string, float>& uniforms) {
-	for (auto it = uniforms.begin(); it != uniforms.end(); it++) {
-		glUniform1f(shader->getUniformLocation(it->first), it->second);
+	for (const auto& u : uniforms) {
+		glUniform1f(shader->getUniformLocation(u.first), u.second);
 	}
 }
