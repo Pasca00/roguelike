@@ -16,13 +16,19 @@ Game::Game() {
 	this->createSystems();
 	this->initSystems();
 
-	this->currentState = std::make_unique<MainMenuState>(this->inputSystem, this->videoSystem, this->physicsSystem);
+	this->currentState = std::make_unique<MainMenuState>(
+		this->inputSystem, 
+		this->videoSystem, 
+		this->physicsSystem,
+		this->soundSystem
+	);
 }
 
 void Game::createSystems() {
 	videoSystem = std::make_shared<VideoSystem>();
 	inputSystem = std::make_shared<InputSystem>();
 	physicsSystem = std::make_shared<PhysicsSystem>();
+	soundSystem = std::make_shared<SoundSystem>();
 }
 
 void Game::initSystems() {
@@ -30,6 +36,7 @@ void Game::initSystems() {
 		videoSystem,
 		inputSystem,
 		physicsSystem,
+		soundSystem,
 	};
 
 	for (const auto& system : systems) {

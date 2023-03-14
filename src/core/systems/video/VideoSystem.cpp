@@ -192,7 +192,7 @@ void VideoSystem::draw(std::shared_ptr<Texture> texture, std::string shaderName)
 void VideoSystem::drawText(std::shared_ptr<TextView> textView, std::string shaderName) {
 	this->renderer->drawText(
 		textView, 
-		this->shaders["text"],
+		this->shaders[shaderName],
 		this->uintUniforms,
 		this->intUniforms,
 		this->floatUniforms
@@ -248,4 +248,37 @@ void VideoSystem::setIntUniform(std::string key, int value) {
 
 void VideoSystem::setFloatUniform(std::string key, float value) {
 	this->floatUniforms[key] = value;
+}
+
+glm::ivec2 VideoSystem::getTextDimensions(std::string text) {
+	int textW = 0;
+	int textH = 0;
+
+	for (auto& c : text) {
+		auto ch = this->characters[c];
+
+		textW += (ch->Advance >> 6);
+		textH = ch->Size.y;
+	}
+
+	return glm::ivec2(textW, textH);
+}
+
+glm::ivec2 VideoSystem::getCenteredTextPosition(std::string& text, std::shared_ptr<Hitbox> rect) {
+	glm::ivec2 stringDims = this->getTextDimensions(text);
+	int rectW = 0;
+	int rectH = 0;
+	
+	if (rect == NULL) {
+		rectW = this->getWindowWidth();
+		rectH = this->getWindowHeight(); 
+	} else {
+		rectW = rect->w;
+		rectH = rect->h;
+	}
+
+	int textX = rectW / 2 - stringDims.x / 2;
+	int textY = rectH / 2 - stringDims.y / 2;
+
+	return glm::ivec2(textX, textY);
 }

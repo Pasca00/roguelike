@@ -9,4 +9,6 @@ namespace Paths {
 	const std::string SHADERS_DIR	 = "C:/Users/alexp/Desktop/Roguelike/src/core/shaders/";
 	const std::string CHARACTERS_DIR = "C:/Users/alexp/Desktop/Roguelike/resources/characters/";
 	const std::string FONTS_DIR		 = "C:/Users/alexp/Desktop/Roguelike/resources/fonts/";
+	const std::string SOUNDS_DIR	 = "C:/Users/alexp/Desktop/Roguelike/resources/sound/";
+	const std::string AMBIENCE_DIR	 = "C:/Users/alexp/Desktop/Roguelike/resources/sound/ambience/";
 };

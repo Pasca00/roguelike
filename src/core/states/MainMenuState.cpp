@@ -3,19 +3,10 @@
 MainMenuState::MainMenuState(
 	std::shared_ptr<InputSystem>& inputSystem,
 	std::shared_ptr<VideoSystem>& videoSystem,
-	std::shared_ptr<PhysicsSystem>& physicsSystem
-) : IState(inputSystem, videoSystem, physicsSystem) {
+	std::shared_ptr<PhysicsSystem>& physicsSystem,
+	std::shared_ptr<SoundSystem>& soundSystem
+) : IState(inputSystem, videoSystem, physicsSystem, soundSystem) {
 	auto textureManager = this->videoSystem->getTextureManager();
-	auto frames = textureManager->getTexturesFromSpriteSheet(
-		Paths::CHARACTERS_DIR + "rogue.png",
-		{10, 10, 10, 10, 10}
-	);
-	
-	this->views["idle"] = std::static_pointer_cast<IView>(std::make_shared<AnimationView>(frames[0]));
-	this->views["idle2"] = std::static_pointer_cast<IView>(std::make_shared<AnimationView>(frames[1]));
-	this->views["running"] = std::static_pointer_cast<IView>(std::make_shared<AnimationView>(frames[2]));
-	this->views["attack"] = std::static_pointer_cast<IView>(std::make_shared<AnimationView>(frames[3]));
-	this->views["death"] = std::static_pointer_cast<IView>(std::make_shared<AnimationView>(frames[4]));
 
 	this->videoSystem->initFramebuffer();
 
@@ -24,7 +15,14 @@ MainMenuState::MainMenuState(
 		std::make_shared<View>(titlescreen, 0, 0, 5)
 	);
 
-	this->textView = std::make_shared<TextView>("PLAY", 0, 0, 48, 48);
+
+	std::string play = "PLAY";
+	glm::vec2 textDims = this->videoSystem->getCenteredTextPosition(play);
+
+	this->textView = std::make_shared<TextView>(play, textDims.x, textDims.y);
+
+	this->soundSystem->loadMusic(Paths::AMBIENCE_DIR + "rain.mp3", "rain");
+	this->soundSystem->playMusic("rain");
 }
 
 void MainMenuState::handleInput() {
@@ -32,18 +30,18 @@ void MainMenuState::handleInput() {
 }
 
 void MainMenuState::update(float dTime) {
-	this->views["running"]->update(dTime);
+
 };
 
 void MainMenuState::render() {
 	this->videoSystem->bindFrameBuffer();
 
 	this->videoSystem->draw(this->views["titlescreen"]);
-	this->videoSystem->draw(this->views["running"]);
-	this->videoSystem->drawText(this->textView);
 
 	this->videoSystem->unbindFramebuffer();
 
 	this->videoSystem->setUintUniform("time", this->physicsSystem->getTotalTime());
-	this->videoSystem->drawFrameBuffer("base");
+	this->videoSystem->drawFrameBuffer("rain");
+
+	this->videoSystem->drawText(this->textView);
 };

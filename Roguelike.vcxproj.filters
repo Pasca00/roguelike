@@ -45,6 +45,9 @@
     <Filter Include="Source Files\core\systems\physics">
       <UniqueIdentifier>{fda3cc30-9c0a-4aef-bf5e-ae123faeb595}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\core\systems\sound">
+      <UniqueIdentifier>{2f5561fa-192f-4885-b0e6-71cd2288cf44}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\main.cpp">
@@ -94,6 +97,9 @@
     </ClCompile>
     <ClCompile Include="src\core\systems\video\views\TextView.cpp">
       <Filter>Source Files\core\systems\video\views</Filter>
+    </ClCompile>
+    <ClCompile Include="src\core\systems\sound\SoundSystem.cpp">
+      <Filter>Source Files\core\systems\sound</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -492,6 +498,9 @@
     </ClInclude>
     <ClInclude Include="src\core\systems\video\views\TextView.h">
       <Filter>Source Files\core\systems\video\views</Filter>
+    </ClInclude>
+    <ClInclude Include="src\core\systems\sound\SoundSystem.h">
+      <Filter>Source Files\core\systems\sound</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

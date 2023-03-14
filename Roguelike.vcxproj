@@ -69,12 +69,12 @@
     <LinkIncremental>true</LinkIncremental>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-    <IncludePath>C:\Users\alexp\Desktop\Roguelike\libs\SDL\SDL2-2.24.0\include;C:\Users\alexp\Desktop\Roguelike\libs\glew-2.1.0\include;C:\Users\alexp\Desktop\Roguelike\libs\FreeType\include;$(IncludePath)</IncludePath>
-    <LibraryPath>C:\Users\alexp\Desktop\Roguelike\libs\SDL\SDL2-2.24.0\lib\x64;C:\Users\alexp\Desktop\Roguelike\libs\glew-2.1.0\lib\Release\x64;C:\Users\alexp\Desktop\Roguelike\libs\FreeType\lib;$(LibraryPath)</LibraryPath>
+    <IncludePath>C:\Users\alexp\Desktop\Roguelike\libs\SDL\SDL2-2.24.0\include;C:\Users\alexp\Desktop\Roguelike\libs\glew-2.1.0\include;C:\Users\alexp\Desktop\Roguelike\libs\FreeType\include;C:\Users\alexp\Desktop\Roguelike\libs\SDL_mixer\include;$(IncludePath)</IncludePath>
+    <LibraryPath>C:\Users\alexp\Desktop\Roguelike\libs\SDL\SDL2-2.24.0\lib\x64;C:\Users\alexp\Desktop\Roguelike\libs\glew-2.1.0\lib\Release\x64;C:\Users\alexp\Desktop\Roguelike\libs\FreeType\lib;C:\Users\alexp\Desktop\Roguelike\libs\SDL_mixer\lib\x64;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
-    <IncludePath>C:\Users\alexp\Desktop\Roguelike\libs\SDL\SDL2-2.24.0\include;C:\Users\alexp\Desktop\Roguelike\libs\glew-2.1.0\include;C:\Users\alexp\Desktop\Roguelike\libs\FreeType\include;$(IncludePath)</IncludePath>
-    <LibraryPath>C:\Users\alexp\Desktop\Roguelike\libs\SDL\SDL2-2.24.0\lib\x64;C:\Users\alexp\Desktop\Roguelike\libs\glew-2.1.0\lib\Release\x64;C:\Users\alexp\Desktop\Roguelike\libs\FreeType\lib;$(LibraryPath)</LibraryPath>
+    <IncludePath>C:\Users\alexp\Desktop\Roguelike\libs\SDL\SDL2-2.24.0\include;C:\Users\alexp\Desktop\Roguelike\libs\glew-2.1.0\include;C:\Users\alexp\Desktop\Roguelike\libs\FreeType\include;C:\Users\alexp\Desktop\Roguelike\libs\SDL_mixer\include;$(IncludePath)</IncludePath>
+    <LibraryPath>C:\Users\alexp\Desktop\Roguelike\libs\SDL\SDL2-2.24.0\lib\x64;C:\Users\alexp\Desktop\Roguelike\libs\glew-2.1.0\lib\Release\x64;C:\Users\alexp\Desktop\Roguelike\libs\FreeType\lib;C:\Users\alexp\Desktop\Roguelike\libs\SDL_mixer\lib\x64;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
@@ -109,7 +109,7 @@
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <Link>
-      <AdditionalDependencies>opengl32.lib;glu32.lib;glew32s.lib;SDL2.lib;SDL2main.lib;freetype.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>opengl32.lib;glu32.lib;glew32s.lib;SDL2.lib;SDL2main.lib;freetype.lib;SDL2_mixer.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <EntryPointSymbol>
       </EntryPointSymbol>
       <SubSystem>Console</SubSystem>
@@ -118,7 +118,7 @@
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <Link>
-      <AdditionalDependencies>opengl32.lib;glu32.lib;glew32s.lib;SDL2.lib;SDL2main.lib;freetype.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>opengl32.lib;glu32.lib;glew32s.lib;SDL2.lib;SDL2main.lib;freetype.lib;SDL2_mixer.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <EntryPointSymbol>
       </EntryPointSymbol>
       <SubSystem>Console</SubSystem>
@@ -127,6 +127,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="src\core\systems\physics\PhysicsSystem.cpp" />
+    <ClCompile Include="src\core\systems\sound\SoundSystem.cpp" />
     <ClCompile Include="src\core\systems\video\Framebuffer.cpp" />
     <ClCompile Include="src\core\systems\video\views\IView.cpp" />
     <ClCompile Include="src\core\systems\video\views\AnimationView.cpp" />
@@ -145,6 +146,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\core\systems\physics\PhysicsSystem.h" />
+    <ClInclude Include="src\core\systems\sound\SoundSystem.h" />
     <ClInclude Include="src\core\systems\video\Framebuffer.h" />
     <ClInclude Include="src\core\systems\video\views\IView.h" />
     <ClInclude Include="src\core\systems\video\views\AnimationView.h" />
