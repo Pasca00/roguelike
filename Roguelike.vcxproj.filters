@@ -101,6 +101,9 @@
     <ClCompile Include="src\core\systems\sound\SoundSystem.cpp">
       <Filter>Source Files\core\systems\sound</Filter>
     </ClCompile>
+    <ClCompile Include="src\core\systems\input\IInteractable.cpp">
+      <Filter>Source Files\core\systems\input</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="libs\sdl\sdl2-2.24.0\include\begin_code.h">
@@ -501,6 +504,9 @@
     </ClInclude>
     <ClInclude Include="src\core\systems\sound\SoundSystem.h">
       <Filter>Source Files\core\systems\sound</Filter>
+    </ClInclude>
+    <ClInclude Include="src\core\systems\input\IInteractable.h">
+      <Filter>Source Files\core\systems\input</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

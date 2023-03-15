@@ -15,6 +15,10 @@ Input::Input() {
 		{"PAUSE",	 false},
 		{"QUIT",	 false},
 	};
+
+	for (const auto& action : this->actions) {
+		this->callbacks[action.first] = std::vector<std::unique_ptr<IInteractable>>();
+	}
 }
 
 void Input::setActionValue(const std::string& action, bool value) {
@@ -57,6 +61,7 @@ void InputSystem::createDefaultKeyMappings() {
 		{SDLK_s, "DOWN"},
 		{SDLK_a, "LEFT"},
 		{SDLK_d, "RIGHT"},
+		{SDLK_e, "INTERACT"},
 
 		{SDLK_RETURN, "ENTER"},
 
@@ -71,6 +76,7 @@ void InputSystem::collectInput() {
 			case SDL_KEYDOWN: {
 				auto action = this->keyActionMappings[e.key.keysym.sym];
 				this->input->setActionValue(action, true);
+				this->triggerCallbacks(action);
 
 				break;
 			}
@@ -91,4 +97,24 @@ void InputSystem::collectInput() {
 
 std::shared_ptr<Input> InputSystem::getInput() {
 	return this->input;
+}
+
+void InputSystem::addEventCallback(std::unique_ptr<IInteractable>& callback) {
+	this->input->callbacks[callback->getTrigger()].push_back(std::move(callback));
+}
+
+void InputSystem::triggerCallbacks(std::string event) {
+	auto& events = this->input->callbacks[event];
+
+
+	for (auto& e : events) {
+		if (e->isDone())
+			continue;
+
+		e->call();
+	}
+
+	events.erase(
+		std::remove_if(events.begin(), events.end(), [](auto& e) { return e->isDone(); }), events.end()
+	);
 }

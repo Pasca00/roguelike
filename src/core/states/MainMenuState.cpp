@@ -23,6 +23,9 @@ MainMenuState::MainMenuState(
 
 	this->soundSystem->loadMusic(Paths::AMBIENCE_DIR + "rain.mp3", "rain");
 	this->soundSystem->playMusic("rain");
+
+	auto callback = std::make_unique<IInteractable>("ENTER", []() { std::cout << "TRIGGERED_ENTER\n"; });
+	this->inputSystem->addEventCallback(callback);
 }
 
 void MainMenuState::handleInput() {

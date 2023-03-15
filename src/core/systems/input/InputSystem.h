@@ -3,14 +3,17 @@
 #include <fstream>
 #include <string>
 #include <unordered_map>
+#include <memory>
 
 #include <SDL.h>
 
 #include "../ISystem.h"
 #include "../../Paths.h"
+#include "IInteractable.h"
 
 struct Input {
 	std::unordered_map<std::string, bool> actions;
+	std::unordered_map<std::string, std::vector<std::unique_ptr<IInteractable>>> callbacks;
 
 	Input();
 
@@ -29,6 +32,8 @@ private:
 	void createDefaultKeyMappings();
 	void readKeyMappings();
 
+	void triggerCallbacks(std::string action);
+
 public:
 	InputSystem();
 
@@ -37,4 +42,6 @@ public:
 	void collectInput();
 
 	std::shared_ptr<Input> getInput();
+
+	void addEventCallback(std::unique_ptr<IInteractable>& callback);
 };

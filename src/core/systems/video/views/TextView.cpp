@@ -1,8 +1,9 @@
 #include "TextView.h"
 
-TextView::TextView(std::string text, float x, float y, float w, float h, float size)
-	: IView(x, y, w, h, size) {
+TextView::TextView(std::string text, float x, float y, bool clickable, float size)
+	: IView(x, y, 0, 0, size) {
 	this->text = text;
+	this->clickable = clickable;
 }
 
 TextView::TextView(std::string text, std::unique_ptr<Hitbox>& hitbox, float size)

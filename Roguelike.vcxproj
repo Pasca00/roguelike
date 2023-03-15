@@ -126,6 +126,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="src\core\systems\input\IInteractable.cpp" />
     <ClCompile Include="src\core\systems\physics\PhysicsSystem.cpp" />
     <ClCompile Include="src\core\systems\sound\SoundSystem.cpp" />
     <ClCompile Include="src\core\systems\video\Framebuffer.cpp" />
@@ -145,6 +146,7 @@
     <ClCompile Include="src\main.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="src\core\systems\input\IInteractable.h" />
     <ClInclude Include="src\core\systems\physics\PhysicsSystem.h" />
     <ClInclude Include="src\core\systems\sound\SoundSystem.h" />
     <ClInclude Include="src\core\systems\video\Framebuffer.h" />
