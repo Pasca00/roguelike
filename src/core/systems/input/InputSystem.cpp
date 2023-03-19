@@ -9,6 +9,7 @@ Input::Input() {
 		{"LEFT",	 false},
 		{"RIGHT",	 false},
 		{"INTERACT", false},
+		{"CLICK",	 false},
 
 		{"ENTER",	 false},
 
@@ -19,6 +20,9 @@ Input::Input() {
 	for (const auto& action : this->actions) {
 		this->callbacks[action.first] = std::vector<std::unique_ptr<IInteractable>>();
 	}
+
+	this->mouseX = 0;
+	this->mouseY = 0;
 }
 
 void Input::setActionValue(const std::string& action, bool value) {
@@ -70,6 +74,8 @@ void InputSystem::createDefaultKeyMappings() {
 }
 
 void InputSystem::collectInput() {
+	SDL_GetMouseState(&this->input->mouseX, &this->input->mouseY);
+
 	SDL_Event e;
 	while (SDL_PollEvent(&e)) {
 		switch (e.type) {
@@ -91,6 +97,19 @@ void InputSystem::collectInput() {
 			case SDL_QUIT: {
 				this->input->setActionValue("QUIT", true);
 			}
+
+			case SDL_MOUSEBUTTONDOWN: {
+				if (e.button.button == SDL_BUTTON_LEFT) {
+					this->input->setActionValue("CLICK", true);
+					this->triggerCallbacks("CLICK");
+				}
+			}
+
+			case SDL_MOUSEBUTTONUP: {
+				if (e.button.button == SDL_BUTTON_LEFT) {
+					this->input->setActionValue("CLICK", false);
+				}
+			}
 		}
 	}
 }
@@ -105,7 +124,6 @@ void InputSystem::addEventCallback(std::unique_ptr<IInteractable>& callback) {
 
 void InputSystem::triggerCallbacks(std::string event) {
 	auto& events = this->input->callbacks[event];
-
 
 	for (auto& e : events) {
 		if (e->isDone())

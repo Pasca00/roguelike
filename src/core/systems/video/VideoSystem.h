@@ -19,6 +19,11 @@
 #include "../../Paths.h"
 #include "Framebuffer.h"
 
+#define TRANSITION_NONE		 0
+#define TRANSITION_EASE_IN   1
+#define TRANSITION_HOLD		 2
+#define TRANSITION_EASE_OUT  3
+
 class VideoSystem : public ISystem {
 private:
 	std::unique_ptr<Window> window;
@@ -37,6 +42,12 @@ private:
 
 	GLint window_fbo;
 
+	int8_t transition;
+	float transitionTime;
+	float transitionEaseTime;
+	float transitionHoldTime;
+	std::shared_ptr<Texture> tranistionTexture;
+
 	void initSDL();
 	void setGLAttributes();
 	void initWindow();
@@ -45,6 +56,7 @@ private:
 	void initShaders();
 	void loadInitialTextures();
 	void initUniforms();
+	void initTransitionUtils();
 
 	void clearUniforms();
 
@@ -77,4 +89,10 @@ public:
 
 	glm::ivec2 getTextDimensions(std::string text);
 	glm::ivec2 getCenteredTextPosition(std::string& text, std::shared_ptr<Hitbox> rect = NULL);
+
+	void beginTransition();
+	void updateTransition(float dTime);
+	void drawTransition();
+	int8_t getTransition();
+	/* TODO: HANDLE TRANSITION EFFECT (EASE IN, HOLD, EASE OUT) */
 };

@@ -291,6 +291,8 @@
     <None Include="src\core\shaders\RainVertexShader.glsl" />
     <None Include="src\core\shaders\TextFragmentShader.glsl" />
     <None Include="src\core\shaders\TextVertexShader.glsl" />
+    <None Include="src\core\shaders\TransitionFragmentShader.glsl" />
+    <None Include="src\core\shaders\TransitionVertexShader.glsl" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

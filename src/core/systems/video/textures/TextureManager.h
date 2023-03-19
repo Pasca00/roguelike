@@ -24,11 +24,11 @@ private:
 	GLenum textureMagFilter;
 
 	unsigned char* loadImageData(std::string& filename);
-	std::shared_ptr<Texture> makeTexture(unsigned char* textureData, int width, int height, int channels);
 
 public:
 	TextureManager();
 
+	std::shared_ptr<Texture> makeTexture(unsigned char* textureData, int width, int height, int channels);
 	std::shared_ptr<Texture> getSingleTextureFromFile(std::string filename);
 	std::vector<std::vector<std::shared_ptr<Texture>>> getTexturesFromSpriteSheet(
 		std::string filename, 

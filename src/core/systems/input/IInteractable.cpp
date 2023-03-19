@@ -1,9 +1,18 @@
 #include "IInteractable.h"
 
-IInteractable::IInteractable(std::string trigger, std::function<void(void)> callback, int repeat) {
+IInteractable::IInteractable(
+	std::string trigger, 
+	std::function<void(void)> callback, 
+	float x,
+	float y,
+	float w,
+	float h,
+	int repeat
+) {
 	this->trigger = trigger;
 	this->callback = callback;
 	this->repeat = repeat;
+	this->rect = std::make_shared<Hitbox>(x, y, w, h);
 }
 
 void IInteractable::call() {

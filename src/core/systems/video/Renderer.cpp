@@ -77,6 +77,10 @@ void Renderer::draw(
 	shader->setModelMatrix(modelMatrix);
 	shader->setProjectionMatrix(this->projectionMatrix);
 
+	this->setUintUniforms(shader, uintUniforms);
+	this->setIntUniforms(shader, intUniforms);
+	this->setFloatUniforms(shader, floatUniforms);
+
 	glActiveTexture(GL_TEXTURE0);
 	glBindTexture(GL_TEXTURE_2D, texture->getTextureId());
 

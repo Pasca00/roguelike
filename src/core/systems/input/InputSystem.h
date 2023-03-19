@@ -15,6 +15,9 @@ struct Input {
 	std::unordered_map<std::string, bool> actions;
 	std::unordered_map<std::string, std::vector<std::unique_ptr<IInteractable>>> callbacks;
 
+	int mouseX;
+	int mouseY;
+
 	Input();
 
 	void setActionValue(const std::string& action, bool value);

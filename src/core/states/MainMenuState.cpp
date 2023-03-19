@@ -15,17 +15,29 @@ MainMenuState::MainMenuState(
 		std::make_shared<View>(titlescreen, 0, 0, 5)
 	);
 
+	{
+		std::string play = "PRESS ENTER TO START";
+		glm::vec2 textDims = this->videoSystem->getCenteredTextPosition(play);
+		this->textView = std::make_shared<TextView>(play, textDims.x, textDims.y);
+	}
 
-	std::string play = "PLAY";
-	glm::vec2 textDims = this->videoSystem->getCenteredTextPosition(play);
+	{
+		this->soundSystem->loadMusic(Paths::AMBIENCE_DIR + "rain.mp3", "rain");
+		this->soundSystem->playMusic("rain");
 
-	this->textView = std::make_shared<TextView>(play, textDims.x, textDims.y);
+		this->soundSystem->loadSound(Paths::SOUNDS_DIR + "/fx/thump.mp3", "thump");
+	}
 
-	this->soundSystem->loadMusic(Paths::AMBIENCE_DIR + "rain.mp3", "rain");
-	this->soundSystem->playMusic("rain");
-
-	auto callback = std::make_unique<IInteractable>("ENTER", []() { std::cout << "TRIGGERED_ENTER\n"; });
-	this->inputSystem->addEventCallback(callback);
+	{
+		auto callback = std::make_unique<IInteractable>(
+			"ENTER",
+			[this]() {
+				this->videoSystem->beginTransition();
+				this->soundSystem->playSound("thump");
+			}
+		);
+		this->inputSystem->addEventCallback(callback);
+	}
 }
 
 void MainMenuState::handleInput() {

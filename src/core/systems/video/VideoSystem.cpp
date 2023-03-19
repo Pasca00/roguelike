@@ -23,6 +23,7 @@ void VideoSystem::init() {
 	this->initShaders();
 	this->loadInitialTextures();
 	this->initUniforms();
+	this->initTransitionUtils();
 }
 
 void VideoSystem::initSDL() {
@@ -81,6 +82,7 @@ void VideoSystem::initShaders() {
 	this->shaders["base"] = std::make_shared<Shader>(Paths::SHADERS_DIR.c_str(), "Base");
 	this->shaders["rain"] = std::make_shared<Shader>(Paths::SHADERS_DIR.c_str(), "Rain");
 	this->shaders["text"] = std::make_shared<Shader>(Paths::SHADERS_DIR.c_str(), "Text");
+	this->shaders["transition"] = std::make_shared<Shader>(Paths::SHADERS_DIR.c_str(), "Transition");
 }
 
 void VideoSystem::loadInitialTextures() {
@@ -91,6 +93,16 @@ void VideoSystem::initUniforms() {
 	this->uintUniforms = std::unordered_map<std::string, unsigned int>();
 	this->intUniforms = std::unordered_map<std::string, int>();
 	this->floatUniforms = std::unordered_map<std::string, float>();
+}
+
+void VideoSystem::initTransitionUtils() {
+	this->transition = TRANSITION_NONE;
+	this->transitionTime = 0;
+	this->transitionEaseTime = 3.f;
+	this->transitionHoldTime = 2.f;
+
+	GLubyte *emptyData = new GLubyte[window->getWidth() * window->getHeight() * 4];
+	this->tranistionTexture = this->textureManager->makeTexture(emptyData, window->getWidth(), window->getHeight(), 4);
 }
 
 void VideoSystem::loadGlyphs() {
@@ -281,4 +293,65 @@ glm::ivec2 VideoSystem::getCenteredTextPosition(std::string& text, std::shared_p
 	int textY = rectH / 2 - stringDims.y / 2;
 
 	return glm::ivec2(textX, textY);
+}
+
+void VideoSystem::beginTransition() {
+	this->transitionTime = 0;
+	this->transition = TRANSITION_EASE_IN;
+}
+
+void VideoSystem::updateTransition(float dTime) {
+	switch (transition) {
+		case TRANSITION_NONE:
+			return;
+
+		case TRANSITION_EASE_IN:
+			transitionTime += dTime;
+
+			if (transitionTime >= transitionEaseTime) {
+				transition = TRANSITION_HOLD;
+				transitionTime = transitionEaseTime;
+			}
+
+			break;
+
+		case TRANSITION_HOLD:
+			transitionTime += dTime;
+
+			if (transitionTime >= transitionEaseTime + transitionHoldTime) {
+				transition = TRANSITION_EASE_OUT;
+				transitionTime = transitionEaseTime;
+			}
+
+			break;
+
+		case TRANSITION_EASE_OUT:
+			transitionTime -= dTime;
+
+			if (transitionTime <= 0) {
+				transition = TRANSITION_NONE;
+				transitionTime = 0;
+			}
+
+			break;
+	}
+}
+
+void VideoSystem::drawTransition() {
+	if (this->transition == TRANSITION_NONE)
+		return;
+
+	this->setFloatUniform("time", this->transitionTime);
+	this->setFloatUniform("time_total", this->transitionEaseTime);
+	this->renderer->draw(
+		this->tranistionTexture,
+		this->shaders["transition"],
+		this->uintUniforms,
+		this->intUniforms,
+		this->floatUniforms
+	);
+}
+
+int8_t VideoSystem::getTransition() {
+	return this->transition;
 }

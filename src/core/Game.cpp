@@ -59,11 +59,13 @@ void Game::collectInput() {
 void Game::update() {
 	this->physicsSystem->computeFrameDeltaTime();
 	this->currentState->update(this->physicsSystem->getFrameDeltaTime());
+
+	this->videoSystem->updateTransition(this->physicsSystem->getFrameDeltaTime());
 }
 
 void Game::draw() {
-	// TODO: make render() call to the state
 	this->currentState->render();
+	this->videoSystem->drawTransition();
 }
 
 void Game::clearScreen() {

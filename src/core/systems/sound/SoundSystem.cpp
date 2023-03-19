@@ -55,7 +55,7 @@ void SoundSystem::playMusic(std::string name) {
     Mix_PlayMusic(this->music[name], -1);
 }
 
-void SoundSystem::playSound(std::string name) {
-    Mix_PlayChannel(-1, this->sounds[name], 1);
+void SoundSystem::playSound(std::string name, int loops) {
+    Mix_PlayChannel(-1, this->sounds[name], loops);
 }
 

@@ -533,5 +533,11 @@
     <None Include="src\core\shaders\TextVertexShader.glsl">
       <Filter>Source Files\core\shaders</Filter>
     </None>
+    <None Include="src\core\shaders\TransitionFragmentShader.glsl">
+      <Filter>Source Files\core\shaders</Filter>
+    </None>
+    <None Include="src\core\shaders\TransitionVertexShader.glsl">
+      <Filter>Source Files\core\shaders</Filter>
+    </None>
   </ItemGroup>
 </Project>
