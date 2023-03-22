@@ -6,6 +6,7 @@
 
 #include "states/IState.h"
 #include "states/MainMenuState.h"
+#include "states/PlayingState.h"
 
 class Game {
 private:
@@ -15,8 +16,13 @@ private:
 	std::shared_ptr<InputSystem> inputSystem;
 	std::shared_ptr<PhysicsSystem> physicsSystem;
 	std::shared_ptr<SoundSystem> soundSystem;
+	std::shared_ptr<GeneralSystem> generalSystem;
 
 	std::unique_ptr<IState> currentState;
+
+	bool stateChange;
+	float stateChangeTimeRequired;
+	float stateChangeTime;
 
 	Game();
 

@@ -1,11 +1,13 @@
 #include "MainMenuState.h"
 
 MainMenuState::MainMenuState(
+	bool& stateChange,
 	std::shared_ptr<InputSystem>& inputSystem,
 	std::shared_ptr<VideoSystem>& videoSystem,
 	std::shared_ptr<PhysicsSystem>& physicsSystem,
-	std::shared_ptr<SoundSystem>& soundSystem
-) : IState(inputSystem, videoSystem, physicsSystem, soundSystem) {
+	std::shared_ptr<SoundSystem>& soundSystem,
+	std::shared_ptr<GeneralSystem>& generalSystem
+) : IState(stateChange, inputSystem, videoSystem, physicsSystem, soundSystem, generalSystem) {
 	auto textureManager = this->videoSystem->getTextureManager();
 
 	this->videoSystem->initFramebuffer();
@@ -34,10 +36,18 @@ MainMenuState::MainMenuState(
 			[this]() {
 				this->videoSystem->beginTransition();
 				this->soundSystem->playSound("thump");
+				this->stateChange = true;
 			}
 		);
 		this->inputSystem->addEventCallback(callback);
 	}
+}
+
+MainMenuState::~MainMenuState() {
+	printf("DELETE::MAIN MENU STATE\n");
+	this->soundSystem->stopMusic();
+	this->soundSystem->deleteMusic("rain");
+	this->soundSystem->deleteSound("thump");
 }
 
 void MainMenuState::handleInput() {

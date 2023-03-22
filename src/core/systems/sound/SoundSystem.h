@@ -24,4 +24,6 @@ public:
 
 	void playMusic(std::string name);
 	void playSound(std::string name, int loops = 0);
+
+	void stopMusic();
 };

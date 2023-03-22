@@ -177,7 +177,7 @@ void VideoSystem::clearScreen() {
 	glClear(GL_COLOR_BUFFER_BIT);
 }
 
-void VideoSystem::draw(std::shared_ptr<IView> view, std::string shaderName) {
+void VideoSystem::draw(std::shared_ptr<IView>& view, std::string shaderName) {
 	this->renderer->draw(
 		view, 
 		this->shaders[shaderName],
@@ -189,7 +189,7 @@ void VideoSystem::draw(std::shared_ptr<IView> view, std::string shaderName) {
 	this->clearUniforms();
 }
 
-void VideoSystem::draw(std::shared_ptr<Texture> texture, std::string shaderName) {
+void VideoSystem::draw(std::shared_ptr<Texture>& texture, std::string shaderName) {
 	this->renderer->draw(
 		texture, 
 		this->shaders[shaderName],
@@ -201,7 +201,7 @@ void VideoSystem::draw(std::shared_ptr<Texture> texture, std::string shaderName)
 	this->clearUniforms();
 }
 
-void VideoSystem::drawText(std::shared_ptr<TextView> textView, std::string shaderName) {
+void VideoSystem::drawText(std::shared_ptr<TextView>& textView, std::string shaderName) {
 	this->renderer->drawText(
 		textView, 
 		this->shaders[shaderName],
@@ -247,7 +247,7 @@ void VideoSystem::unbindFramebuffer() {
 }
 
 void VideoSystem::drawFrameBuffer(std::string shaderName) {
-	this->draw(this->framebuffer->getView(), shaderName);
+	this->draw(std::static_pointer_cast<IView>(this->framebuffer->getView()), shaderName);
 }
 
 void VideoSystem::setUintUniform(std::string key, unsigned int value) {

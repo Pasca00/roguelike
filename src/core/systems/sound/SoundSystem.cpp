@@ -59,3 +59,7 @@ void SoundSystem::playSound(std::string name, int loops) {
     Mix_PlayChannel(-1, this->sounds[name], loops);
 }
 
+void SoundSystem::stopMusic() {
+    Mix_PauseMusic();
+}
+

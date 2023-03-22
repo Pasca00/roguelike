@@ -16,11 +16,17 @@ Game::Game() {
 	this->createSystems();
 	this->initSystems();
 
+	this->stateChange = false;
+	this->stateChangeTimeRequired = 5.0;
+	this->stateChangeTime = 0.0;
+
 	this->currentState = std::make_unique<MainMenuState>(
+		this->stateChange,
 		this->inputSystem, 
 		this->videoSystem, 
 		this->physicsSystem,
-		this->soundSystem
+		this->soundSystem,
+		this->generalSystem
 	);
 }
 
@@ -29,6 +35,7 @@ void Game::createSystems() {
 	inputSystem = std::make_shared<InputSystem>();
 	physicsSystem = std::make_shared<PhysicsSystem>();
 	soundSystem = std::make_shared<SoundSystem>();
+	generalSystem = std::make_shared<GeneralSystem>();
 }
 
 void Game::initSystems() {
@@ -37,6 +44,7 @@ void Game::initSystems() {
 		inputSystem,
 		physicsSystem,
 		soundSystem,
+		generalSystem,
 	};
 
 	for (const auto& system : systems) {
@@ -58,9 +66,30 @@ void Game::collectInput() {
 
 void Game::update() {
 	this->physicsSystem->computeFrameDeltaTime();
-	this->currentState->update(this->physicsSystem->getFrameDeltaTime());
+	float dTime = this->physicsSystem->getFrameDeltaTime();
 
-	this->videoSystem->updateTransition(this->physicsSystem->getFrameDeltaTime());
+	if (this->stateChange) {
+		this->stateChangeTime += dTime;
+		if (this->stateChangeTime >= stateChangeTimeRequired) {
+			this->stateChangeTime = 0;
+			this->stateChange = false;
+
+			this->generalSystem->queueThreadJob([this] {
+				this->currentState = std::make_unique<PlayingState>(
+					this->stateChange,
+					this->inputSystem,
+					this->videoSystem,
+					this->physicsSystem,
+					this->soundSystem,
+					this->generalSystem
+				);
+			});
+			
+		}
+	}
+
+	this->videoSystem->updateTransition(dTime);
+	this->currentState->update(dTime);
 }
 
 void Game::draw() {

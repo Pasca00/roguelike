@@ -48,6 +48,9 @@
     <Filter Include="Source Files\core\systems\sound">
       <UniqueIdentifier>{2f5561fa-192f-4885-b0e6-71cd2288cf44}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\core\systems\general">
+      <UniqueIdentifier>{9dd43704-286b-426d-8624-4fd8515ebc07}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\main.cpp">
@@ -103,6 +106,15 @@
     </ClCompile>
     <ClCompile Include="src\core\systems\input\IInteractable.cpp">
       <Filter>Source Files\core\systems\input</Filter>
+    </ClCompile>
+    <ClCompile Include="src\core\states\PlayingState.cpp">
+      <Filter>Source Files\core\states</Filter>
+    </ClCompile>
+    <ClCompile Include="src\core\systems\general\GeneralSystem.cpp">
+      <Filter>Source Files\core\systems\general</Filter>
+    </ClCompile>
+    <ClCompile Include="src\core\systems\general\ThreadPool.cpp">
+      <Filter>Source Files\core\systems\general</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -507,6 +519,15 @@
     </ClInclude>
     <ClInclude Include="src\core\systems\input\IInteractable.h">
       <Filter>Source Files\core\systems\input</Filter>
+    </ClInclude>
+    <ClInclude Include="src\core\states\PlayingState.h">
+      <Filter>Source Files\core\states</Filter>
+    </ClInclude>
+    <ClInclude Include="src\core\systems\general\GeneralSystem.h">
+      <Filter>Source Files\core\systems\general</Filter>
+    </ClInclude>
+    <ClInclude Include="src\core\systems\general\ThreadPool.h">
+      <Filter>Source Files\core\systems\general</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

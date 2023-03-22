@@ -126,6 +126,9 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="src\core\states\PlayingState.cpp" />
+    <ClCompile Include="src\core\systems\general\GeneralSystem.cpp" />
+    <ClCompile Include="src\core\systems\general\ThreadPool.cpp" />
     <ClCompile Include="src\core\systems\input\IInteractable.cpp" />
     <ClCompile Include="src\core\systems\physics\PhysicsSystem.cpp" />
     <ClCompile Include="src\core\systems\sound\SoundSystem.cpp" />
@@ -146,6 +149,9 @@
     <ClCompile Include="src\main.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="src\core\states\PlayingState.h" />
+    <ClInclude Include="src\core\systems\general\GeneralSystem.h" />
+    <ClInclude Include="src\core\systems\general\ThreadPool.h" />
     <ClInclude Include="src\core\systems\input\IInteractable.h" />
     <ClInclude Include="src\core\systems\physics\PhysicsSystem.h" />
     <ClInclude Include="src\core\systems\sound\SoundSystem.h" />

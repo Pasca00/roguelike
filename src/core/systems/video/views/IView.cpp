@@ -10,6 +10,10 @@ IView::IView(std::unique_ptr<Hitbox>& hitbox, float size) {
 	this->size = size;
 }
 
+IView::~IView() {
+
+}
+
 float IView::getWidth() {
 	return this->hitbox->w;
 }
