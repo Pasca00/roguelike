@@ -126,6 +126,8 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="src\core\gameplay\levels\BSPGenerator.cpp" />
+    <ClCompile Include="src\core\gameplay\levels\LevelManager.cpp" />
     <ClCompile Include="src\core\states\PlayingState.cpp" />
     <ClCompile Include="src\core\systems\general\GeneralSystem.cpp" />
     <ClCompile Include="src\core\systems\general\ThreadPool.cpp" />
@@ -149,6 +151,9 @@
     <ClCompile Include="src\main.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="src\core\gameplay\levels\BSPGenerator.h" />
+    <ClInclude Include="src\core\gameplay\levels\IGenerator.h" />
+    <ClInclude Include="src\core\gameplay\levels\LevelManager.h" />
     <ClInclude Include="src\core\states\PlayingState.h" />
     <ClInclude Include="src\core\systems\general\GeneralSystem.h" />
     <ClInclude Include="src\core\systems\general\ThreadPool.h" />

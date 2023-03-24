@@ -51,6 +51,9 @@
     <Filter Include="Source Files\core\systems\general">
       <UniqueIdentifier>{9dd43704-286b-426d-8624-4fd8515ebc07}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\core\gameplay\levels">
+      <UniqueIdentifier>{f586fd39-62be-48a1-baec-2b490b5bb21b}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\main.cpp">
@@ -115,6 +118,12 @@
     </ClCompile>
     <ClCompile Include="src\core\systems\general\ThreadPool.cpp">
       <Filter>Source Files\core\systems\general</Filter>
+    </ClCompile>
+    <ClCompile Include="src\core\gameplay\levels\LevelManager.cpp">
+      <Filter>Source Files\core\gameplay\levels</Filter>
+    </ClCompile>
+    <ClCompile Include="src\core\gameplay\levels\BSPGenerator.cpp">
+      <Filter>Source Files\core\gameplay\levels</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -528,6 +537,15 @@
     </ClInclude>
     <ClInclude Include="src\core\systems\general\ThreadPool.h">
       <Filter>Source Files\core\systems\general</Filter>
+    </ClInclude>
+    <ClInclude Include="src\core\gameplay\levels\LevelManager.h">
+      <Filter>Source Files\core\gameplay\levels</Filter>
+    </ClInclude>
+    <ClInclude Include="src\core\gameplay\levels\BSPGenerator.h">
+      <Filter>Source Files\core\gameplay\levels</Filter>
+    </ClInclude>
+    <ClInclude Include="src\core\gameplay\levels\IGenerator.h">
+      <Filter>Source Files\core\gameplay\levels</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

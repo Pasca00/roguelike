@@ -1,9 +1,11 @@
 #pragma once
 
 #include "IState.h"
+#include "../gameplay/levels/LevelManager.h"
 
 class PlayingState : public IState {
 private:
+	std::unique_ptr<LevelManager> levelManager;
 
 public:
 	PlayingState(
