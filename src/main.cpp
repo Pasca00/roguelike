@@ -7,6 +7,8 @@ const int SCREEN_FPS = 60;
 const float SCREEN_TICKS_PER_FRAME = 1000.0 / SCREEN_FPS;
 
 int main(int argc, char** argv) {
+	srand(time(NULL));
+
 	Game* game = Game::getInstance();
 
 	Uint64 start;

@@ -300,6 +300,11 @@ void VideoSystem::beginTransition() {
 	this->transition = TRANSITION_EASE_IN;
 }
 
+void VideoSystem::endTransition() {
+	this->transition = TRANSITION_EASE_OUT;
+	this->transitionTime = transitionEaseTime;
+}
+
 void VideoSystem::updateTransition(float dTime) {
 	switch (transition) {
 		case TRANSITION_NONE:
@@ -315,7 +320,7 @@ void VideoSystem::updateTransition(float dTime) {
 
 			break;
 
-		case TRANSITION_HOLD:
+		/*case TRANSITION_HOLD:
 			transitionTime += dTime;
 
 			if (transitionTime >= transitionEaseTime + transitionHoldTime) {
@@ -323,7 +328,7 @@ void VideoSystem::updateTransition(float dTime) {
 				transitionTime = transitionEaseTime;
 			}
 
-			break;
+			break;*/
 
 		case TRANSITION_EASE_OUT:
 			transitionTime -= dTime;

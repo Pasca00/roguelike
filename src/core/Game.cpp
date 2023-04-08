@@ -74,7 +74,7 @@ void Game::update() {
 			this->stateChangeTime = 0;
 			this->stateChange = false;
 
-			this->generalSystem->queueThreadJob([this] {
+			/*this->generalSystem->queueThreadJob([this] {
 				this->currentState = std::make_unique<PlayingState>(
 					this->stateChange,
 					this->inputSystem,
@@ -83,7 +83,16 @@ void Game::update() {
 					this->soundSystem,
 					this->generalSystem
 				);
-			});
+			});*/
+
+			this->currentState = std::make_unique<PlayingState>(
+				this->stateChange,
+				this->inputSystem,
+				this->videoSystem,
+				this->physicsSystem,
+				this->soundSystem,
+				this->generalSystem
+				);
 			
 		}
 	}
@@ -98,7 +107,7 @@ void Game::draw() {
 }
 
 void Game::clearScreen() {
-	videoSystem->clearScreen();
+	this->videoSystem->clearScreen();
 }
 
 void Game::swapWindow() {

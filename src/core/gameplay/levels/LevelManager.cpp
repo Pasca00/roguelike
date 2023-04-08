@@ -1,9 +1,10 @@
 #include "LevelManager.h"
 
-LevelManager::LevelManager(std::unique_ptr<IGenerator> generator) {
-	this->generator = std::move(generator);
+LevelManager::LevelManager(std::shared_ptr<CastleStage>& castleStage, int tileSize) 
+	: castleStage(castleStage) {
+	this->tileSize = tileSize;
 }
 
-void LevelManager::generateTemplate() {
-	auto layout = this->generator->generateLayout();
+std::vector<std::vector<std::shared_ptr<Tile>>> LevelManager::getTileMap() {
+	return this->castleStage->getTileMap();
 }

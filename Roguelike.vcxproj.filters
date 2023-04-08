@@ -54,6 +54,15 @@
     <Filter Include="Source Files\core\gameplay\levels">
       <UniqueIdentifier>{f586fd39-62be-48a1-baec-2b490b5bb21b}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\core\gameplay\levels\tiles">
+      <UniqueIdentifier>{fcba4b8f-81f1-455f-8cfc-969509549b74}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\core\gameplay\levels\generators">
+      <UniqueIdentifier>{f9cad00b-f929-4b1b-9f6f-18f05e2e7970}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\core\gameplay\levels\stages">
+      <UniqueIdentifier>{7b5e3d09-4078-4c5a-ad63-c8fb1b37b2d5}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\main.cpp">
@@ -122,8 +131,14 @@
     <ClCompile Include="src\core\gameplay\levels\LevelManager.cpp">
       <Filter>Source Files\core\gameplay\levels</Filter>
     </ClCompile>
-    <ClCompile Include="src\core\gameplay\levels\BSPGenerator.cpp">
-      <Filter>Source Files\core\gameplay\levels</Filter>
+    <ClCompile Include="src\core\gameplay\levels\generators\BSPGenerator.cpp">
+      <Filter>Source Files\core\gameplay\levels\generators</Filter>
+    </ClCompile>
+    <ClCompile Include="src\core\gameplay\levels\stages\CastleStage.cpp">
+      <Filter>Source Files\core\gameplay\levels\stages</Filter>
+    </ClCompile>
+    <ClCompile Include="src\core\gameplay\levels\tiles\Tile.cpp">
+      <Filter>Source Files\core\gameplay\levels\tiles</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -541,11 +556,20 @@
     <ClInclude Include="src\core\gameplay\levels\LevelManager.h">
       <Filter>Source Files\core\gameplay\levels</Filter>
     </ClInclude>
-    <ClInclude Include="src\core\gameplay\levels\BSPGenerator.h">
-      <Filter>Source Files\core\gameplay\levels</Filter>
+    <ClInclude Include="src\core\gameplay\levels\generators\BSPGenerator.h">
+      <Filter>Source Files\core\gameplay\levels\generators</Filter>
     </ClInclude>
-    <ClInclude Include="src\core\gameplay\levels\IGenerator.h">
-      <Filter>Source Files\core\gameplay\levels</Filter>
+    <ClInclude Include="src\core\gameplay\levels\generators\IGenerator.h">
+      <Filter>Source Files\core\gameplay\levels\generators</Filter>
+    </ClInclude>
+    <ClInclude Include="src\core\gameplay\levels\stages\CastleStage.h">
+      <Filter>Source Files\core\gameplay\levels\stages</Filter>
+    </ClInclude>
+    <ClInclude Include="src\core\gameplay\levels\stages\IStage.h">
+      <Filter>Source Files\core\gameplay\levels\stages</Filter>
+    </ClInclude>
+    <ClInclude Include="src\core\gameplay\levels\tiles\Tile.h">
+      <Filter>Source Files\core\gameplay\levels\tiles</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

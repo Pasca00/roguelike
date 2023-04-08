@@ -91,6 +91,7 @@ public:
 	glm::ivec2 getCenteredTextPosition(std::string& text, std::shared_ptr<Hitbox> rect = NULL);
 
 	void beginTransition();
+	void endTransition();
 	void updateTransition(float dTime);
 	void drawTransition();
 	int8_t getTransition();

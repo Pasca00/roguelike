@@ -1,16 +1,20 @@
 #pragma once
 
 #include <memory>
+#include <vector>
 
-#include "IGenerator.h"
-#include "BSPGenerator.h"
+#include "stages/IStage.h"
+#include "stages/CastleStage.h"
 
 class LevelManager {
 private:
-	std::unique_ptr<IGenerator> generator;
+	int tileSize;
 
+	std::shared_ptr<CastleStage> castleStage;
 
 public:
-	LevelManager(std::unique_ptr<IGenerator> generator);
-	void generateTemplate();
+	LevelManager(std::shared_ptr<CastleStage>& castleStage, int tileSize);
+
+
+	std::vector<std::vector<std::shared_ptr<Tile>>> getTileMap();
 };
