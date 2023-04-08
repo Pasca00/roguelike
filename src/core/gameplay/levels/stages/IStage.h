@@ -14,6 +14,7 @@ protected:
 
 	std::vector<std::vector<std::shared_ptr<Texture>>> floorTextures;
 	std::vector<std::vector<std::shared_ptr<Texture>>> wallTextures;
+	std::vector<std::vector<std::shared_ptr<Texture>>> ceilingTextures;
 
 	int tileSize;
 

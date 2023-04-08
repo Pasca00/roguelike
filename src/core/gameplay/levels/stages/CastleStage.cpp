@@ -109,10 +109,118 @@ char** CastleStage::findTileType(char** stageTemplate) {
 					stageTiles[i][j] = wall_corridor_deadend;
 				} else if (stageTemplate[i + 1][j - 1] == IGenerator::WALL) {
 					stageTiles[i][j] = wall_left;
+
+					if (j >= 1) 
+						stageTiles[i][j - 1] = ceil_right;
+					if (i >= 1 && j >= 1) 
+						stageTiles[i - 1][j - 1] = ceil_right;
 				} else if (stageTemplate[i + 1][j + 1] == IGenerator::WALL) {
 					stageTiles[i][j] = wall_right;
+					
+					if (j < w - 1)
+						stageTiles[i][j + 1] = ceil_left;
+					if (j < w - 1 && i >= 1)
+						stageTiles[i - 1][j + 1] = ceil_left;
 				} else {
 					stageTiles[i][j] = wall_base;
+				}
+
+				if (i - 2 >= 0) {
+					stageTiles[i - 2][j] = ceil_bottom;
+				}
+			}
+			else {
+				if (i == 0 || i == h - 1 || j == 0 || j == w - 1) {
+					stageTiles[i][j] = ceil_base;
+					continue;
+				}
+
+				if (
+					stageTemplate[i][j - 1] == IGenerator::EMPTY &&
+					stageTemplate[i][j + 1] == IGenerator::EMPTY &&
+					stageTemplate[i - 1][j] == IGenerator::EMPTY
+					) {
+					stageTiles[i][j] = ceil_corridor_deadend_top;
+				}
+				else if (
+					stageTemplate[i][j - 1] == IGenerator::EMPTY &&
+					stageTemplate[i - 1][j] == IGenerator::EMPTY &&
+					stageTemplate[i + 1][j] == IGenerator::EMPTY
+					) {
+					stageTiles[i][j] = ceil_corridor_deadend_left;
+				}
+				else if (
+					stageTemplate[i][j + 1] == IGenerator::EMPTY &&
+					stageTemplate[i - 1][j] == IGenerator::EMPTY &&
+					stageTemplate[i + 1][j] == IGenerator::EMPTY
+					) {
+					stageTiles[i][j] = ceil_corridor_deadend_right;
+				}
+				else if (
+					stageTemplate[i][j - 1] == IGenerator::EMPTY &&
+					stageTemplate[i][j + 1] == IGenerator::EMPTY &&
+					stageTemplate[i + 1][j] == IGenerator::EMPTY
+					) {
+					stageTiles[i][j] = ceil_corridor_deadend_bottom;
+				}
+				else if (
+					stageTemplate[i][j + 1] == IGenerator::EMPTY &&
+					stageTemplate[i - 1][j] == IGenerator::EMPTY
+					) {
+					stageTiles[i][j] = ceil_corner_top_right;
+				}
+				else if (
+					stageTemplate[i][j - 1] == IGenerator::EMPTY &&
+					stageTemplate[i - 1][j] == IGenerator::EMPTY
+					) {
+					stageTiles[i][j] = ceil_corner_top_left;
+				}
+				else if (
+					stageTemplate[i][j - 1] == IGenerator::EMPTY &&
+					stageTemplate[i + 1][j] == IGenerator::EMPTY
+					) {
+					stageTiles[i][j] = ceil_corner_bottom_left;
+				}
+				else if (
+					stageTemplate[i][j + 1] == IGenerator::EMPTY &&
+					stageTemplate[i + 1][j] == IGenerator::EMPTY
+					) {
+					stageTiles[i][j] = ceil_corner_bottom_right;
+				}
+				else if (
+					stageTemplate[i - 1][j] == IGenerator::EMPTY &&
+					stageTemplate[i + 1][j] == IGenerator::EMPTY
+					) {
+					stageTiles[i][j] = ceil_corridor_horizontal;
+				}
+				else if (
+					stageTemplate[i][j - 1] == IGenerator::EMPTY &&
+					stageTemplate[i][j + 1] == IGenerator::EMPTY
+					) {
+					stageTiles[i][j] = ceil_corridor_vertical;
+				}
+				else if (
+					stageTemplate[i - 1][j] == IGenerator::EMPTY
+					) {
+					stageTiles[i][j] = ceil_top;
+				}
+				else if (
+					stageTemplate[i + 1][j] == IGenerator::EMPTY
+					) {
+					stageTiles[i][j] = ceil_bottom;
+				}
+				else if (
+					stageTemplate[i][j - 1] == IGenerator::EMPTY
+					) {
+					stageTiles[i][j] = ceil_left;
+				}
+				else if (
+					stageTemplate[i][j + 1] == IGenerator::EMPTY
+					) {
+					stageTiles[i][j] = ceil_right;
+				}
+				else {
+					stageTiles[i][j] = ceil_base;
 				}
 			}
 		}
@@ -161,6 +269,29 @@ void CastleStage::loadTextures() {
 		16,
 		32
 	);
+
+	this->ceilingTextures = this->textureManager->getTexturesFromSpriteSheet(
+		this->texturesDir + "ceiling.png",
+		{
+			2, // ceiling corridor vertical
+			2, // ceiling corridor horizontal
+			1, // ceiling corridor deadend bottom 
+			1, // ceiling corridor deadend right
+			1, // ceiling corridor deadend top
+			1, // ceiling corridor deadend left
+			3, // ceiling right
+			3, // ceiling bottom
+			3, // ceiling top
+			3, // ceiling left
+			1, // ceiling corner bottom left
+			1, // ceiling corner bottom right
+			1, // ceiling corner top right
+			1, // ceiling corner top left
+			1, // ceiling base
+		},
+		16,
+		16
+	);
 }
 
 void CastleStage::createTileMap(char** stageTemplate, char** stageTiles) {
@@ -185,6 +316,11 @@ void CastleStage::createTileMap(char** stageTemplate, char** stageTiles) {
 			} else if (i < h - 1 && stageTemplate[i][j] == IGenerator::WALL && stageTemplate[i + 1][j] == IGenerator::EMPTY) {
 				int tileType = stageTiles[i][j];
 				auto texture = this->wallTextures[tileType][rand() % this->wallTextures[tileType].size()];
+				auto view = std::make_shared<View>(texture, tileX, tileY, this->tileSize / 16);
+				this->tileMap[i][j] = std::make_shared<Tile>(view);
+			} else {
+				int tileType = stageTiles[i][j];
+				auto texture = this->ceilingTextures[tileType][rand() % this->ceilingTextures[tileType].size()];
 				auto view = std::make_shared<View>(texture, tileX, tileY, this->tileSize / 16);
 				this->tileMap[i][j] = std::make_shared<Tile>(view);
 			}
