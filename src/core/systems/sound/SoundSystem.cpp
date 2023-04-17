@@ -63,3 +63,7 @@ void SoundSystem::stopMusic() {
     Mix_PauseMusic();
 }
 
+void SoundSystem::setMusicLevel(uint8_t level) {
+    Mix_VolumeMusic(level);
+}
+

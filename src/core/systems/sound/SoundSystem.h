@@ -26,4 +26,6 @@ public:
 	void playSound(std::string name, int loops = 0);
 
 	void stopMusic();
+
+	void setMusicLevel(uint8_t level);
 };

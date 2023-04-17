@@ -201,6 +201,18 @@ void VideoSystem::draw(std::shared_ptr<Texture>& texture, std::string shaderName
 	this->clearUniforms();
 }
 
+void VideoSystem::drawEntity(std::shared_ptr<Texture>& texture, std::string shaderName) {
+	this->renderer->draw(
+		texture,
+		this->shaders[shaderName],
+		this->uintUniforms,
+		this->intUniforms,
+		this->floatUniforms
+	);
+
+	this->clearUniforms();
+}
+
 void VideoSystem::drawText(std::shared_ptr<TextView>& textView, std::string shaderName) {
 	this->renderer->drawText(
 		textView, 

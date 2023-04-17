@@ -11,10 +11,11 @@ CastleStage::CastleStage(
 CastleStage::~CastleStage() { }
 
 void CastleStage::generateStage() {
+	this->loadTextures();
+
 	auto stageTemplate = this->generateTemplate();
 	auto stageTiles = this->findTileType(stageTemplate);
 	
-	this->loadTextures();
 	this->createTileMap(stageTemplate, stageTiles);
 }
 
@@ -125,9 +126,9 @@ char** CastleStage::findTileType(char** stageTemplate) {
 					stageTiles[i][j] = wall_base;
 				}
 
-				if (i - 2 >= 0) {
+				/*if (i - 2 >= 0 && stageTiles[i - 2][j]) {
 					stageTiles[i - 2][j] = ceil_bottom;
-				}
+				}*/
 			}
 			else {
 				if (i == 0 || i == h - 1 || j == 0 || j == w - 1) {
@@ -205,7 +206,9 @@ char** CastleStage::findTileType(char** stageTemplate) {
 					stageTiles[i][j] = ceil_top;
 				}
 				else if (
-					stageTemplate[i + 1][j] == IGenerator::EMPTY
+					i < h - 3
+					&& stageTemplate[i + 2][j] == IGenerator::WALL
+					&& stageTemplate[i + 3][j] == IGenerator::EMPTY
 					) {
 					stageTiles[i][j] = ceil_bottom;
 				}
@@ -308,18 +311,18 @@ void CastleStage::createTileMap(char** stageTemplate, char** stageTiles) {
 			float tileX = j * this->tileSize;
 			float tileY = (h - i - 1) * this->tileSize;
 
+			int tileType = stageTiles[i][j];
+
 			if (stageTemplate[i][j] == IGenerator::EMPTY) {
-				int tileType = stageTiles[i][j];
 				auto texture = this->floorTextures[tileType][rand() % this->floorTextures[tileType].size()];
 				auto view = std::make_shared<View>(texture, tileX, tileY, this->tileSize / 16);
 				this->tileMap[i][j] = std::make_shared<Tile>(view);
 			} else if (i < h - 1 && stageTemplate[i][j] == IGenerator::WALL && stageTemplate[i + 1][j] == IGenerator::EMPTY) {
-				int tileType = stageTiles[i][j];
-				auto texture = this->wallTextures[tileType][rand() % this->wallTextures[tileType].size()];
+				int k = rand() % this->wallTextures[tileType].size();
+				auto texture = this->wallTextures[tileType][k];
 				auto view = std::make_shared<View>(texture, tileX, tileY, this->tileSize / 16);
 				this->tileMap[i][j] = std::make_shared<Tile>(view);
 			} else {
-				int tileType = stageTiles[i][j];
 				auto texture = this->ceilingTextures[tileType][rand() % this->ceilingTextures[tileType].size()];
 				auto view = std::make_shared<View>(texture, tileX, tileY, this->tileSize / 16);
 				this->tileMap[i][j] = std::make_shared<Tile>(view);

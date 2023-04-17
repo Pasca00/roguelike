@@ -2,6 +2,7 @@
 
 AnimationView::AnimationView(
 	std::vector<std::shared_ptr<Texture>>& frames,
+	bool repeat,
 	float frameTime,
 	float x,
 	float y,
@@ -17,11 +18,13 @@ AnimationView::AnimationView(
 	this->frameTime = frameTime;
 	this->currentFrame = 0;
 	this->timeSinceLastFrame = 0;
+	this->repeat = repeat;
 }
 
 AnimationView::AnimationView(
 	std::vector<std::shared_ptr<Texture>>& frames,
 	std::unique_ptr<Hitbox>& hitbox,
+	bool repeat,
 	float frameTime,
 	float size
 ) : IView(std::move(hitbox), size) {
@@ -29,6 +32,7 @@ AnimationView::AnimationView(
 	this->frameTime = frameTime;
 	this->currentFrame = 0;
 	this->timeSinceLastFrame = 0;
+	this->repeat = repeat;
 }
 
 GLuint AnimationView::getTextureId() {
@@ -39,8 +43,21 @@ void AnimationView::update(float dTime) {
 	this->timeSinceLastFrame += dTime;
 	if (this->timeSinceLastFrame >= this->frameTime) {
 		this->currentFrame++;
-		this->currentFrame %= this->frames.size();
+		
+		if (this->repeat) {
+			this->currentFrame %= this->frames.size();
+		}
+
 		this->timeSinceLastFrame = 0;
 	}
+}
+
+bool AnimationView::isDone() {
+	return this->currentFrame == this->frames.size();
+}
+
+void AnimationView::reset() {
+	this->currentFrame = 0;
+	this->timeSinceLastFrame = 0;
 }
 

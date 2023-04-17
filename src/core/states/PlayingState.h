@@ -2,10 +2,12 @@
 
 #include "IState.h"
 #include "../gameplay/levels/LevelManager.h"
+#include "../gameplay/entities/Player.h"
 
 class PlayingState : public IState {
 private:
 	std::unique_ptr<LevelManager> levelManager;
+	std::unique_ptr<Player> player;
 
 public:
 	PlayingState(
@@ -22,4 +24,6 @@ public:
 	virtual void handleInput() override;
 	virtual void update(float dTime) override;
 	virtual void render() override;
+
+	virtual void executePostLoad() override;
 };

@@ -12,9 +12,12 @@ private:
 	float frameTime;
 	float timeSinceLastFrame;
 
+	bool repeat;
+
 public:
 	AnimationView(
 		std::vector<std::shared_ptr<Texture>>& frames,
+		bool repeat = true,
 		float frameTime = 0.15f,
 		float x = 0.f,
 		float y = 0.f,
@@ -23,6 +26,7 @@ public:
 	AnimationView(
 		std::vector<std::shared_ptr<Texture>>& frames,
 		std::unique_ptr<Hitbox>& hitbox,
+		bool repeat = true,
 		float frameTime = 0.15f,
 		float size = 10.f
 	);
@@ -30,5 +34,8 @@ public:
 	GLuint getTextureId();
 
 	void update(float dTime) override;
+
+	bool isDone();
+	void reset();
 };
 

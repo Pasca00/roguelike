@@ -126,6 +126,9 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="src\core\gameplay\entities\Entity.cpp" />
+    <ClCompile Include="src\core\gameplay\entities\Player.cpp" />
+    <ClCompile Include="src\core\gameplay\entities\PlayerStates.cpp" />
     <ClCompile Include="src\core\gameplay\levels\generators\BSPGenerator.cpp" />
     <ClCompile Include="src\core\gameplay\levels\LevelManager.cpp" />
     <ClCompile Include="src\core\gameplay\levels\stages\CastleStage.cpp" />
@@ -134,6 +137,7 @@
     <ClCompile Include="src\core\systems\general\GeneralSystem.cpp" />
     <ClCompile Include="src\core\systems\general\ThreadPool.cpp" />
     <ClCompile Include="src\core\systems\input\IInteractable.cpp" />
+    <ClCompile Include="src\core\systems\physics\Movable.cpp" />
     <ClCompile Include="src\core\systems\physics\PhysicsSystem.cpp" />
     <ClCompile Include="src\core\systems\sound\SoundSystem.cpp" />
     <ClCompile Include="src\core\systems\video\Framebuffer.cpp" />
@@ -153,6 +157,9 @@
     <ClCompile Include="src\main.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="src\core\gameplay\entities\Entity.h" />
+    <ClInclude Include="src\core\gameplay\entities\Player.h" />
+    <ClInclude Include="src\core\gameplay\entities\PlayerStates.h" />
     <ClInclude Include="src\core\gameplay\levels\generators\BSPGenerator.h" />
     <ClInclude Include="src\core\gameplay\levels\generators\IGenerator.h" />
     <ClInclude Include="src\core\gameplay\levels\LevelManager.h" />
@@ -163,6 +170,7 @@
     <ClInclude Include="src\core\systems\general\GeneralSystem.h" />
     <ClInclude Include="src\core\systems\general\ThreadPool.h" />
     <ClInclude Include="src\core\systems\input\IInteractable.h" />
+    <ClInclude Include="src\core\systems\physics\Movable.h" />
     <ClInclude Include="src\core\systems\physics\PhysicsSystem.h" />
     <ClInclude Include="src\core\systems\sound\SoundSystem.h" />
     <ClInclude Include="src\core\systems\video\Framebuffer.h" />

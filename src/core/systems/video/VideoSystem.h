@@ -71,6 +71,7 @@ public:
 
 	void draw(std::shared_ptr<IView>& view, std::string shaderName = "base");
 	void draw(std::shared_ptr<Texture>& texture, std::string shaderName = "base");
+	void drawEntity(std::shared_ptr<Texture>& texture, std::string shaderName = "base");
 	void drawText(std::shared_ptr<TextView>& textView, std::string shaderName = "text");
 
 	void swapWindow();

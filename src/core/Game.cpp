@@ -62,6 +62,7 @@ bool Game::shouldRun() {
 
 void Game::collectInput() {
 	this->inputSystem->collectInput();
+	this->currentState->handleInput();
 }
 
 void Game::update() {
@@ -92,8 +93,9 @@ void Game::update() {
 				this->physicsSystem,
 				this->soundSystem,
 				this->generalSystem
-				);
-			
+			);
+
+			this->currentState->executePostLoad();
 		}
 	}
 

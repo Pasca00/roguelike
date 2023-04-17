@@ -25,4 +25,6 @@ public:
 	void handleInput() override;
 	void update(float dTime) override;
 	void render() override;
+
+	virtual void executePostLoad() override;
 };

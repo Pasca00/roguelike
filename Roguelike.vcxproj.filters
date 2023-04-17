@@ -63,6 +63,9 @@
     <Filter Include="Source Files\core\gameplay\levels\stages">
       <UniqueIdentifier>{7b5e3d09-4078-4c5a-ad63-c8fb1b37b2d5}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\core\gameplay\entities">
+      <UniqueIdentifier>{e8167cb0-e816-4cb3-81ed-dead0c127651}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\main.cpp">
@@ -139,6 +142,18 @@
     </ClCompile>
     <ClCompile Include="src\core\gameplay\levels\tiles\Tile.cpp">
       <Filter>Source Files\core\gameplay\levels\tiles</Filter>
+    </ClCompile>
+    <ClCompile Include="src\core\gameplay\entities\Entity.cpp">
+      <Filter>Source Files\core\gameplay\entities</Filter>
+    </ClCompile>
+    <ClCompile Include="src\core\gameplay\entities\Player.cpp">
+      <Filter>Source Files\core\gameplay\entities</Filter>
+    </ClCompile>
+    <ClCompile Include="src\core\systems\physics\Movable.cpp">
+      <Filter>Source Files\core\systems\physics</Filter>
+    </ClCompile>
+    <ClCompile Include="src\core\gameplay\entities\PlayerStates.cpp">
+      <Filter>Source Files\core\gameplay\entities</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -570,6 +585,18 @@
     </ClInclude>
     <ClInclude Include="src\core\gameplay\levels\tiles\Tile.h">
       <Filter>Source Files\core\gameplay\levels\tiles</Filter>
+    </ClInclude>
+    <ClInclude Include="src\core\gameplay\entities\Entity.h">
+      <Filter>Source Files\core\gameplay\entities</Filter>
+    </ClInclude>
+    <ClInclude Include="src\core\gameplay\entities\Player.h">
+      <Filter>Source Files\core\gameplay\entities</Filter>
+    </ClInclude>
+    <ClInclude Include="src\core\systems\physics\Movable.h">
+      <Filter>Source Files\core\systems\physics</Filter>
+    </ClInclude>
+    <ClInclude Include="src\core\gameplay\entities\PlayerStates.h">
+      <Filter>Source Files\core\gameplay\entities</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

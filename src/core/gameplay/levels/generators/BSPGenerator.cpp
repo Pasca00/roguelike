@@ -109,8 +109,8 @@ TreeNode* BSPGenerator::buildTree(int depth, int x, int y, int h, int w) {
 }
 
 void BSPGenerator::generateRoomForNode(TreeNode* node) {
-	int x = randomInRange(node->x, node->x + node->w / 4);
-	int y = randomInRange(node->y, node->y + node->h / 4);
+	int x = randomInRange(node->x + 1, node->x + (node->w - node->x) / 4);
+	int y = randomInRange(node->y + 1, node->y + (node->h - node->y) / 4);
 	int w = node->w - 1;
 	int h = node->h - 1;
 

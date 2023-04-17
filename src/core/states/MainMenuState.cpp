@@ -70,3 +70,5 @@ void MainMenuState::render() {
 
 	this->videoSystem->drawText(this->textView);
 };
+
+void MainMenuState::executePostLoad() { }
