@@ -22,6 +22,9 @@ public:
 	float getX();
 	float getY();
 
+	void setX(float x);
+	void setY(float y);
+
 	float getSize();
 
 	virtual GLuint getTextureId() = 0;

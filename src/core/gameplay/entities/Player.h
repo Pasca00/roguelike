@@ -1,29 +1,18 @@
 #pragma once
 
-#include "../../systems/physics/Movable.h"
-#include "PlayerStates.h"
+#include "Entity.h"
 
-class Player {
+class Player : public Entity {
 private:
-	std::shared_ptr<Movable> movable;
 
-	std::unique_ptr<PlayerIdleState> idleState;
-	std::unique_ptr<PlayerWalkingState> walkingState;
-	std::unique_ptr<PlayerAttackState> attackState;
-	std::unique_ptr<PlayerDyingState> dyingState;
-
-	Entity* currentState;
-
-	//Uint8 currentState;
 
 public:
 	Player(
-		glm::vec2& position,
-		std::shared_ptr<AnimationView>& idleAnimation1,
-		std::shared_ptr<AnimationView>& idleAnimation2,
-		std::shared_ptr<AnimationView>& attackAnimation,
-		std::shared_ptr<AnimationView>& walkingAnimation,
-		std::shared_ptr<AnimationView>& deathAnimation
+		std::shared_ptr<Movable>& movableComponent,
+		std::vector<std::shared_ptr<AnimationView>>& idleAnimations,
+		std::vector<std::shared_ptr<AnimationView>>& attackAnimations,
+		std::vector<std::shared_ptr<AnimationView>>& moveAnimations,
+		std::shared_ptr<AnimationView>& deadAnimation
 	);
 
 	void handleInput(std::shared_ptr<Input>& input);

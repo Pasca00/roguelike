@@ -2,7 +2,11 @@
 
 #include <SDL_timer.h>
 
+#include <vector>
+#include <memory>
+
 #include "../ISystem.h"
+#include "Movable.h"
 
 class PhysicsSystem : public ISystem {
 private:
@@ -12,13 +16,21 @@ private:
 	float dTime;
 	float totalTime;
 
+	std::vector<std::shared_ptr<Movable>> movables;
+
+	float friction;
+
 public:
 	PhysicsSystem();
 
 	void init() override;
 
+	void update(float dtime);
+
 	void computeFrameDeltaTime();
 	float getFrameDeltaTime();
 	
 	unsigned int getTotalTime();
+
+	void addMovable(std::shared_ptr<Movable>& movable);
 };

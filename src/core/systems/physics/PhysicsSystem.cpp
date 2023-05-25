@@ -7,6 +7,21 @@ void PhysicsSystem::init() {
 	this->currTime = 0;
 	this->prevTime = 0;
 	this->dTime = 0;
+
+	this->friction = 12.f;
+}
+
+void PhysicsSystem::update(float dtime) {
+	for (auto m : this->movables) {
+		m->accelerate(dtime);
+		m->applyFriction(this->friction * dtime);
+
+		m->move(dtime);
+	}
+}
+
+void PhysicsSystem::addMovable(std::shared_ptr<Movable>& movable) {
+	this->movables.push_back(movable);
 }
 
 void PhysicsSystem::computeFrameDeltaTime() {

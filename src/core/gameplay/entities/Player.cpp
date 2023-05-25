@@ -1,39 +1,77 @@
 #include "Player.h"
 
 Player::Player(
-	glm::vec2& position,
-	std::shared_ptr<AnimationView>& idleAnimation1,
-	std::shared_ptr<AnimationView>& idleAnimation2,
-	std::shared_ptr<AnimationView>& attackAnimation,
-	std::shared_ptr<AnimationView>& walkingAnimation,
-	std::shared_ptr<AnimationView>& deathAnimation
-) {
-	this->currentState = Player::STATE_IDLE;
-	this->movable = std::make_shared<Movable>(position);
+	std::shared_ptr<Movable>& movableComponent,
+	std::vector<std::shared_ptr<AnimationView>>& idleAnimations,
+	std::vector<std::shared_ptr<AnimationView>>& attackAnimations,
+	std::vector<std::shared_ptr<AnimationView>>& moveAnimations,
+	std::shared_ptr<AnimationView>& deadAnimation
+) : Entity(movableComponent, idleAnimations, attackAnimations, moveAnimations, deadAnimation) {
 
-	this->idleState = std::make_unique<PlayerIdleState>(idleAnimation1, idleAnimation2);
-	this->attackState = std::make_unique<PlayerAttackState>(attackAnimation);
-	this->walkingState = std::make_unique<PlayerWalkingState>(walkingAnimation);
-	this->dyingState = std::make_unique<PlayerDyingState>(deathAnimation);
-
-	this->currentState = this->idleState.get();
 }
 
 void Player::handleInput(std::shared_ptr<Input>& input) {
-	if (input->actions["LEFT"]) {
-		this->currentState = this->walkingState.get();
-	}
-	else {
-		this->currentState = this->idleState.get();
-	}
+	switch (this->currentState) {
+	case EntityState::IDLE:
+		if (input->actions["CLICK"]) {
+			this->currentState = EntityState::ATTACK;
+			this->animation = attackAnimations[rand() % attackAnimations.size()];
+			this->animation->reset();
+		} else {
+			if (!input->actions["LEFT"] != !input->actions["RIGHT"]) {
+				this->currentState = EntityState::MOVE;
+				this->movableComponent->startMovement();
+				this->animation = moveAnimations[rand() % moveAnimations.size()];
+				this->animation->reset();
+			}
+		}
 
-	this->currentState->handleInput(input);
+		break;
+
+	case EntityState::MOVE:
+		if (input->actions["LEFT"]) {
+			this->movableComponent->setXDirection(-1);
+		} else if (input->actions["RIGHT"]) {
+			this->movableComponent->setXDirection(1);
+		} else if (input->actions["DOWN"]) {
+			this->movableComponent->setYDirection(-1);
+		} else if (input->actions["UP"]) {
+			this->movableComponent->setYDirection(1);
+		} else {
+			this->movableComponent->stopMovement();
+			this->currentState = EntityState::IDLE;
+			this->animation = idleAnimations[rand() % idleAnimations.size()];
+			this->animation->reset();
+		}
+
+		break;
+	}
 }
 
 void Player::update(float dtime) {
-	this->currentState->update(dtime);
+	this->animation->update(dtime);
+
+	switch (this->currentState) {
+	case EntityState::IDLE:
+		if (this->animation->isDone()) {
+			this->animation = this->idleAnimations[rand() % idleAnimations.size()];
+			this->animation->reset();
+		}
+		break;
+
+	case EntityState::ATTACK:
+		if (this->animation->isDone()) {
+			this->currentState = EntityState::IDLE;
+			this->animation = this->attackAnimations[rand() % attackAnimations.size()];
+			this->animation->reset();
+		}
+		break;
+	}
 }
 
 std::shared_ptr<AnimationView> Player::getCurrentTexture() {
-	return this->currentState->getCurrentTexture();
+	this->animation->setX(this->movableComponent->position.x);
+	this->animation->setY(this->movableComponent->position.y);
+
+	return this->animation;
 }

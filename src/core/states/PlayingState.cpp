@@ -47,14 +47,21 @@ PlayingState::PlayingState(
 		auto attack = std::make_shared<AnimationView>(rogueTextures[3], false, 0.15f, 120, 120, 3);
 		auto death = std::make_shared<AnimationView>(rogueTextures[4], false, 0.15f, 120, 120, 3);
 
+		std::vector<std::shared_ptr<AnimationView>> idleVec = { idle1, idle2 };
+		std::vector<std::shared_ptr<AnimationView>> walkVec = { walk };
+		std::vector<std::shared_ptr<AnimationView>> attackVec = { attack };
+
+		auto movable = std::make_shared<Movable>(glm::vec2(30, 30), 5.f);
+
 		this->player = std::make_unique<Player>(
-			glm::vec2(30, 30),
-			idle1,
-			idle2,
-			attack,
-			walk,
+			movable,
+			idleVec,
+			attackVec,
+			walkVec,
 			death
 		);
+
+		this->physicsSystem->addMovable(movable);
 	}
 
 	this->videoSystem->endTransition();
@@ -69,6 +76,9 @@ void PlayingState::handleInput() {
 }
 
 void PlayingState::update(float dTime) {
+	// TODO: pass this function to thread pool to make it more efficient 
+	this->physicsSystem->update(dTime);
+
 	this->player->update(dTime);
 }
 
