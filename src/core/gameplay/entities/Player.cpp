@@ -14,15 +14,13 @@ void Player::handleInput(std::shared_ptr<Input>& input) {
 	switch (this->currentState) {
 	case EntityState::IDLE:
 		if (input->actions["CLICK"]) {
-			this->currentState = EntityState::ATTACK;
-			this->animation = attackAnimations[rand() % attackAnimations.size()];
-			this->animation->reset();
+			this->switchState(EntityState::ATTACK);
 		} else {
-			if (!input->actions["LEFT"] != !input->actions["RIGHT"]) {
-				this->currentState = EntityState::MOVE;
-				this->movableComponent->startMovement();
-				this->animation = moveAnimations[rand() % moveAnimations.size()];
-				this->animation->reset();
+			if (
+				input->actions["LEFT"] || input->actions["RIGHT"]
+				|| input->actions["UP"] || input->actions["DOWN"]
+			) {
+				this->switchState(EntityState::MOVE);
 			}
 		}
 
@@ -33,15 +31,21 @@ void Player::handleInput(std::shared_ptr<Input>& input) {
 			this->movableComponent->setXDirection(-1);
 		} else if (input->actions["RIGHT"]) {
 			this->movableComponent->setXDirection(1);
-		} else if (input->actions["DOWN"]) {
+		} else {
+			this->movableComponent->setXDirection(0);
+		}
+		
+		if (input->actions["DOWN"]) {
 			this->movableComponent->setYDirection(-1);
 		} else if (input->actions["UP"]) {
 			this->movableComponent->setYDirection(1);
 		} else {
-			this->movableComponent->stopMovement();
-			this->currentState = EntityState::IDLE;
-			this->animation = idleAnimations[rand() % idleAnimations.size()];
-			this->animation->reset();
+			this->movableComponent->setYDirection(0);
+		}
+
+		if (!input->actions["LEFT"] && !input->actions["RIGHT"]
+			&& !input->actions["UP"] && !input->actions["DOWN"]) {
+			this->switchState(EntityState::IDLE);
 		}
 
 		break;

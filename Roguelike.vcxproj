@@ -140,6 +140,7 @@
     <ClCompile Include="src\core\systems\physics\Movable.cpp" />
     <ClCompile Include="src\core\systems\physics\PhysicsSystem.cpp" />
     <ClCompile Include="src\core\systems\sound\SoundSystem.cpp" />
+    <ClCompile Include="src\core\systems\video\Camera.cpp" />
     <ClCompile Include="src\core\systems\video\Framebuffer.cpp" />
     <ClCompile Include="src\core\systems\video\views\IView.cpp" />
     <ClCompile Include="src\core\systems\video\views\AnimationView.cpp" />
@@ -173,6 +174,7 @@
     <ClInclude Include="src\core\systems\physics\Movable.h" />
     <ClInclude Include="src\core\systems\physics\PhysicsSystem.h" />
     <ClInclude Include="src\core\systems\sound\SoundSystem.h" />
+    <ClInclude Include="src\core\systems\video\Camera.h" />
     <ClInclude Include="src\core\systems\video\Framebuffer.h" />
     <ClInclude Include="src\core\systems\video\views\IView.h" />
     <ClInclude Include="src\core\systems\video\views\AnimationView.h" />

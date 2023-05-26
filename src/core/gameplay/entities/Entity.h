@@ -21,6 +21,8 @@ protected:
 	std::vector<std::shared_ptr<AnimationView>> moveAnimations;
 	std::shared_ptr<AnimationView> deadAnimation;
 
+	void switchState(EntityState to);
+
 public:
 	Entity( // TODO: change these to pairs or maps
 		std::shared_ptr<Movable>& movableComponent,

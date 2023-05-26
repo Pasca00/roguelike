@@ -18,3 +18,21 @@ Entity::Entity(
 std::shared_ptr<AnimationView> Entity::getCurrentTexture() {
 	return this->animation;
 }
+
+void Entity::switchState(EntityState to) {
+	if (to == EntityState::MOVE) {
+		this->movableComponent->startMovement();
+		this->animation = moveAnimations[rand() % moveAnimations.size()];
+	} else if (to == EntityState::IDLE) {
+		this->movableComponent->stopMovement();
+		this->movableComponent->setXDirection(0);
+		this->movableComponent->setYDirection(0);
+		this->animation = idleAnimations[rand() % idleAnimations.size()];
+	} else if (to == EntityState::ATTACK) {
+		this->movableComponent->startMovement();
+		this->animation = deadAnimation;
+	}
+
+	this->currentState = to;
+	this->animation->reset();
+}
