@@ -13,8 +13,8 @@ void PhysicsSystem::init() {
 
 void PhysicsSystem::update(float dtime) {
 	for (auto m : this->movables) {
-		m->accelerate(dtime);
 		m->applyFriction(this->friction * dtime);
+		m->accelerate(dtime);
 
 		m->move(dtime);
 	}

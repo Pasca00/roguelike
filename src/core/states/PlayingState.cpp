@@ -51,7 +51,7 @@ PlayingState::PlayingState(
 		std::vector<std::shared_ptr<AnimationView>> walkVec = { walk };
 		std::vector<std::shared_ptr<AnimationView>> attackVec = { attack };
 
-		auto movable = std::make_shared<Movable>(glm::vec2(30, 30), 5.f);
+		auto movable = std::make_shared<Movable>(playerHitbox, 5.f);
 
 		this->player = std::make_unique<Player>(
 			movable,
@@ -62,7 +62,12 @@ PlayingState::PlayingState(
 		);
 
 		this->physicsSystem->addMovable(movable);
+
+		this->videoSystem->setCameraSubject(playerHitbox);
+		this->videoSystem->drawRelativeToCamera(true);
 	}
+
+	this->physicsSystem->addMovable(this->videoSystem->getCamera()->getFocusZone());
 
 	this->videoSystem->endTransition();
 }
@@ -78,6 +83,8 @@ void PlayingState::handleInput() {
 void PlayingState::update(float dTime) {
 	// TODO: pass this function to thread pool to make it more efficient 
 	this->physicsSystem->update(dTime);
+
+	this->videoSystem->updateCamera(dTime);
 
 	this->player->update(dTime);
 }

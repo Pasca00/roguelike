@@ -13,7 +13,7 @@ protected:
 	std::shared_ptr<Movable> movableComponent;
 
 	EntityState currentState;
-	
+
 	std::shared_ptr<AnimationView> animation;
 
 	std::vector<std::shared_ptr<AnimationView>> idleAnimations;

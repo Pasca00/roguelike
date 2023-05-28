@@ -18,6 +18,7 @@
 #include "textures/TextureManager.h"
 #include "../../Paths.h"
 #include "Framebuffer.h"
+#include "Camera.h"
 
 #define TRANSITION_NONE		 0
 #define TRANSITION_EASE_IN   1
@@ -29,6 +30,9 @@ private:
 	std::unique_ptr<Window> window;
 	std::unique_ptr<Renderer> renderer;
 	std::shared_ptr<TextureManager> textureManager;
+	std::shared_ptr<Camera> camera;
+
+	bool drawWithCamera;
 
 	std::unordered_map<std::string, std::shared_ptr<Shader>> shaders;
 	
@@ -57,6 +61,7 @@ private:
 	void loadInitialTextures();
 	void initUniforms();
 	void initTransitionUtils();
+	void initCamera();
 
 	void clearUniforms();
 
@@ -97,4 +102,9 @@ public:
 	void drawTransition();
 	int8_t getTransition();
 	/* TODO: HANDLE TRANSITION EFFECT (EASE IN, HOLD, EASE OUT) */
+
+	std::shared_ptr<Camera>& getCamera();
+	void updateCamera(float dTime);
+	void setCameraSubject(std::shared_ptr<Hitbox>& hitbox);
+	void drawRelativeToCamera(bool v);
 };

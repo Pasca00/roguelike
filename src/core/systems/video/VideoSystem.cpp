@@ -24,6 +24,7 @@ void VideoSystem::init() {
 	this->loadInitialTextures();
 	this->initUniforms();
 	this->initTransitionUtils();
+	this->initCamera();
 }
 
 void VideoSystem::initSDL() {
@@ -105,6 +106,11 @@ void VideoSystem::initTransitionUtils() {
 	this->tranistionTexture = this->textureManager->makeTexture(emptyData, window->getWidth(), window->getHeight(), 4);
 }
 
+void VideoSystem::initCamera() {
+	this->drawWithCamera = false;
+	this->camera = std::make_shared<Camera>(this->getWindowWidth(), this->getWindowHeight());
+}
+
 void VideoSystem::loadGlyphs() {
 	FT_Library library;
 	auto error = FT_Init_FreeType(&library);
@@ -173,11 +179,19 @@ void VideoSystem::clearUniforms() {
 }
 
 void VideoSystem::clearScreen() {
-	glClearColor(0.5f, 0.1f, 0.1f, 1.0f);
+	glClearColor(0.f, 0.f, 0.f, 1.0f);
 	glClear(GL_COLOR_BUFFER_BIT);
 }
 
 void VideoSystem::draw(std::shared_ptr<IView>& view, std::string shaderName) {
+	auto prevX = view->getX();
+	auto prevY = view->getY();
+
+	if (this->drawWithCamera) {
+		view->setX(prevX - this->camera->getX());
+		view->setY(prevY - this->camera->getY());
+	}
+
 	this->renderer->draw(
 		view, 
 		this->shaders[shaderName],
@@ -187,6 +201,11 @@ void VideoSystem::draw(std::shared_ptr<IView>& view, std::string shaderName) {
 	);
 
 	this->clearUniforms();
+
+	if (this->drawWithCamera) {
+		view->setX(prevX);
+		view->setY(prevY);
+	}
 }
 
 void VideoSystem::draw(std::shared_ptr<Texture>& texture, std::string shaderName) {
@@ -371,4 +390,20 @@ void VideoSystem::drawTransition() {
 
 int8_t VideoSystem::getTransition() {
 	return this->transition;
+}
+
+std::shared_ptr<Camera>& VideoSystem::getCamera() {
+	return this->camera;
+}
+
+void VideoSystem::updateCamera(float dTime) {
+	this->camera->update(dTime);
+}
+
+void VideoSystem::setCameraSubject(std::shared_ptr<Hitbox>& hitbox) {
+	this->camera->setSubject(hitbox);
+}
+
+void VideoSystem::drawRelativeToCamera(bool v) {
+	this->drawWithCamera = v;
 }

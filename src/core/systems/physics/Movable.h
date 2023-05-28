@@ -1,12 +1,17 @@
 #pragma once
 
+#include <memory>
+
 #include "../../../glm/glm.hpp"
+#include "../../gameplay/Hitbox.h"
 
 class Movable {
 public:
+	std::shared_ptr<Hitbox> hitbox;
+
 	glm::vec2 velocity;
 	glm::vec2 direction;
-	glm::vec2 position;
+	//glm::vec2 position;
 
 	float currentAcceleration;
 	float maxSpeed;
@@ -15,7 +20,7 @@ public:
 	bool isMoving;
 
 public:
-	Movable(glm::vec2& position, float acceleration = 2.5f);
+	Movable(std::shared_ptr<Hitbox>& hitbox, float acceleration = 2.5f);
 
 	void setXDirection(float dir);
 	void setYDirection(float dir);
