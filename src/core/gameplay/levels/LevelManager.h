@@ -17,4 +17,6 @@ public:
 
 
 	std::vector<std::vector<std::shared_ptr<Tile>>> getTileMap();
+
+	std::shared_ptr<CastleStage>& getCurrentStage();
 };

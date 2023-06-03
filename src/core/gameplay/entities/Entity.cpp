@@ -13,6 +13,7 @@ Entity::Entity(
 	moveAnimations(moveAnimations),
 	deadAnimation(deadAnimation) {
 	this->currentState = EntityState::IDLE;
+	this->drawFlipped = false;
 }
 
 std::shared_ptr<AnimationView> Entity::getCurrentTexture() {

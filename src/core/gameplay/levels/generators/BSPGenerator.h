@@ -4,21 +4,6 @@
 
 #include "IGenerator.h"
 
-struct TreeNode {
-	int x;
-	int y;
-	int h;
-	int w;
-
-	TreeNode* l;
-	TreeNode* r;
-
-	TreeNode(int x, int y, int h, int w) : x(x), y(y), h(h), w(w) {
-		l = NULL;
-		r = NULL;
-	}
-};
-
 class BSPGenerator : public IGenerator {
 private:
 	int depth;
@@ -33,4 +18,5 @@ public:
 	~BSPGenerator();
 
 	char** generateLayout() override;
+
 };

@@ -183,6 +183,26 @@ void VideoSystem::clearScreen() {
 	glClear(GL_COLOR_BUFFER_BIT);
 }
 
+bool VideoSystem::viewIsOnScreen(std::shared_ptr<IView>& view) {
+	if (view->getX() + view->getWidth() * view->getSize() < 0) {
+		return false;
+	}
+
+	if (view->getY() + view->getHeight() * view->getSize() < 0) {
+		return false;
+	}
+	
+	if (view->getX() > this->getWindowWidth()) {
+		return false;
+	}
+	
+	if (view->getY() > this->getWindowHeight()) {
+		return false;
+	}
+
+	return true;
+}
+
 void VideoSystem::draw(std::shared_ptr<IView>& view, std::string shaderName) {
 	auto prevX = view->getX();
 	auto prevY = view->getY();
@@ -192,13 +212,15 @@ void VideoSystem::draw(std::shared_ptr<IView>& view, std::string shaderName) {
 		view->setY(prevY - this->camera->getY());
 	}
 
-	this->renderer->draw(
-		view, 
-		this->shaders[shaderName],
-		this->uintUniforms,
-		this->intUniforms,
-		this->floatUniforms
-	);
+	if (this->viewIsOnScreen(view)) {
+		this->renderer->draw(
+			view,
+			this->shaders[shaderName],
+			this->uintUniforms,
+			this->intUniforms,
+			this->floatUniforms
+		);
+	}
 
 	this->clearUniforms();
 

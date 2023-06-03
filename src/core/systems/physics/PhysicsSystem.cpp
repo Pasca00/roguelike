@@ -34,6 +34,11 @@ void PhysicsSystem::computeFrameDeltaTime() {
 	this->totalTime += this->dTime;
 }
 
+void PhysicsSystem::setMap(std::vector<std::vector<std::shared_ptr<Tile>>>& tilemap, TreeNode* mapTree) {
+	this->currentTilemap = tilemap;
+	this->currentMapTree = mapTree;
+}
+
 float PhysicsSystem::getFrameDeltaTime() {
 	return dTime;
 }

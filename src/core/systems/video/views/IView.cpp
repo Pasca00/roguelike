@@ -3,11 +3,13 @@
 IView::IView(float x, float y, float w, float h, float size) {
 	this->hitbox = std::make_unique<Hitbox>(x, y, w, h);
 	this->size = size;
+	this->renderFlipped = false;
 }
 
 IView::IView(std::unique_ptr<Hitbox>& hitbox, float size) {
 	this->hitbox = std::move(hitbox);
 	this->size = size;
+	this->renderFlipped = false;
 }
 
 IView::~IView() {
@@ -43,3 +45,11 @@ float IView::getSize() {
 }
 
 void IView::update(float dTime) { }
+
+void IView::flip(bool f) {
+	this->renderFlipped = f;
+}
+
+bool IView::isFlipped() {
+	return this->renderFlipped;
+}

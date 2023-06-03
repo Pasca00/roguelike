@@ -23,6 +23,8 @@ protected:
 
 	void switchState(EntityState to);
 
+	bool drawFlipped;
+
 public:
 	Entity( // TODO: change these to pairs or maps
 		std::shared_ptr<Movable>& movableComponent,

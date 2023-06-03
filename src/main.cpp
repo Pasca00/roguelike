@@ -14,6 +14,9 @@ int main(int argc, char** argv) {
 	Uint64 start;
 	Uint64 end;
 
+	Uint32 nFrames = 0;
+	float totalTimeElapsed = 0;
+
 	while (game->shouldRun()) {
 		start = SDL_GetPerformanceCounter();
 

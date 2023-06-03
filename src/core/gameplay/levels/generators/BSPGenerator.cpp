@@ -153,7 +153,7 @@ void BSPGenerator::connectRoomsForNode(TreeNode* node) {
 }
 
 char** BSPGenerator::generateLayout() {
-	TreeNode* tree = buildTree(this->depth, 1, 1, this->h - 1, this->w - 1);
+	this->mapTree = buildTree(this->depth, 1, 1, this->h - 1, this->w - 1);
 
 	for (int i = 0; i < h; i++) {
 		for (int j = 0; j < w; j++) {

@@ -9,6 +9,8 @@ class IView {
 private:
 	std::unique_ptr<Hitbox> hitbox;
 
+	bool renderFlipped;
+
 	float size;
 
 public:
@@ -30,5 +32,8 @@ public:
 	virtual GLuint getTextureId() = 0;
 
 	virtual void update(float dTime);
+
+	void flip(bool flip);
+	bool isFlipped();
 };
 

@@ -12,12 +12,12 @@ PlayingState::PlayingState(
 		auto castleStage = std::make_shared<CastleStage>(
 			std::static_pointer_cast<IGenerator>(std::make_shared<BSPGenerator>(50, 100, 5)),
 			this->videoSystem->getTextureManager(),
-			32
-			);
+			64
+		);
 
 		this->levelManager = std::make_unique<LevelManager>(
 			castleStage,
-			16
+			32
 		);
 
 		castleStage->generateStage();
@@ -40,12 +40,12 @@ PlayingState::PlayingState(
 			}
 		);
 
-		auto playerHitbox = std::make_shared<Hitbox>(30, 30);
 		auto idle1 = std::make_shared<AnimationView>(rogueTextures[0], false, 0.15f, 120, 120, 3);
 		auto idle2 = std::make_shared<AnimationView>(rogueTextures[1], false, 0.15f, 120, 120, 3);
 		auto walk = std::make_shared<AnimationView>(rogueTextures[2], true, 0.15f, 120, 120, 3);
 		auto attack = std::make_shared<AnimationView>(rogueTextures[3], false, 0.15f, 120, 120, 3);
 		auto death = std::make_shared<AnimationView>(rogueTextures[4], false, 0.15f, 120, 120, 3);
+		auto playerHitbox = std::make_shared<Hitbox>(30, 30, 36, 30);
 
 		std::vector<std::shared_ptr<AnimationView>> idleVec = { idle1, idle2 };
 		std::vector<std::shared_ptr<AnimationView>> walkVec = { walk };
@@ -81,6 +81,7 @@ void PlayingState::handleInput() {
 }
 
 void PlayingState::update(float dTime) {
+	this->levelManager->getCurrentStage();
 	// TODO: pass this function to thread pool to make it more efficient 
 	this->physicsSystem->update(dTime);
 
@@ -90,7 +91,7 @@ void PlayingState::update(float dTime) {
 }
 
 void PlayingState::render() {
-	auto tileMap = this->levelManager->getTileMap();
+	auto& tileMap = this->levelManager->getTileMap();
 
 	for (int i = 0; i < tileMap.size(); i++) {
 		for (int j = 0; j < tileMap[i].size(); j++) {

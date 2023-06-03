@@ -37,4 +37,8 @@ public:
 	std::vector<std::vector<std::shared_ptr<Tile>>> getTileMap() {
 		return this->tileMap;
 	}
+
+	TreeNode* getMapTree() {
+		return this->generator->mapTree;
+	}
 };

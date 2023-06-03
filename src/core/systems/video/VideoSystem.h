@@ -67,6 +67,8 @@ private:
 
 	void loadGlyphs();
 
+	bool viewIsOnScreen(std::shared_ptr<IView>& view);
+
 public:
 	void init();
 

@@ -29,8 +29,10 @@ void Player::handleInput(std::shared_ptr<Input>& input) {
 	case EntityState::MOVE:
 		if (input->actions["LEFT"]) {
 			this->movableComponent->setXDirection(-1);
+			this->drawFlipped = true;
 		} else if (input->actions["RIGHT"]) {
 			this->movableComponent->setXDirection(1);
+			this->drawFlipped = false;
 		} else {
 			this->movableComponent->setXDirection(0);
 		}
@@ -76,6 +78,8 @@ void Player::update(float dtime) {
 std::shared_ptr<AnimationView> Player::getCurrentTexture() {
 	this->animation->setX(this->movableComponent->hitbox->x);
 	this->animation->setY(this->movableComponent->hitbox->y);
+
+	this->animation->flip(this->drawFlipped);
 
 	return this->animation;
 }

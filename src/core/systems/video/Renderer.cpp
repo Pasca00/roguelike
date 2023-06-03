@@ -106,6 +106,8 @@ void Renderer::draw(
 	shader->setModelMatrix(modelMatrix);
 	shader->setProjectionMatrix(this->projectionMatrix);
 
+	glUniform1i(shader->getUniformLocation("render_flipped"), view->isFlipped() ? 1 : 0);
+
 	this->setUintUniforms(shader, uintUniforms);
 	this->setIntUniforms(shader, intUniforms);
 	this->setFloatUniforms(shader, floatUniforms);

@@ -8,3 +8,7 @@ LevelManager::LevelManager(std::shared_ptr<CastleStage>& castleStage, int tileSi
 std::vector<std::vector<std::shared_ptr<Tile>>> LevelManager::getTileMap() {
 	return this->castleStage->getTileMap();
 }
+
+std::shared_ptr<CastleStage>& LevelManager::getCurrentStage() {
+	return this->castleStage;
+}
