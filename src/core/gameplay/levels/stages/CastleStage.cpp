@@ -17,6 +17,16 @@ void CastleStage::generateStage() {
 	auto stageTiles = this->findTileType(stageTemplate);
 	
 	this->createTileMap(stageTemplate, stageTiles);
+
+	for (int i = 0; i < tileMap.size(); i++) {
+		for (int j = tileMap[i].size() - 1; j >= 0; j--) {
+			if (stageTemplate[i][j] == IGenerator::EMPTY) {
+				auto& playerTileView = tileMap[i][j]->getView();
+				this->playerStartPosX = playerTileView->getX();
+				this->playerStartPosY = playerTileView->getY();
+			}
+		}
+	}
 }
 
 char** CastleStage::findTileType(char** stageTemplate) {
@@ -327,6 +337,9 @@ void CastleStage::createTileMap(char** stageTemplate, char** stageTiles) {
 				auto view = std::make_shared<View>(texture, tileX, tileY, this->tileSize / 16);
 				this->tileMap[i][j] = std::make_shared<Tile>(view);
 			}
+
+
+			this->tileMap[i][j]->type = stageTemplate[i][j];
 		}
 	}
 

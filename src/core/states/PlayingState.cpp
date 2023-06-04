@@ -21,6 +21,8 @@ PlayingState::PlayingState(
 		);
 
 		castleStage->generateStage();
+
+		this->physicsSystem->setMap(this->levelManager->getTileMap(), castleStage->getMapTree());
 	}
 
 	{
@@ -28,6 +30,9 @@ PlayingState::PlayingState(
 	}
 
 	{
+		float playerX = this->levelManager->getCurrentStage()->playerStartPosX;
+		float playerY = this->levelManager->getCurrentStage()->playerStartPosY;
+
 		auto textureManager = this->videoSystem->getTextureManager();
 		auto rogueTextures = textureManager->getTexturesFromSpriteSheet(
 			Paths::CHARACTERS_DIR + "rogue.png",
@@ -45,7 +50,7 @@ PlayingState::PlayingState(
 		auto walk = std::make_shared<AnimationView>(rogueTextures[2], true, 0.15f, 120, 120, 3);
 		auto attack = std::make_shared<AnimationView>(rogueTextures[3], false, 0.15f, 120, 120, 3);
 		auto death = std::make_shared<AnimationView>(rogueTextures[4], false, 0.15f, 120, 120, 3);
-		auto playerHitbox = std::make_shared<Hitbox>(30, 30, 36, 30);
+		auto playerHitbox = std::make_shared<Hitbox>(playerX, playerY, 48, 32);
 
 		std::vector<std::shared_ptr<AnimationView>> idleVec = { idle1, idle2 };
 		std::vector<std::shared_ptr<AnimationView>> walkVec = { walk };

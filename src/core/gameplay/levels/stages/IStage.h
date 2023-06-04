@@ -22,11 +22,18 @@ protected:
 	virtual void createTileMap(char** stageTemplate, char** stageTiles) = 0;
 
 public:
+	float playerStartPosX;
+	float playerStartPosY;
+
 	IStage(
 		std::shared_ptr<IGenerator>& generator,
 		std::shared_ptr<TextureManager>& textureManager,
 		int tileSize = 32
-	) : generator(generator), textureManager(textureManager), tileSize(tileSize) { }
+	) : generator(generator), 
+		textureManager(textureManager), 
+		tileSize(tileSize), 
+		playerStartPosX(0), 
+		playerStartPosY(0) { }
 
 	char** generateTemplate() {
 		return this->generator->generateLayout();

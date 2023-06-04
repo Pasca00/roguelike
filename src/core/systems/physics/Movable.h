@@ -19,6 +19,8 @@ public:
 
 	bool isMoving;
 
+	bool doesCollide;
+
 public:
 	Movable(std::shared_ptr<Hitbox>& hitbox, float acceleration = 2.5f);
 
@@ -31,4 +33,7 @@ public:
 	void accelerate(float dtime = 1.0f);
 	void applyFriction(float friction);
 	void move(float dtime);
+
+	void setCollision(bool collision);
+	bool collides();
 };

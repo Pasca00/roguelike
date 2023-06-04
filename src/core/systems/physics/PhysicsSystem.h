@@ -24,6 +24,9 @@ private:
 
 	std::vector<std::vector<std::shared_ptr<Tile>>> currentTilemap;
 	TreeNode* currentMapTree;
+	float tileSize;
+
+	void computeMovablePosition(std::shared_ptr<Movable>& m);
 
 public:
 	PhysicsSystem();
@@ -39,5 +42,5 @@ public:
 
 	void addMovable(std::shared_ptr<Movable>& movable);
 
-	void setMap(std::vector<std::vector<std::shared_ptr<Tile>>>& tilemap, TreeNode* mapTree);
+	void setMap(std::vector<std::vector<std::shared_ptr<Tile>>>& tilemap, TreeNode* mapTree, float tileSize = 64.f);
 };

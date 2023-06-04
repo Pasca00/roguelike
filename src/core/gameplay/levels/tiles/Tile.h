@@ -10,4 +10,6 @@ public:
 	Tile(std::shared_ptr<View>& view);
 
 	std::shared_ptr<View>& getView();
+
+	char type;
 };
