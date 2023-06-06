@@ -17,7 +17,7 @@ void PhysicsSystem::update(float dtime) {
 		m->accelerate(dtime);
 	
 		if (m->collides()) {
-			this->computeMovablePosition(m);
+			this->computeMovablePosition(m, dtime);
 		} else {
 			m->move(dtime);
 		}
@@ -44,34 +44,57 @@ void PhysicsSystem::setMap(std::vector<std::vector<std::shared_ptr<Tile>>>& tile
 	this->tileSize = tileSize;
 }
 
-void PhysicsSystem::computeMovablePosition(std::shared_ptr<Movable>& m) {
+void PhysicsSystem::computeMovablePosition(std::shared_ptr<Movable>& m, float dTime) {
 	auto& mHitbox = m->hitbox;
 
 	float potentialX = mHitbox->x + m->velocity.x * m->direction.x;
 	float potentialY = mHitbox->y + m->velocity.y * m->direction.y;
 
 	int currTileX = mHitbox->x / this->tileSize;
-	int currTileY = this->currentTilemap.size() - 1 - mHitbox->y / this->tileSize;
+	int currTileY = this->currentTilemap.size() - mHitbox->y / this->tileSize;
 	
-	auto tileLeft	= this->currentTilemap[currTileY][currTileX - 1];
-	auto tileRight	= this->currentTilemap[currTileY][currTileX + 1];
-	auto tileUp		= this->currentTilemap[currTileY][currTileX];
-	auto tileDown	= this->currentTilemap[currTileY + 1][currTileX];
+	auto tileLeft		= this->currentTilemap[currTileY][currTileX - 1];
+	auto tileRight		= this->currentTilemap[currTileY][currTileX + 1];
+
+	auto tileUp			= this->currentTilemap[currTileY - 1][currTileX];
+	auto tileDown		= this->currentTilemap[currTileY + 1][currTileX];
+
+	auto tileUpperLeft	= this->currentTilemap[currTileY - 1][currTileX - 1];
+	auto tileUpperRight = this->currentTilemap[currTileY - 1][currTileX + 1];
+	auto tileLowerRight = this->currentTilemap[currTileY + 1][currTileX + 1];
 
 	if (m->direction.x == -1) {
 		if (tileLeft->type != IGenerator::WALL) {
-			mHitbox->x = potentialX;
+			if (tileUpperLeft->type != IGenerator::WALL) {
+				mHitbox->x = potentialX;
+			} else {
+				auto& view = tileUpperLeft->getView();
+				if (mHitbox->y + mHitbox->h > view->getY() && potentialX < view->getX() + tileSize) {
+					mHitbox->x = view->getX() + tileSize;
+				} else {
+					mHitbox->x = potentialX;
+				}
+			}
 		} else {
 			auto& view = tileLeft->getView();
-			if (potentialX < view->getX() + view->getWidth() * view->getSize()) {
-				mHitbox->x = view->getX() + view->getWidth() * view->getSize();
+			if (potentialX < view->getX() + tileSize) {
+				mHitbox->x = view->getX() + tileSize;
 			} else {
 				mHitbox->x = potentialX;
 			}
 		}
 	} else if (m->direction.x == 1) {
 		if (tileRight->type != IGenerator::WALL) {
-			mHitbox->x = potentialX;
+			if (tileUpperRight->type != IGenerator::WALL) {
+				mHitbox->x = potentialX;
+			} else {
+				auto& view = tileUpperRight->getView();
+				if (mHitbox->y + mHitbox->h > view->getY() && potentialX + mHitbox->w > view->getX()) {
+					mHitbox->x = view->getX() - mHitbox->w;
+				} else {
+					mHitbox->x = potentialX;
+				}
+			}
 		} else {
 			auto& view = tileRight->getView();
 			if (potentialX + mHitbox->w > view->getX()) {
@@ -84,18 +107,36 @@ void PhysicsSystem::computeMovablePosition(std::shared_ptr<Movable>& m) {
 
 	if (m->direction.y == -1) {
 		if (tileDown->type != IGenerator::WALL) {
-			mHitbox->y = potentialY;
+			if (tileLowerRight->type != IGenerator::WALL) {
+				mHitbox->y = potentialY;
+			} else {
+				auto& view = tileLowerRight->getView();
+				if (mHitbox->x + mHitbox->w > view->getX() && potentialY <= view->getY() + tileSize) {
+					mHitbox->y = view->getY() + tileSize + 0.1f;
+				} else {
+					mHitbox->y = potentialY;
+				}
+			}
 		} else {
 			auto& view = tileDown->getView();
-			if (potentialY < view->getY() + view->getHeight() * view->getSize()) {
-				mHitbox->y = view->getY() + view->getHeight() * view->getSize();
+			if (potentialY <= view->getY() + tileSize) {
+				mHitbox->y = view->getY() + tileSize + 0.1f;
 			} else {
 				mHitbox->y = potentialY;
 			}
 		}
 	} else if (m->direction.y == 1) {
 		if (tileUp->type != IGenerator::WALL) {
-			mHitbox->y = potentialY;
+			if (tileUpperRight->type != IGenerator::WALL) {
+				mHitbox->y = potentialY;
+			} else {
+				auto& view = tileUpperRight->getView();
+				if (mHitbox->x + mHitbox->w > view->getX() && potentialY + mHitbox->h > view->getY()) {
+					mHitbox->y = view->getY() - mHitbox->h;
+				} else {
+					mHitbox->y = potentialY;
+				}
+			}
 		} else {
 			auto& view = tileUp->getView();
 			if (potentialY + mHitbox->h > view->getY()) {

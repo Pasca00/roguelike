@@ -50,7 +50,7 @@ PlayingState::PlayingState(
 		auto walk = std::make_shared<AnimationView>(rogueTextures[2], true, 0.15f, 120, 120, 3);
 		auto attack = std::make_shared<AnimationView>(rogueTextures[3], false, 0.15f, 120, 120, 3);
 		auto death = std::make_shared<AnimationView>(rogueTextures[4], false, 0.15f, 120, 120, 3);
-		auto playerHitbox = std::make_shared<Hitbox>(playerX, playerY, 48, 32);
+		auto playerHitbox = std::make_shared<Hitbox>(playerX, playerY, 40, 40);
 
 		std::vector<std::shared_ptr<AnimationView>> idleVec = { idle1, idle2 };
 		std::vector<std::shared_ptr<AnimationView>> walkVec = { walk };

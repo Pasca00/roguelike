@@ -76,7 +76,7 @@ void Player::update(float dtime) {
 }
 
 std::shared_ptr<AnimationView> Player::getCurrentTexture() {
-	this->animation->setX(this->movableComponent->hitbox->x);
+	this->animation->setX(this->movableComponent->hitbox->x - 8 * this->animation->getSize());
 	this->animation->setY(this->movableComponent->hitbox->y);
 
 	this->animation->flip(this->drawFlipped);

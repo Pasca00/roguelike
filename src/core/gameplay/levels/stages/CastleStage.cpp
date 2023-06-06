@@ -22,8 +22,8 @@ void CastleStage::generateStage() {
 		for (int j = tileMap[i].size() - 1; j >= 0; j--) {
 			if (stageTemplate[i][j] == IGenerator::EMPTY) {
 				auto& playerTileView = tileMap[i][j]->getView();
-				this->playerStartPosX = playerTileView->getX();
-				this->playerStartPosY = playerTileView->getY();
+				this->playerStartPosX = playerTileView->getX() + this->tileSize / 2;
+				this->playerStartPosY = playerTileView->getY() + this->tileSize / 2;
 			}
 		}
 	}
