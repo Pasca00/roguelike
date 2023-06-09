@@ -8,13 +8,15 @@ void PhysicsSystem::init() {
 	this->prevTime = 0;
 	this->dTime = 0;
 
-	this->friction = 12.f;
+	this->friction = 120.f;
+
+	this->timeModifier = 1.0;
 }
 
 void PhysicsSystem::update(float dtime) {
 	for (auto& m : this->movables) {
-		m->applyFriction(this->friction * dtime);
-		m->accelerate(dtime);
+		m->applyFriction(this->friction);
+		m->accelerate();
 	
 		if (m->collides()) {
 			this->computeMovablePosition(m, dtime);
@@ -47,8 +49,8 @@ void PhysicsSystem::setMap(std::vector<std::vector<std::shared_ptr<Tile>>>& tile
 void PhysicsSystem::computeMovablePosition(std::shared_ptr<Movable>& m, float dTime) {
 	auto& mHitbox = m->hitbox;
 
-	float potentialX = mHitbox->x + m->velocity.x * m->direction.x;
-	float potentialY = mHitbox->y + m->velocity.y * m->direction.y;
+	float potentialX = mHitbox->x + m->velocity.x * m->direction.x * dTime;
+	float potentialY = mHitbox->y + m->velocity.y * m->direction.y * dTime;
 
 	int currTileX = mHitbox->x / this->tileSize;
 	int currTileY = this->currentTilemap.size() - mHitbox->y / this->tileSize;
@@ -149,9 +151,13 @@ void PhysicsSystem::computeMovablePosition(std::shared_ptr<Movable>& m, float dT
 }
 	
 float PhysicsSystem::getFrameDeltaTime() {
-	return dTime;
+	return dTime * this->timeModifier;
 }
 
 unsigned int PhysicsSystem::getTotalTime() {
 	return SDL_GetTicks();
+}
+
+float& PhysicsSystem::getTimeModifier() {
+	return this->timeModifier;
 }

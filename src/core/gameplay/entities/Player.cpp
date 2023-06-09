@@ -5,12 +5,19 @@ Player::Player(
 	std::vector<std::shared_ptr<AnimationView>>& idleAnimations,
 	std::vector<std::shared_ptr<AnimationView>>& attackAnimations,
 	std::vector<std::shared_ptr<AnimationView>>& moveAnimations,
-	std::shared_ptr<AnimationView>& deadAnimation
+	std::shared_ptr<AnimationView>& deadAnimation,
+	std::shared_ptr<ControllableParameters>& controllableParams
 ) : Entity(movableComponent, idleAnimations, attackAnimations, moveAnimations, deadAnimation) {
-
+	this->controllableParams = controllableParams;
 }
 
 void Player::handleInput(std::shared_ptr<Input>& input) {
+	if (input->actions["SHIFT"]) {
+		this->controllableParams->slowTimeModifier();
+	} else {
+		this->controllableParams->restoreTimeModifier();
+	}
+
 	switch (this->currentState) {
 	case EntityState::IDLE:
 		if (input->actions["CLICK"]) {

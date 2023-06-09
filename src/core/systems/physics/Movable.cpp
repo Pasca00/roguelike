@@ -7,7 +7,7 @@ Movable::Movable(std::shared_ptr<Hitbox>& hitbox, float acceleration) : hitbox(h
 	this->acceleration = acceleration;
 
 	this->currentAcceleration = 0.f;
-	this->maxSpeed = 4.f;
+	this->maxSpeed = 200.f;
 
 	this->isMoving = false;
 
@@ -32,7 +32,7 @@ void Movable::stopMovement() {
 
 void Movable::accelerate(float dtime) {
 	if (this->isMoving) {
-		this->velocity += this->acceleration;
+		this->velocity += this->acceleration * dtime;
 		if (this->velocity.x > this->maxSpeed) {
 			this->velocity.x = this->maxSpeed;
 		}
@@ -43,8 +43,8 @@ void Movable::accelerate(float dtime) {
 	}
 }
 
-void Movable::applyFriction(float friction) {
-	this->velocity -= friction;
+void Movable::applyFriction(float friction, float dtime) {
+	this->velocity -= friction * dtime;
 	if (this->velocity.x < 0) {
 		this->velocity.x = 0;
 	}
@@ -55,8 +55,8 @@ void Movable::applyFriction(float friction) {
 }
 
 void Movable::move(float dtime) {
-	this->hitbox->x += this->velocity.x * this->direction.x;
-	this->hitbox->y += this->velocity.y * this->direction.y;
+	this->hitbox->x += this->velocity.x * this->direction.x * dtime;
+	this->hitbox->y += this->velocity.y * this->direction.y * dtime;
 }
 
 void Movable::setCollision(bool collision) {

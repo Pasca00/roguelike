@@ -66,6 +66,9 @@
     <Filter Include="Source Files\core\gameplay\entities">
       <UniqueIdentifier>{e8167cb0-e816-4cb3-81ed-dead0c127651}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\core\gameplay\inventory">
+      <UniqueIdentifier>{a312862f-4e8d-43ff-b6ec-fdf0d13580ea}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\main.cpp">
@@ -157,6 +160,12 @@
     </ClCompile>
     <ClCompile Include="src\core\systems\video\Camera.cpp">
       <Filter>Source Files\core\systems\video</Filter>
+    </ClCompile>
+    <ClCompile Include="src\core\gameplay\inventory\Item.cpp">
+      <Filter>Source Files\core\gameplay\inventory</Filter>
+    </ClCompile>
+    <ClCompile Include="src\core\gameplay\inventory\StatusEffect.cpp">
+      <Filter>Source Files\core\gameplay\inventory</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -589,9 +598,6 @@
     <ClInclude Include="src\core\gameplay\levels\tiles\Tile.h">
       <Filter>Source Files\core\gameplay\levels\tiles</Filter>
     </ClInclude>
-    <ClInclude Include="src\core\gameplay\entities\Entity.h">
-      <Filter>Source Files\core\gameplay\entities</Filter>
-    </ClInclude>
     <ClInclude Include="src\core\gameplay\entities\Player.h">
       <Filter>Source Files\core\gameplay\entities</Filter>
     </ClInclude>
@@ -603,6 +609,21 @@
     </ClInclude>
     <ClInclude Include="src\core\systems\video\Camera.h">
       <Filter>Source Files\core\systems\video</Filter>
+    </ClInclude>
+    <ClInclude Include="src\core\gameplay\inventory\ControllableParameters.h">
+      <Filter>Source Files\core\gameplay\inventory</Filter>
+    </ClInclude>
+    <ClInclude Include="src\core\gameplay\inventory\Item.h">
+      <Filter>Source Files\core\gameplay\inventory</Filter>
+    </ClInclude>
+    <ClInclude Include="src\core\gameplay\inventory\GlobalEffectManager.h">
+      <Filter>Source Files\core\gameplay\inventory</Filter>
+    </ClInclude>
+    <ClInclude Include="src\core\gameplay\entities\Entity.h">
+      <Filter>Source Files\core\gameplay\entities</Filter>
+    </ClInclude>
+    <ClInclude Include="src\core\gameplay\inventory\StatusEffect.h">
+      <Filter>Source Files\core\gameplay\inventory</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

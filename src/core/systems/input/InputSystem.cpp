@@ -10,6 +10,7 @@ Input::Input() {
 		{"RIGHT",	 false},
 		{"INTERACT", false},
 		{"CLICK",	 false},
+		{"SHIFT",	 false},
 
 		{"ENTER",	 false},
 
@@ -66,6 +67,8 @@ void InputSystem::createDefaultKeyMappings() {
 		{SDLK_a, "LEFT"},
 		{SDLK_d, "RIGHT"},
 		{SDLK_e, "INTERACT"},
+
+		{SDLK_LSHIFT, "SHIFT"},
 
 		{SDLK_RETURN, "ENTER"},
 

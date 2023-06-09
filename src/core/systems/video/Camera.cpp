@@ -12,7 +12,7 @@ Camera::Camera(int windowWidth, int windowHeight) {
 		focusWidth, 
 		focusHeight
 	);
-	this->focusZone = std::make_shared<Movable>(hb, 7.5f);
+	this->focusZone = std::make_shared<Movable>(hb, 200.f);
 	this->focusZone->setCollision(false);
 
 	this->viewArea = std::make_shared<Hitbox>(0, 0, windowWidth, windowHeight);

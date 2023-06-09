@@ -56,14 +56,21 @@ PlayingState::PlayingState(
 		std::vector<std::shared_ptr<AnimationView>> walkVec = { walk };
 		std::vector<std::shared_ptr<AnimationView>> attackVec = { attack };
 
-		auto movable = std::make_shared<Movable>(playerHitbox, 5.f);
+		auto movable = std::make_shared<Movable>(playerHitbox, 150.f);
+
+		auto controllableParams = std::make_shared<ControllableParameters>(
+			this->physicsSystem->getTimeModifier(),
+			movable->maxSpeed,
+			movable->doesCollide
+		);
 
 		this->player = std::make_unique<Player>(
 			movable,
 			idleVec,
 			attackVec,
 			walkVec,
-			death
+			death,
+			controllableParams
 		);
 
 		this->physicsSystem->addMovable(movable);

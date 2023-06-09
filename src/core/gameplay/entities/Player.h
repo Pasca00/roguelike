@@ -1,10 +1,11 @@
 #pragma once
 
 #include "Entity.h"
+#include "../inventory/ControllableParameters.h"
 
 class Player : public Entity {
 private:
-
+	std::shared_ptr<ControllableParameters> controllableParams;
 
 public:
 	Player(
@@ -12,7 +13,8 @@ public:
 		std::vector<std::shared_ptr<AnimationView>>& idleAnimations,
 		std::vector<std::shared_ptr<AnimationView>>& attackAnimations,
 		std::vector<std::shared_ptr<AnimationView>>& moveAnimations,
-		std::shared_ptr<AnimationView>& deadAnimation
+		std::shared_ptr<AnimationView>& deadAnimation,
+		std::shared_ptr<ControllableParameters>& controllableParams
 	);
 
 	void handleInput(std::shared_ptr<Input>& input);
