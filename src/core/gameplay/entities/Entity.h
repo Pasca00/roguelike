@@ -34,8 +34,10 @@ public:
 		std::shared_ptr<AnimationView>& deadAnimation
 	);
 
-	virtual void handleInput(std::shared_ptr<Input>& input) = 0;
-	virtual void update(float dtime) = 0;
+	virtual void handleInput(std::shared_ptr<Input>& input);
+	virtual void update(float dtime);
 
 	std::shared_ptr<AnimationView> getCurrentTexture();
+
+	std::shared_ptr<Movable>& getMovableComponent();
 };

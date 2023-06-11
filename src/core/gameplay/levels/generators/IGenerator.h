@@ -25,13 +25,20 @@ protected:
 	int h;
 	int w;
 
+	int** scoreGrid;
+
 public:
 	IGenerator(int h = 50, int w = 50, int chestCount = 5, int itemCount = 2) : h(h), w(w), chestCount(chestCount), itemCount(itemCount) {
 		layout = new char* [h];
+		scoreGrid = new int* [h];
+		
 		for (int i = 0; i < h; i++) {
 			layout[i] = new char[w];
+			scoreGrid[i] = new int[w];
+
 			for (int j = 0; j < w; j++) {
 				layout[i][j] = WALL;
+				scoreGrid[i][j] = 0;
 			}
 		}
 	}
@@ -60,4 +67,8 @@ public:
 	static const char DECORATION = 'D';
 
 	TreeNode* mapTree;
+
+	int** getScoreGrid() {
+		return this->scoreGrid;
+	}
 };

@@ -3,11 +3,16 @@
 #include "IState.h"
 #include "../gameplay/levels/LevelManager.h"
 #include "../gameplay/entities/Player.h"
+#include "../gameplay/entities/enemies/AI/IController.h"
 
 class PlayingState : public IState {
 private:
 	std::unique_ptr<LevelManager> levelManager;
 	std::unique_ptr<Player> player;
+
+	std::unique_ptr<IController> enemyTest;
+
+	void makeEnemies();
 
 public:
 	PlayingState(

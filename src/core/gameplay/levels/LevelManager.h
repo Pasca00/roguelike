@@ -12,11 +12,27 @@ private:
 
 	std::shared_ptr<CastleStage> castleStage;
 
+	float timeSinceLastScoring;
+	float scoringInterval;
+
+	int iPreviousPlayer;
+	int jPreviousPlayer;
+
+	int** scoreGrid;
+
+	std::vector<int*> visitedAdresses;
+
 public:
 	LevelManager(std::shared_ptr<CastleStage>& castleStage, int tileSize);
-
 
 	std::vector<std::vector<std::shared_ptr<Tile>>> getTileMap();
 
 	std::shared_ptr<CastleStage>& getCurrentStage();
+
+	void updateScoreGrid(float dTime, float playerX, float playerY);
+	int** getScoreGrid();
+
+	int getTileSize();
+	int getH();
+	int getW();
 };

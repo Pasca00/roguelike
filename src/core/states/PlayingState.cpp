@@ -9,15 +9,17 @@ PlayingState::PlayingState(
 	std::shared_ptr<GeneralSystem>& generalSystem
 ) : IState(stateChange, inputSystem, videoSystem, physicsSystem, soundSystem, generalSystem) {
 	{
+		int tileSize = 64;
+
 		auto castleStage = std::make_shared<CastleStage>(
 			std::static_pointer_cast<IGenerator>(std::make_shared<BSPGenerator>(50, 100, 5)),
 			this->videoSystem->getTextureManager(),
-			64
+			tileSize
 		);
 
 		this->levelManager = std::make_unique<LevelManager>(
 			castleStage,
-			32
+			tileSize
 		);
 
 		castleStage->generateStage();
@@ -82,6 +84,8 @@ PlayingState::PlayingState(
 	this->physicsSystem->addMovable(this->videoSystem->getCamera()->getFocusZone());
 
 	this->videoSystem->endTransition();
+
+	this->makeEnemies();
 }
 
 PlayingState::~PlayingState() {}
@@ -90,16 +94,21 @@ void PlayingState::handleInput() {
 	auto input = this->inputSystem->getInput();
 	
 	this->player->handleInput(input);
+
+	this->enemyTest->feedInputToEntity();
 }
 
 void PlayingState::update(float dTime) {
-	this->levelManager->getCurrentStage();
-	// TODO: pass this function to thread pool to make it more efficient 
+	auto p = this->player->getMovableComponent();
+	this->levelManager->updateScoreGrid(dTime, p->hitbox->x, p->hitbox->y);
+	
 	this->physicsSystem->update(dTime);
 
 	this->videoSystem->updateCamera(dTime);
 
 	this->player->update(dTime);
+
+	this->enemyTest->update(dTime);
 }
 
 void PlayingState::render() {
@@ -113,11 +122,65 @@ void PlayingState::render() {
 		}
 	}
 
-
+	this->videoSystem->draw(std::static_pointer_cast<IView>(this->enemyTest->getEntity()->getCurrentTexture()));
 	this->videoSystem->draw(std::static_pointer_cast<IView>(this->player->getCurrentTexture()));
 }
 
 void PlayingState::executePostLoad() {
 	this->soundSystem->setMusicLevel(8);
 	this->soundSystem->playMusic("castle");
+}
+
+void PlayingState::makeEnemies() {
+	float x = this->levelManager->getCurrentStage()->playerStartPosX;
+	float y = this->levelManager->getCurrentStage()->playerStartPosY;
+
+	auto textureManager = this->videoSystem->getTextureManager();
+	auto orcTextures = textureManager->getTexturesFromSpriteSheet(
+		Paths::CHARACTERS_DIR + "orcs.png",
+		{
+			10, // death
+			10, // attack
+			10, // walk
+			10, // idle1
+			10, // idle2
+		}
+	);
+
+	auto idle1 = std::make_shared<AnimationView>(orcTextures[0], false, 0.15f, 120, 120, 3);
+	auto idle2 = std::make_shared<AnimationView>(orcTextures[1], false, 0.15f, 120, 120, 3);
+	auto walk = std::make_shared<AnimationView>(orcTextures[2], true, 0.15f, 120, 120, 3);
+	auto attack = std::make_shared<AnimationView>(orcTextures[3], false, 0.15f, 120, 120, 3);
+	auto death = std::make_shared<AnimationView>(orcTextures[4], false, 0.15f, 120, 120, 3);
+	auto hitbox = std::make_shared<Hitbox>(x, y, 40, 40);
+
+	std::vector<std::shared_ptr<AnimationView>> idleVec = { idle1, idle2 };
+	std::vector<std::shared_ptr<AnimationView>> walkVec = { walk };
+	std::vector<std::shared_ptr<AnimationView>> attackVec = { attack };
+
+	auto movable = std::make_shared<Movable>(hitbox, 150.f);
+
+	auto controllableParams = std::make_shared<ControllableParameters>(
+		this->physicsSystem->getTimeModifier(),
+		movable->maxSpeed,
+		movable->doesCollide
+	);
+
+	auto enemy = std::make_shared<Entity>(
+		movable,
+		idleVec,
+		attackVec,
+		walkVec,
+		death
+	);
+
+	this->enemyTest = std::make_unique<IController>(
+		enemy,
+		this->levelManager->getScoreGrid(),
+		this->levelManager->getTileSize(),
+		this->levelManager->getH(),
+		this->levelManager->getW()
+	);
+
+	this->physicsSystem->addMovable(movable);
 }

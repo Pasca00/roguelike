@@ -41,11 +41,15 @@ public:
 
 	virtual void generateStage() = 0;
 
-	std::vector<std::vector<std::shared_ptr<Tile>>> getTileMap() {
+	std::vector<std::vector<std::shared_ptr<Tile>>>& getTileMap() {
 		return this->tileMap;
 	}
 
 	TreeNode* getMapTree() {
 		return this->generator->mapTree;
+	}
+
+	std::shared_ptr<IGenerator>& getGenerator() {
+		return this->generator;
 	}
 };

@@ -126,6 +126,8 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="src\core\gameplay\entities\enemies\EnemyHeavy.cpp" />
+    <ClCompile Include="src\core\gameplay\entities\enemies\EnemyRogue.cpp" />
     <ClCompile Include="src\core\gameplay\entities\Entity.cpp" />
     <ClCompile Include="src\core\gameplay\entities\Player.cpp" />
     <ClCompile Include="src\core\gameplay\entities\PlayerStates.cpp" />
@@ -160,6 +162,9 @@
     <ClCompile Include="src\main.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="src\core\gameplay\entities\enemies\AI\IController.h" />
+    <ClInclude Include="src\core\gameplay\entities\enemies\EnemyHeavy.h" />
+    <ClInclude Include="src\core\gameplay\entities\enemies\EnemyRogue.h" />
     <ClInclude Include="src\core\gameplay\entities\Entity.h" />
     <ClInclude Include="src\core\gameplay\entities\Player.h" />
     <ClInclude Include="src\core\gameplay\entities\PlayerStates.h" />

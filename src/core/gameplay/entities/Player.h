@@ -17,9 +17,9 @@ public:
 		std::shared_ptr<ControllableParameters>& controllableParams
 	);
 
-	void handleInput(std::shared_ptr<Input>& input);
-	void update(float dtime);
-	std::shared_ptr<AnimationView> getCurrentTexture();
+	void handleInput(std::shared_ptr<Input>& input) override;
+	void update(float dtime) override;
+	//std::shared_ptr<AnimationView> getCurrentTexture();
 
 	static const Uint8 STATE_IDLE		= 0;
 	static const Uint8 STATE_WALKING	= 1;

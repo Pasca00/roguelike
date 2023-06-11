@@ -3,7 +3,15 @@
 #include "StatusEffect.h"
 
 void dealDamageFunc(std::shared_ptr<Entity>& target) {
-	//
+	// auto health = target->getHealthComponent()
+}
+
+void healFunc(std::shared_ptr<Entity>& target) {
+	// auto health = target->getHealthComponent()
+}
+
+void slowFunc(std::shared_ptr<Entity>& target) {
+	// auto movable = target->getMovableComponent()
 }
 
 class GlobalEffectManager {

@@ -34,6 +34,12 @@ bool Input::getAction(const std::string& action) {
 	return this->actions[action];
 }
 
+void Input::clear() {
+	for (auto& pair : this->actions) {
+		pair.second = false;
+	}
+}
+
 const std::string InputSystem::keyMappingsFilename = "keys";
 
 InputSystem::InputSystem() { }

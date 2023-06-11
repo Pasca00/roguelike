@@ -69,6 +69,12 @@
     <Filter Include="Source Files\core\gameplay\inventory">
       <UniqueIdentifier>{a312862f-4e8d-43ff-b6ec-fdf0d13580ea}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\core\gameplay\entities\enemies">
+      <UniqueIdentifier>{7473015a-8658-42bc-88aa-279ecd81f129}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\core\gameplay\entities\enemies\AI">
+      <UniqueIdentifier>{fa530d46-bfe8-482b-9268-01b1d2690b22}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\main.cpp">
@@ -166,6 +172,12 @@
     </ClCompile>
     <ClCompile Include="src\core\gameplay\inventory\StatusEffect.cpp">
       <Filter>Source Files\core\gameplay\inventory</Filter>
+    </ClCompile>
+    <ClCompile Include="src\core\gameplay\entities\enemies\EnemyHeavy.cpp">
+      <Filter>Source Files\core\gameplay\entities\enemies</Filter>
+    </ClCompile>
+    <ClCompile Include="src\core\gameplay\entities\enemies\EnemyRogue.cpp">
+      <Filter>Source Files\core\gameplay\entities\enemies</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -624,6 +636,15 @@
     </ClInclude>
     <ClInclude Include="src\core\gameplay\inventory\StatusEffect.h">
       <Filter>Source Files\core\gameplay\inventory</Filter>
+    </ClInclude>
+    <ClInclude Include="src\core\gameplay\entities\enemies\EnemyHeavy.h">
+      <Filter>Source Files\core\gameplay\entities\enemies</Filter>
+    </ClInclude>
+    <ClInclude Include="src\core\gameplay\entities\enemies\EnemyRogue.h">
+      <Filter>Source Files\core\gameplay\entities\enemies</Filter>
+    </ClInclude>
+    <ClInclude Include="src\core\gameplay\entities\enemies\AI\IController.h">
+      <Filter>Source Files\core\gameplay\entities\enemies\AI</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

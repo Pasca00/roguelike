@@ -22,6 +22,8 @@ struct Input {
 
 	void setActionValue(const std::string& action, bool value);
 	bool getAction(const std::string& action);
+
+	void clear();
 };
 
 class InputSystem : public ISystem {
