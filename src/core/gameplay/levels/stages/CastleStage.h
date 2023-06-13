@@ -12,6 +12,9 @@ private:
 	char** findTileType(char** stageTemplate);
 	void loadTextures() override;
 	void createTileMap(char** stageTemplate, char** stageTiles) override;
+	void placeItems() override;
+
+	TreeNode* getRoomForCoords(float x, float y);
 
 public:
 	CastleStage(
@@ -23,6 +26,9 @@ public:
 
 	void generateStage() override;
 
+	void update(float dtime);
+
+private:
 	static const int corridor_T_down		 = 18;
 	static const int corridor_T_up			 = 17;
 	static const int corridor_T_left		 = 16;

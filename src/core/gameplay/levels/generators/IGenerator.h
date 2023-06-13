@@ -31,6 +31,7 @@ public:
 	IGenerator(int h = 50, int w = 50, int chestCount = 5, int itemCount = 2) : h(h), w(w), chestCount(chestCount), itemCount(itemCount) {
 		layout = new char* [h];
 		scoreGrid = new int* [h];
+		mapTree = NULL;
 		
 		for (int i = 0; i < h; i++) {
 			layout[i] = new char[w];
@@ -71,4 +72,6 @@ public:
 	int** getScoreGrid() {
 		return this->scoreGrid;
 	}
+
+	virtual int getNumItems() = 0;
 };

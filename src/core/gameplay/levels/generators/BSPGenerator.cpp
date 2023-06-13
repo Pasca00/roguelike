@@ -165,3 +165,6 @@ char** BSPGenerator::generateLayout() {
 	return layout;
 }
 
+int BSPGenerator::getNumItems() {
+	return pow(2, this->depth - 1) / 4 + rand() % 2;
+}

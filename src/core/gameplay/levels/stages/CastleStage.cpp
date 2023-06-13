@@ -27,6 +27,14 @@ void CastleStage::generateStage() {
 			}
 		}
 	}
+
+	this->placeItems();
+}
+
+void CastleStage::update(float dtime) {
+	for (auto& t : this->torches) {
+		t->update(dtime);
+	}
 }
 
 char** CastleStage::findTileType(char** stageTemplate) {
@@ -244,7 +252,7 @@ char** CastleStage::findTileType(char** stageTemplate) {
 
 void CastleStage::loadTextures() {
 	this->floorTextures = this->textureManager->getTexturesFromSpriteSheet(
-		this->texturesDir + "floor.png", 
+		this->texturesDir + "floor.png",
 		{
 			1, // corridor T down
 			1, // corridor T up
@@ -305,6 +313,42 @@ void CastleStage::loadTextures() {
 		16,
 		16
 	);
+
+	this->wallDecorations = this->textureManager->getTexturesFromSpriteSheet(
+		this->texturesDir + "wall_decoration.png",
+		{
+			6 // flags
+		},
+		16,
+		32
+	)[0];
+
+	this->floorDecorations = this->textureManager->getTexturesFromSpriteSheet(
+		this->texturesDir + "floor_decoration.png",
+		{
+			3
+		},
+		16,
+		16
+	)[0];
+
+	this->torchTextures = this->textureManager->getTexturesFromSpriteSheet(
+		this->texturesDir + "torch.png",
+		{
+			3
+		},
+		16,
+		16
+	)[0];
+
+	this->chestTextures = this->textureManager->getTexturesFromSpriteSheet(
+		this->texturesDir + "chest.png",
+		{
+			2
+		},
+		32,
+		16
+	)[0];
 }
 
 void CastleStage::createTileMap(char** stageTemplate, char** stageTiles) {
@@ -327,11 +371,39 @@ void CastleStage::createTileMap(char** stageTemplate, char** stageTiles) {
 				auto texture = this->floorTextures[tileType][rand() % this->floorTextures[tileType].size()];
 				auto view = std::make_shared<View>(texture, tileX, tileY, this->tileSize / 16);
 				this->tileMap[i][j] = std::make_shared<Tile>(view);
+
+				if (rand() % 100 < 2) {
+					auto t = this->floorDecorations[rand() % this->floorDecorations.size()];
+					auto v = std::make_shared<View>(t, tileX, tileY, this->tileSize / 16);
+					this->tileMap[i][j]->addDecoration(v);
+				}
+
 			} else if (i < h - 1 && stageTemplate[i][j] == IGenerator::WALL && stageTemplate[i + 1][j] == IGenerator::EMPTY) {
 				int k = rand() % this->wallTextures[tileType].size();
 				auto texture = this->wallTextures[tileType][k];
 				auto view = std::make_shared<View>(texture, tileX, tileY, this->tileSize / 16);
 				this->tileMap[i][j] = std::make_shared<Tile>(view);
+
+				if (rand() % 100 < 2) {
+					auto t = this->wallDecorations[rand() % this->wallDecorations.size()];
+					auto v = std::make_shared<View>(t, tileX, tileY, this->tileSize / 16);
+					this->tileMap[i][j]->addDecoration(v);
+				} else if (rand() % 100 < 6) {
+					// Add torch to wall
+					float offset = rand() % 10 / 100.f;
+					auto v = std::make_shared<AnimationView>(
+						this->torchTextures, 
+						true, 
+						0.15f + offset, 
+						tileX, 
+						tileY + this->tileSize, 
+						this->tileSize / 16
+					);
+
+					this->torches.push_back(v);
+					this->tileMap[i][j]->addDecoration(std::static_pointer_cast<IView>(v));
+				}
+
 			} else {
 				auto texture = this->ceilingTextures[tileType][rand() % this->ceilingTextures[tileType].size()];
 				auto view = std::make_shared<View>(texture, tileX, tileY, this->tileSize / 16);
@@ -346,4 +418,44 @@ void CastleStage::createTileMap(char** stageTemplate, char** stageTiles) {
 	auto texture = this->floorTextures[0][0];
 	auto view = std::make_shared<View>(texture, 0, 0, 2);
 	this->tileMap[0][0] = std::make_shared<Tile>(view);
+}
+
+void CastleStage::placeItems() {
+	int nItems = this->generator->getNumItems();
+
+	auto playerRoom = this->getRoomForCoords(this->playerStartPosX, this->playerStartPosY);
+	
+	int iItem = (playerRoom->h - playerRoom->y) / 2 + playerRoom->y;
+	int jItem = (playerRoom->w - playerRoom->x) / 2 + playerRoom->x;
+
+	auto x = this->tileMap[iItem][jItem]->getView()->getX();
+	auto y = this->tileMap[iItem][jItem]->getView()->getY();
+
+	auto v = std::make_shared<View>(this->chestTextures[0], x, y, this->tileSize / 16);
+	this->tileMap[iItem][jItem]->addDecoration(v);
+	this->tileMap[iItem][jItem]->type = IGenerator::WALL;
+}
+
+TreeNode* CastleStage::getRoomForCoords(float x, float y) {
+	int i = this->tileMap.size() - 1 - y / this->tileSize;
+	int j = x / this->tileSize;
+
+	auto currNode = this->generator->mapTree;
+	while (currNode->l != NULL && currNode->r != NULL) {
+		if (currNode->l->x == currNode->r->x) {
+			if (i < currNode->r->y) {
+				currNode = currNode->l;
+			} else {
+				currNode = currNode->r;
+			}
+		} else {
+			if (j < currNode->r->x) {
+				currNode = currNode->l;
+			} else {
+				currNode = currNode->r;
+			}
+		}
+	}
+
+	return currNode;
 }

@@ -16,6 +16,8 @@ LevelManager::LevelManager(std::shared_ptr<CastleStage>& castleStage, int tileSi
 
 	this->scoreGrid = this->castleStage->getGenerator()->getScoreGrid();
 	this->visitedAdresses = std::vector<int*>();
+
+	this->noiseDampening = 10;
 }
 
 std::vector<std::vector<std::shared_ptr<Tile>>> LevelManager::getTileMap() {
@@ -45,7 +47,7 @@ void LevelManager::updateScoreGrid(float dTime, float playerX, float playerY) {
 		this->iPreviousPlayer = iCurr;
 		this->jPreviousPlayer = jCurr;
 
-		std::queue<std::pair<int, int>> q;
+		std::queue<std::pair<std::pair<int, int>, int>> q;
 
 		auto tileMap = this->castleStage->getTileMap();
 
@@ -55,11 +57,13 @@ void LevelManager::updateScoreGrid(float dTime, float playerX, float playerY) {
 		}
 		this->visitedAdresses.clear();
 
-		q.push({ iCurr, jCurr });
+		q.push({ { iCurr, jCurr }, 100 });
 
 		int i = 0;
 		while (!q.empty()) {
-			auto pos = q.front();
+			auto n = q.front();
+			auto pos = n.first;
+			auto score = n.second;
 			q.pop();
 
 			this->visitedAdresses.push_back(&this->scoreGrid[pos.first][pos.second]);
@@ -67,7 +71,7 @@ void LevelManager::updateScoreGrid(float dTime, float playerX, float playerY) {
 			if (tileMap[pos.first][pos.second]->type == IGenerator::WALL) {
 				this->scoreGrid[pos.first][pos.second] = 0;
 			} else {
-				this->scoreGrid[pos.first][pos.second] = 100 - 10 * manhattanDistance(iCurr, jCurr, pos.first, pos.second);
+				this->scoreGrid[pos.first][pos.second] = score;
 			}
 
 			// If we reached a score of 0, ignore all neighbours
@@ -77,25 +81,25 @@ void LevelManager::updateScoreGrid(float dTime, float playerX, float playerY) {
 
 			if (pos.first > 1) {
 				if (this->scoreGrid[pos.first - 1][pos.second] == 0) {
-					q.push({ pos.first - 1, pos.second });
+					q.push({ { pos.first - 1, pos.second }, score - this->noiseDampening });
 				}
 			}
 
 			if (pos.first < generator->getH() - 2) {
 				if (this->scoreGrid[pos.first + 1][pos.second] == 0) {
-					q.push({ pos.first + 1, pos.second });
+					q.push({ { pos.first + 1, pos.second }, score - this->noiseDampening });
 				}
 			}
 
 			if (pos.second > 1) {
 				if (this->scoreGrid[pos.first][pos.second - 1] == 0) {
-					q.push({ pos.first, pos.second - 1 });
+					q.push({ { pos.first, pos.second - 1 }, score - this->noiseDampening });
 				}
 			}
 
 			if (pos.first < generator->getW() - 2) {
 				if (this->scoreGrid[pos.first][pos.second + 1] == 0) {
-					q.push({ pos.first, pos.second + 1 });
+					q.push({ { pos.first, pos.second + 1 }, score - this->noiseDampening });
 				}
 			}
 		}
@@ -116,4 +120,8 @@ int LevelManager::getH() {
 
 int LevelManager::getW() {
 	return this->castleStage->getGenerator()->getW();
+}
+
+int* LevelManager::getNoiseDampeningPointer() {
+	return &this->noiseDampening;
 }

@@ -22,6 +22,8 @@ private:
 
 	std::vector<int*> visitedAdresses;
 
+	int noiseDampening;
+
 public:
 	LevelManager(std::shared_ptr<CastleStage>& castleStage, int tileSize);
 
@@ -35,4 +37,6 @@ public:
 	int getTileSize();
 	int getH();
 	int getW();
+
+	int* getNoiseDampeningPointer();
 };

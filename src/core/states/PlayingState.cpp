@@ -9,6 +9,10 @@ PlayingState::PlayingState(
 	std::shared_ptr<GeneralSystem>& generalSystem
 ) : IState(stateChange, inputSystem, videoSystem, physicsSystem, soundSystem, generalSystem) {
 	{
+		this->updateBarrier = std::make_unique<Barrier>(4);
+	}
+
+	{
 		int tileSize = 64;
 
 		auto castleStage = std::make_shared<CastleStage>(
@@ -24,7 +28,9 @@ PlayingState::PlayingState(
 
 		castleStage->generateStage();
 
-		this->physicsSystem->setMap(this->levelManager->getTileMap(), castleStage->getMapTree());
+		auto tileMap = this->levelManager->getTileMap();
+
+		this->physicsSystem->setMap(tileMap, castleStage->getMapTree());
 	}
 
 	{
@@ -99,10 +105,26 @@ void PlayingState::handleInput() {
 }
 
 void PlayingState::update(float dTime) {
-	auto p = this->player->getMovableComponent();
-	this->levelManager->updateScoreGrid(dTime, p->hitbox->x, p->hitbox->y);
+	this->generalSystem->queueThreadJob([&]() {
+		auto p = player->getMovableComponent();
+		levelManager->updateScoreGrid(dTime, p->hitbox->x, p->hitbox->y);
+
+		updateBarrier->wait();
+	});
 	
-	this->physicsSystem->update(dTime);
+	this->generalSystem->queueThreadJob([&]() {
+		this->physicsSystem->update(dTime);
+		
+		updateBarrier->wait();
+	});
+
+	this->generalSystem->queueThreadJob([&]() {
+		levelManager->getCurrentStage()->update(dTime);
+
+		updateBarrier->wait();
+	});
+
+	this->updateBarrier->wait();
 
 	this->videoSystem->updateCamera(dTime);
 
@@ -112,12 +134,17 @@ void PlayingState::update(float dTime) {
 }
 
 void PlayingState::render() {
-	auto& tileMap = this->levelManager->getTileMap();
+	auto tileMap = this->levelManager->getTileMap();
 
 	for (int i = 0; i < tileMap.size(); i++) {
 		for (int j = 0; j < tileMap[i].size(); j++) {
 			if (tileMap[i][j] != nullptr) {
 				this->videoSystem->draw(std::static_pointer_cast<IView>(tileMap[i][j]->getView()));
+
+				auto decoration = tileMap[i][j]->getDecoration();
+				if (decoration != nullptr) {
+					this->videoSystem->draw(decoration);
+				}
 			}
 		}
 	}

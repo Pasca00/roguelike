@@ -1,6 +1,7 @@
 #pragma once
 
 #include "../../../systems/video/textures/TextureManager.h"
+#include "../../../systems/video/views/AnimationView.h"
 #include "../generators/IGenerator.h"
 #include "../generators/BSPGenerator.h"
 #include "../tiles/Tile.h"
@@ -16,10 +17,19 @@ protected:
 	std::vector<std::vector<std::shared_ptr<Texture>>> wallTextures;
 	std::vector<std::vector<std::shared_ptr<Texture>>> ceilingTextures;
 
+	std::vector<std::shared_ptr<AnimationView>> torches;
+	std::vector<std::shared_ptr<Texture>> torchTextures;
+
+	std::vector<std::shared_ptr<Texture>> wallDecorations;
+	std::vector<std::shared_ptr<Texture>> floorDecorations;
+
+	std::vector<std::shared_ptr<Texture>> chestTextures;
+
 	int tileSize;
 
 	virtual void loadTextures() = 0;
 	virtual void createTileMap(char** stageTemplate, char** stageTiles) = 0;
+	virtual void placeItems() = 0;
 
 public:
 	float playerStartPosX;

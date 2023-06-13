@@ -14,6 +14,8 @@ private:
 
 	void makeEnemies();
 
+	std::unique_ptr<Barrier> updateBarrier;
+
 public:
 	PlayingState(
 		bool& stateChange,

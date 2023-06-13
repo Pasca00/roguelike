@@ -19,4 +19,5 @@ public:
 
 	char** generateLayout() override;
 
+	int getNumItems() override;
 };
