@@ -18,6 +18,7 @@ PlayingState::PlayingState(
 		auto castleStage = std::make_shared<CastleStage>(
 			std::static_pointer_cast<IGenerator>(std::make_shared<BSPGenerator>(50, 100, 5)),
 			this->videoSystem->getTextureManager(),
+			this->soundSystem,
 			tileSize
 		);
 
@@ -35,6 +36,9 @@ PlayingState::PlayingState(
 
 	{
 		this->soundSystem->loadMusic(Paths::MUSIC_DIR + "dark_forest.mp3", "castle");
+
+		this->soundSystem->loadSound(Paths::SFX_DIR + "chest.mp3", "chest");
+		this->soundSystem->loadSound(Paths::SFX_DIR + "iron_door.mp3", "iron_door");
 	}
 
 	{
@@ -92,6 +96,14 @@ PlayingState::PlayingState(
 	this->videoSystem->endTransition();
 
 	this->makeEnemies();
+
+	{
+		auto interactables = this->levelManager->getCurrentStage()->getInteractables();
+
+		for (auto& i : interactables) {
+			this->inputSystem->addEventCallback(i);
+		}
+	}
 }
 
 PlayingState::~PlayingState() {}
@@ -108,6 +120,7 @@ void PlayingState::update(float dTime) {
 	this->generalSystem->queueThreadJob([&]() {
 		auto p = player->getMovableComponent();
 		levelManager->updateScoreGrid(dTime, p->hitbox->x, p->hitbox->y);
+		inputSystem->checkPlayerInteractables(p->hitbox->x, p->hitbox->y, p->hitbox->w, p->hitbox->h);
 
 		updateBarrier->wait();
 	});
@@ -208,6 +221,4 @@ void PlayingState::makeEnemies() {
 		this->levelManager->getH(),
 		this->levelManager->getW()
 	);
-
-	this->physicsSystem->addMovable(movable);
 }

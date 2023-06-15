@@ -17,6 +17,10 @@ View::View(
 	this->texture = texture;
 }
 
+void View::setTexture(std::shared_ptr<Texture>& texture) {
+	this->texture = texture;
+}
+
 GLuint View::getTextureId() {
 	return this->texture->getTextureId();
 }

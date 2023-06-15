@@ -13,4 +13,5 @@ namespace Paths {
 	const std::string SOUNDS_DIR	 = "C:/Users/alexp/Desktop/Roguelike/resources/sound/";
 	const std::string AMBIENCE_DIR	 = "C:/Users/alexp/Desktop/Roguelike/resources/sound/ambience/";
 	const std::string MUSIC_DIR		 = "C:/Users/alexp/Desktop/Roguelike/resources/sound/music/";
+	const std::string SFX_DIR		 = "C:/Users/alexp/Desktop/Roguelike/resources/sound/fx/";
 };

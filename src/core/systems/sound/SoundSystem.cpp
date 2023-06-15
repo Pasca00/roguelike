@@ -23,6 +23,7 @@ void SoundSystem::init() {
 
 void SoundSystem::loadSound(std::string filePath, std::string name) {
     auto sound = Mix_LoadWAV(filePath.c_str());
+ 
     if (sound == NULL) {
         printf("ERROR::SOUND_SYSTEM::LOADING_CHUNK:: %s", name.c_str());
         return;

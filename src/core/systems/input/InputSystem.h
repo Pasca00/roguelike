@@ -49,4 +49,6 @@ public:
 	std::shared_ptr<Input> getInput();
 
 	void addEventCallback(std::unique_ptr<IInteractable>& callback);
+
+	void checkPlayerInteractables(float playerX, float playerY, float playerW, float playerH);
 };

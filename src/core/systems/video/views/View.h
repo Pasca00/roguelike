@@ -10,5 +10,7 @@ public:
 	View(std::shared_ptr<Texture>& texture, float x = 0, float y = 0, float size = 1);
 	View(std::shared_ptr<Texture>& texture, std::unique_ptr<Hitbox>& hitbox, float size = 1);
 
+	void setTexture(std::shared_ptr<Texture>& texture);
+	
 	GLuint getTextureId() override;
 };

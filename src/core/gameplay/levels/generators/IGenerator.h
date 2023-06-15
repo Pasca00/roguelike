@@ -61,11 +61,13 @@ public:
 		return w;
 	}
 
-	static const char WALL		 = '#';
-	static const char EMPTY		 = ' ';
-	static const char CHEST		 = 'C';
-	static const char ITEM		 = 'I';
-	static const char DECORATION = 'D';
+	static const char WALL			  = '#';
+	static const char EMPTY			  = ' ';
+	static const char CHEST			  = 'C';
+	static const char ITEM			  = '*';
+	static const char DECORATION	  = 'D';
+	static const char DOOR_HORIZONTAL = 'I';
+	static const char DOOR_VERTICAL   = 'H';
 
 	TreeNode* mapTree;
 

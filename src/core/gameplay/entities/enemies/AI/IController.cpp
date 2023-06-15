@@ -45,7 +45,7 @@ void IController::findNextMove() {
 
 	auto h = this->controlledEntity->getMovableComponent()->hitbox;
 
-	int iCurr = this->mapH - 1 - h->y / tileSize;
+	int iCurr = this->mapH - h->y / tileSize;
 	int jCurr = h->x / tileSize;
 
 	int maxScore = scoreGrid[iCurr][jCurr];

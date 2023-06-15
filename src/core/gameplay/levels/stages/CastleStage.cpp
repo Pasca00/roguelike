@@ -3,8 +3,9 @@
 CastleStage::CastleStage(
 	std::shared_ptr<IGenerator>& generator,
 	std::shared_ptr<TextureManager>& textureManager,
+	std::shared_ptr<SoundSystem>& soundSystem,
 	int tileSize
-) : IStage(generator, textureManager, tileSize) {
+) : IStage(generator, textureManager, soundSystem, tileSize) {
 	this->texturesDir = Paths::TILESETS_DIR +  "/castle/";
 }
 
@@ -29,10 +30,11 @@ void CastleStage::generateStage() {
 	}
 
 	this->placeItems();
+	this->placeDoors();
 }
 
 void CastleStage::update(float dtime) {
-	for (auto& t : this->torches) {
+	for (auto& t : this->animations) {
 		t->update(dtime);
 	}
 }
@@ -346,8 +348,17 @@ void CastleStage::loadTextures() {
 		{
 			2
 		},
-		32,
+		16,
 		16
+	)[0];
+
+	this->doorTextures = this->textureManager->getTexturesFromSpriteSheet(
+		this->texturesDir + "iron_door.png",
+		{
+			2
+		},
+		16,
+		32
 	)[0];
 }
 
@@ -400,7 +411,7 @@ void CastleStage::createTileMap(char** stageTemplate, char** stageTiles) {
 						this->tileSize / 16
 					);
 
-					this->torches.push_back(v);
+					this->animations.push_back(v);
 					this->tileMap[i][j]->addDecoration(std::static_pointer_cast<IView>(v));
 				}
 
@@ -409,7 +420,6 @@ void CastleStage::createTileMap(char** stageTemplate, char** stageTiles) {
 				auto view = std::make_shared<View>(texture, tileX, tileY, this->tileSize / 16);
 				this->tileMap[i][j] = std::make_shared<Tile>(view);
 			}
-
 
 			this->tileMap[i][j]->type = stageTemplate[i][j];
 		}
@@ -424,16 +434,120 @@ void CastleStage::placeItems() {
 	int nItems = this->generator->getNumItems();
 
 	auto playerRoom = this->getRoomForCoords(this->playerStartPosX, this->playerStartPosY);
-	
+
 	int iItem = (playerRoom->h - playerRoom->y) / 2 + playerRoom->y;
 	int jItem = (playerRoom->w - playerRoom->x) / 2 + playerRoom->x;
 
-	auto x = this->tileMap[iItem][jItem]->getView()->getX();
-	auto y = this->tileMap[iItem][jItem]->getView()->getY();
+	auto t = this->tileMap[iItem][jItem];
+	auto& v = t->getView();
 
-	auto v = std::make_shared<View>(this->chestTextures[0], x, y, this->tileSize / 16);
-	this->tileMap[iItem][jItem]->addDecoration(v);
+	auto x = v->getX();
+	auto y = v->getY();
+
+	auto dec = std::make_shared<View>(this->chestTextures[0], x, y, this->tileSize / 16);
+	this->tileMap[iItem][jItem]->addDecoration(dec);
 	this->tileMap[iItem][jItem]->type = IGenerator::WALL;
+
+	auto interactable = std::make_unique<IInteractable>(
+		"INTERACT",
+		[dec, &chestTextures = this->chestTextures, &soundSystem = this->soundSystem]() {
+			dec->setTexture(chestTextures[1]);
+
+			soundSystem->playSound("chest");
+		},
+		x - interactRange,
+		y - interactRange,
+		v->getWidth() * v->getSize() + interactRange,
+		v->getHeight() * v->getSize() + interactRange,
+		1,
+		false
+	);
+
+	this->interactables.push_back(std::move(interactable));
+}
+
+void CastleStage::placeDoors() {
+	for (int i = 0; i < this->tileMap.size(); i++) {
+		for (int j = 0; j < this->tileMap[i].size(); j++) {
+			if (tileMap[i][j]->type != IGenerator::EMPTY) {
+				continue;
+			}
+
+			if (
+				this->tileMap[i][j - 1]->type == IGenerator::WALL 
+				&& this->tileMap[i][j + 1]->type == IGenerator::WALL
+				&& (this->tileMap[i + 1][j - 1]->type == IGenerator::EMPTY 
+				|| this->tileMap[i + 1][j + 1]->type == IGenerator::EMPTY)
+			) {
+				auto t = tileMap[i][j]->getView();
+				auto door = std::make_shared<View>(this->doorTextures[0], t->getX(), t->getY(), this->tileSize / 16);
+				this->tileMap[i][j]->addDecoration(door);
+				this->tileMap[i][j]->type = IGenerator::DOOR_VERTICAL;
+
+				auto interactable = std::make_unique<IInteractable>(
+					"INTERACT",
+					[&tileType = tileMap[i][j]->type, door, &doorTextures = doorTextures, &soundSystem = soundSystem]() {
+						if (tileType == IGenerator::DOOR_VERTICAL) {
+							tileType = IGenerator::EMPTY;
+							door->setTexture(doorTextures[1]);
+
+							soundSystem->playSound("iron_door");
+						} else {
+							tileType = IGenerator::DOOR_VERTICAL;
+							door->setTexture(doorTextures[0]);
+
+							soundSystem->playSound("iron_door");
+						}
+					},
+					t->getX() - interactRange,
+					t->getY() - interactRange,
+					t->getWidth() * t->getSize() + interactRange + 64.f,
+					t->getHeight()* t->getSize() + interactRange + 64.f,
+					-1,
+					false
+				);
+
+				this->interactables.push_back(std::move(interactable));
+			} else if (
+				this->tileMap[i - 1][j]->type == IGenerator::WALL
+				&& this->tileMap[i + 1][j]->type == IGenerator::WALL
+				&& (this->tileMap[i - 1][j - 1]->type == IGenerator::EMPTY
+					|| this->tileMap[i + 1][j - 1]->type == IGenerator::EMPTY)
+			) {
+				auto t = tileMap[i][j]->getView();
+				auto door = std::make_shared<View>(this->doorTextures[1], t->getX(), t->getY(), this->tileSize / 16);
+				this->tileMap[i][j]->addDecoration(door);
+				this->tileMap[i][j]->type = IGenerator::DOOR_HORIZONTAL;
+
+				auto interactable = std::make_unique<IInteractable>(
+					"INTERACT",
+					[&tileType = tileMap[i][j]->type, door, &doorTextures = doorTextures, &tileSize = tileSize, &soundSystem = soundSystem]() {
+						if (tileType == IGenerator::DOOR_HORIZONTAL) {
+							tileType = IGenerator::EMPTY;
+							door->setTexture(doorTextures[0]);
+							door->setY(door->getY() + tileSize);
+
+							soundSystem->playSound("iron_door");
+						} else {
+							tileType = IGenerator::DOOR_HORIZONTAL;
+							door->setTexture(doorTextures[1]);
+							door->setY(door->getY() - tileSize);
+
+							soundSystem->playSound("iron_door");
+						}
+					},
+					t->getX() - interactRange,
+					t->getY() - interactRange,
+					t->getWidth() * t->getSize() + interactRange,
+					t->getHeight() * t->getSize() + interactRange,
+					-1,
+					false
+					);
+
+				this->interactables.push_back(std::move(interactable));
+			}
+		}
+	}
 }
 
 TreeNode* CastleStage::getRoomForCoords(float x, float y) {

@@ -55,6 +55,8 @@ void PhysicsSystem::computeMovablePosition(std::shared_ptr<Movable>& m, float dT
 	int currTileX = mHitbox->x / this->tileSize;
 	int currTileY = this->currentTilemap.size() - mHitbox->y / this->tileSize;
 	
+	auto currTile		= this->currentTilemap[currTileY][currTileX];
+
 	auto tileLeft		= this->currentTilemap[currTileY][currTileX - 1];
 	auto tileRight		= this->currentTilemap[currTileY][currTileX + 1];
 
@@ -65,7 +67,26 @@ void PhysicsSystem::computeMovablePosition(std::shared_ptr<Movable>& m, float dT
 	auto tileUpperRight = this->currentTilemap[currTileY - 1][currTileX + 1];
 	auto tileLowerRight = this->currentTilemap[currTileY + 1][currTileX + 1];
 
-	if (m->direction.x == -1) {
+	bool checkedDown = false;
+	bool checkedLeft = false;
+
+	if (currTile->type == IGenerator::DOOR_HORIZONTAL) {
+		auto& view = currTile->getView();
+		if (potentialX < view->getX() + 16.f) {
+			mHitbox->x = view->getX() + 16.f;
+
+			checkedLeft = true;
+		}
+	} else if (currTile->type == IGenerator::DOOR_VERTICAL) {
+		auto& view = currTile->getView();
+		if (potentialY < view->getY() + 16.f) {
+			mHitbox->y = view->getY() + 16.f;
+		
+			checkedDown = true;
+		}
+	}
+
+	if (m->direction.x == -1 && !checkedLeft) {
 		if (tileLeft->type != IGenerator::WALL) {
 			if (tileUpperLeft->type != IGenerator::WALL) {
 				mHitbox->x = potentialX;
@@ -86,7 +107,7 @@ void PhysicsSystem::computeMovablePosition(std::shared_ptr<Movable>& m, float dT
 			}
 		}
 	} else if (m->direction.x == 1) {
-		if (tileRight->type != IGenerator::WALL) {
+		if (tileRight->type != IGenerator::WALL && tileRight->type != IGenerator::DOOR_HORIZONTAL) {
 			if (tileUpperRight->type != IGenerator::WALL) {
 				mHitbox->x = potentialX;
 			} else {
@@ -107,7 +128,7 @@ void PhysicsSystem::computeMovablePosition(std::shared_ptr<Movable>& m, float dT
 		}
 	}
 
-	if (m->direction.y == -1) {
+	if (m->direction.y == -1 && !checkedDown) {
 		if (tileDown->type != IGenerator::WALL) {
 			if (tileLowerRight->type != IGenerator::WALL) {
 				mHitbox->y = potentialY;
@@ -128,7 +149,7 @@ void PhysicsSystem::computeMovablePosition(std::shared_ptr<Movable>& m, float dT
 			}
 		}
 	} else if (m->direction.y == 1) {
-		if (tileUp->type != IGenerator::WALL) {
+		if (tileUp->type != IGenerator::WALL && tileUp->type != IGenerator::DOOR_VERTICAL) {
 			if (tileUpperRight->type != IGenerator::WALL) {
 				mHitbox->y = potentialY;
 			} else {

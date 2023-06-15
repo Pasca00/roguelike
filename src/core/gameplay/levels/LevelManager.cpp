@@ -36,7 +36,7 @@ void LevelManager::updateScoreGrid(float dTime, float playerX, float playerY) {
 	if (this->timeSinceLastScoring >= this->scoringInterval) {
 		this->timeSinceLastScoring = 0.f;
 
-		int iCurr = generator->getH() - 1 - playerY / this->tileSize;
+		int iCurr = generator->getH() - playerY / this->tileSize;
 		int jCurr = playerX / this->tileSize;
 
 		// If player hasn't moved, it's not necessary to update the grid values

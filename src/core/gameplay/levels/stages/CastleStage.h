@@ -13,6 +13,7 @@ private:
 	void loadTextures() override;
 	void createTileMap(char** stageTemplate, char** stageTiles) override;
 	void placeItems() override;
+	void placeDoors() override;
 
 	TreeNode* getRoomForCoords(float x, float y);
 
@@ -20,6 +21,7 @@ public:
 	CastleStage(
 		std::shared_ptr<IGenerator>& generator,
 		std::shared_ptr<TextureManager>& textureManager,
+		std::shared_ptr<SoundSystem>& soundSystem,
 		int tileSize = 32
 	);
 	~CastleStage();
@@ -27,6 +29,8 @@ public:
 	void generateStage() override;
 
 	void update(float dtime);
+
+	std::unique_ptr<IInteractable> inter;
 
 private:
 	static const int corridor_T_down		 = 18;

@@ -1,5 +1,7 @@
 #pragma once
 
+#include "../../../systems/sound/SoundSystem.h"
+#include "../../../systems/input/IInteractable.h"
 #include "../../../systems/video/textures/TextureManager.h"
 #include "../../../systems/video/views/AnimationView.h"
 #include "../generators/IGenerator.h"
@@ -8,6 +10,8 @@
 
 class IStage {
 protected:
+	std::shared_ptr<SoundSystem> soundSystem;
+
 	std::shared_ptr<IGenerator> generator;
 	std::shared_ptr<TextureManager> textureManager;
 
@@ -17,7 +21,7 @@ protected:
 	std::vector<std::vector<std::shared_ptr<Texture>>> wallTextures;
 	std::vector<std::vector<std::shared_ptr<Texture>>> ceilingTextures;
 
-	std::vector<std::shared_ptr<AnimationView>> torches;
+	std::vector<std::shared_ptr<AnimationView>> animations;
 	std::vector<std::shared_ptr<Texture>> torchTextures;
 
 	std::vector<std::shared_ptr<Texture>> wallDecorations;
@@ -25,11 +29,18 @@ protected:
 
 	std::vector<std::shared_ptr<Texture>> chestTextures;
 
+	std::vector<std::shared_ptr<Texture>> doorTextures;
+
+	std::vector<std::unique_ptr<IInteractable>> interactables;
+
 	int tileSize;
+
+	float interactRange;
 
 	virtual void loadTextures() = 0;
 	virtual void createTileMap(char** stageTemplate, char** stageTiles) = 0;
 	virtual void placeItems() = 0;
+	virtual void placeDoors() = 0;
 
 public:
 	float playerStartPosX;
@@ -38,12 +49,15 @@ public:
 	IStage(
 		std::shared_ptr<IGenerator>& generator,
 		std::shared_ptr<TextureManager>& textureManager,
+		std::shared_ptr<SoundSystem>& soundSystem,
 		int tileSize = 32
-	) : generator(generator), 
-		textureManager(textureManager), 
-		tileSize(tileSize), 
+	) : generator(generator),
+		textureManager(textureManager),
+		tileSize(tileSize),
+		soundSystem(soundSystem),
 		playerStartPosX(0), 
-		playerStartPosY(0) { }
+		playerStartPosY(0),
+		interactRange(48.f) { }
 
 	char** generateTemplate() {
 		return this->generator->generateLayout();
@@ -61,5 +75,9 @@ public:
 
 	std::shared_ptr<IGenerator>& getGenerator() {
 		return this->generator;
+	}
+
+	std::vector<std::unique_ptr<IInteractable>> getInteractables() {
+		return std::move(this->interactables);
 	}
 };

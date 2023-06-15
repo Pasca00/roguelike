@@ -131,11 +131,26 @@ void InputSystem::addEventCallback(std::unique_ptr<IInteractable>& callback) {
 	this->input->callbacks[callback->getTrigger()].push_back(std::move(callback));
 }
 
+void InputSystem::checkPlayerInteractables(float playerX, float playerY, float playerW, float playerH) {
+	auto& events = this->input->callbacks["INTERACT"];
+
+	for (auto& e : events) {
+		auto h = e->getHitbox();
+
+		if (playerX + playerW > h->x && playerX < h->x + h->w
+			&& playerY + playerH > h->y && playerY < h->y + h->h) {
+			e->enable();
+		} else {
+			e->disable();
+		}
+	}
+}
+
 void InputSystem::triggerCallbacks(std::string event) {
 	auto& events = this->input->callbacks[event];
 
 	for (auto& e : events) {
-		if (e->isDone())
+		if (!e->isEnabled() || e->isDone())
 			continue;
 
 		e->call();
