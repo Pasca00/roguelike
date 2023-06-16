@@ -10,7 +10,7 @@ private:
 	std::unique_ptr<LevelManager> levelManager;
 	std::unique_ptr<Player> player;
 
-	std::unique_ptr<IController> enemyTest;
+	std::vector<std::unique_ptr<IController>> enemies;
 
 	void makeEnemies();
 

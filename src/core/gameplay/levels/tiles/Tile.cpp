@@ -16,3 +16,15 @@ void Tile::addDecoration(std::shared_ptr<IView> v) {
 std::shared_ptr<IView>& Tile::getDecoration() {
 	return this->decoration;
 }
+
+void Tile::addAdditionalView(std::shared_ptr<IView>& v) {
+	this->additionalViews.push_back(v);
+}
+
+std::vector<std::shared_ptr<IView>>& Tile::getAdditionalViews() {
+	return this->additionalViews;
+}
+
+void Tile::clearAdditionalViews() {
+	this->additionalViews.clear();
+}

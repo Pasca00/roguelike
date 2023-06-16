@@ -23,6 +23,7 @@ protected:
 
 	std::vector<std::shared_ptr<AnimationView>> animations;
 	std::vector<std::shared_ptr<Texture>> torchTextures;
+	std::vector<std::shared_ptr<Texture>> brasierTextures;
 
 	std::vector<std::shared_ptr<Texture>> wallDecorations;
 	std::vector<std::shared_ptr<Texture>> floorDecorations;
@@ -37,10 +38,14 @@ protected:
 
 	float interactRange;
 
+	std::vector<std::pair<float, float>> enemyHeavyPositions;
+	std::vector<std::pair<float, float>> enemyLightPositions;
+
 	virtual void loadTextures() = 0;
 	virtual void createTileMap(char** stageTemplate, char** stageTiles) = 0;
 	virtual void placeItems() = 0;
 	virtual void placeDoors() = 0;
+	virtual void placeEnemiesStartPositions() = 0;
 
 public:
 	float playerStartPosX;
@@ -79,5 +84,13 @@ public:
 
 	std::vector<std::unique_ptr<IInteractable>> getInteractables() {
 		return std::move(this->interactables);
+	}
+
+	std::vector<std::pair<float, float>>& getEnemyHeavyStart() {
+		return this->enemyHeavyPositions;
+	}
+
+	std::vector<std::pair<float, float>>& getEnemyLightStart() {
+		return this->enemyLightPositions;
 	}
 };

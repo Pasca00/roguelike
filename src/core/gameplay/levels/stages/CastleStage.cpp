@@ -1,5 +1,7 @@
 #include "CastleStage.h"
 
+#include <stack>
+
 CastleStage::CastleStage(
 	std::shared_ptr<IGenerator>& generator,
 	std::shared_ptr<TextureManager>& textureManager,
@@ -19,8 +21,9 @@ void CastleStage::generateStage() {
 	
 	this->createTileMap(stageTemplate, stageTiles);
 
-	for (int i = 0; i < tileMap.size(); i++) {
-		for (int j = tileMap[i].size() - 1; j >= 0; j--) {
+	auto smallestRoom = this->findSmallestRoom();
+	for (int i = smallestRoom->y; i < smallestRoom->h; i++) {
+		for (int j = smallestRoom->x; j < smallestRoom->w; j++) {
 			if (stageTemplate[i][j] == IGenerator::EMPTY) {
 				auto& playerTileView = tileMap[i][j]->getView();
 				this->playerStartPosX = playerTileView->getX() + this->tileSize / 2;
@@ -29,8 +32,9 @@ void CastleStage::generateStage() {
 		}
 	}
 
-	this->placeItems();
 	this->placeDoors();
+	this->placeItems();
+	this->placeEnemiesStartPositions();
 }
 
 void CastleStage::update(float dtime) {
@@ -360,6 +364,15 @@ void CastleStage::loadTextures() {
 		16,
 		32
 	)[0];
+
+	this->brasierTextures = this->textureManager->getTexturesFromSpriteSheet(
+		this->texturesDir + "brasier.png",
+		{
+			3
+		},
+		16,
+		32
+	)[0];
 }
 
 void CastleStage::createTileMap(char** stageTemplate, char** stageTiles) {
@@ -550,6 +563,30 @@ void CastleStage::placeDoors() {
 	}
 }
 
+void CastleStage::placeEnemiesStartPositions() {
+	TreeNode* head = this->getMapTree();
+
+	auto playerRoom = this->getRoomForCoords(this->playerStartPosX, this->playerStartPosY);
+
+	std::stack<TreeNode*> stack;
+	while (head != NULL || !stack.empty()) {
+		while (head != NULL) {
+			stack.push(head);
+		
+			head = head->l;
+		}
+
+		head = stack.top();
+		stack.pop();
+
+		if (head->l == NULL && head->r == NULL && head != playerRoom) {
+			this->placeEnemiesInRoom(head);
+		}
+
+		head = head->r;
+	}
+}
+
 TreeNode* CastleStage::getRoomForCoords(float x, float y) {
 	int i = this->tileMap.size() - 1 - y / this->tileSize;
 	int j = x / this->tileSize;
@@ -572,4 +609,217 @@ TreeNode* CastleStage::getRoomForCoords(float x, float y) {
 	}
 
 	return currNode;
+}
+
+void CastleStage::placeEnemiesInRoom(TreeNode* room) {
+	int roomW = room->w - room->x;
+	int roomH = room->h - room->y;
+
+	int surface = roomW * roomH;
+	int surfaceChanceMod = surface / 100;
+
+	int sign;
+
+	if (surfaceChanceMod >= 5) {
+		// If we have a lot of enemies we can only decrease
+		sign = rand() % 2 == 0 ? 0 : -1;
+	} else if (surfaceChanceMod <= 1) {
+		sign = rand() % 2 == 0 ? 0 : 1;
+	} else {
+		sign = rand() % 2 == 0 ? -1 : 1;
+	}
+
+	// Can add or remove one enemy max
+	int numEnemies = surface / 100 + sign * rand() % 2;
+
+	if (numEnemies == 0) {
+		return;
+	}
+
+	int numHeavyEnemies;
+	int numLightEnemies;
+
+	if (numEnemies == 1) {
+		numHeavyEnemies = rand() % 2 == 0 ? 1 : 0;
+	} else {
+		numHeavyEnemies = rand() % (numEnemies - numEnemies / 2);
+	}
+
+	numLightEnemies = numEnemies - numHeavyEnemies;
+
+	int groupSpawnChance;
+	int spawnChance = 10;
+	char enemyType;
+
+	if (numEnemies == 1) {
+		spawnChance = 10;
+		groupSpawnChance = 0;
+		enemyType = numHeavyEnemies == 1 ? 'H' : 'L';
+		for (int i = room->y; i < room->h; i++) {
+			for (int j = room->x; j < room->w; j++) {
+				if (tileMap[i][j]->type == IGenerator::EMPTY) {
+					int currPick = rand() % 100 + 1;
+					if (currPick <= spawnChance) {
+						this->placeEnemy(i, j, enemyType);
+
+						return;
+					} else if (currPick <= spawnChance + groupSpawnChance) {
+						auto v = tileMap[i][j]->getView();
+						auto dec = std::make_shared<AnimationView>(this->brasierTextures, true, 0.15f, v->getX(), v->getY(), this->tileSize / 16.f);
+						tileMap[i][j]->addDecoration(dec);
+						tileMap[i][j]->type = IGenerator::WALL;
+
+						this->animations.push_back(dec);
+
+						if (tileMap[i][j + 1]->type == IGenerator::EMPTY) {
+							this->placeEnemy(i, j + 1, enemyType);
+						} else {
+							this->placeEnemy(i, j - 1, enemyType);
+						}
+					
+						return;
+					}
+
+					spawnChance += 15;
+					groupSpawnChance += 1;
+				}
+			}
+		}
+	}
+
+	std::vector<char> enemies;
+	while (numHeavyEnemies != 0 && numLightEnemies != 0) {
+		if (rand() % 2 == 0) {
+			if (numHeavyEnemies > 0) {
+				numHeavyEnemies--;
+				enemies.push_back('H');
+			} else {
+				numLightEnemies--;
+				enemies.push_back('L');
+			}
+		} else {
+			if (numLightEnemies > 0) {
+				numLightEnemies--;
+				enemies.push_back('L');
+			}
+			else {
+				numHeavyEnemies--;
+				enemies.push_back('H');
+			}
+		}
+	}
+
+	groupSpawnChance = 5;
+	spawnChance = 5;
+	while (!enemies.empty()) {
+		if (enemies.size() == 1) {
+			groupSpawnChance = 50;
+			spawnChance = 50;
+		}
+
+		int randOffsetY = rand() % 3;
+		int randOffsetX = rand() % 3;
+		for (int i = room->y + randOffsetY; i < room->h; i++) {
+			for (int j = room->x + randOffsetX; j < room->w; j++) {
+				if (tileMap[i][j]->type == IGenerator::EMPTY) {
+					int pickChance = rand() % 100 + 1;
+					if (pickChance <= spawnChance) {
+						this->placeEnemy(i, j, enemies.back());
+						enemies.pop_back();
+
+						if (enemies.empty())
+							return;
+
+						spawnChance = 2;
+						groupSpawnChance += 20;
+					} else if (pickChance <= spawnChance + groupSpawnChance) {
+						printf("here\n");
+						auto v = tileMap[i][j]->getView();
+						auto dec = std::make_shared<AnimationView>(this->brasierTextures, true, 0.15f, v->getX(), v->getY(), this->tileSize / 16.f);
+						tileMap[i][j]->addDecoration(dec);
+						tileMap[i][j]->type = IGenerator::WALL;
+
+						this->animations.push_back(dec);
+
+						if (tileMap[i][j + 1]->type == IGenerator::EMPTY) {
+							this->placeEnemy(i, j + 1, enemies.back());
+						} else {
+							this->placeEnemy(i, j - 1, enemies.back());
+						}
+						enemies.pop_back();
+
+						if (enemies.empty())
+							return;
+
+						if (tileMap[i + 1][j]->type == IGenerator::EMPTY) {
+							this->placeEnemy(i + 1, j, enemies.back());
+						}
+						else {
+							this->placeEnemy(i - 1, j, enemies.back());
+						}
+						enemies.pop_back();
+
+						if (enemies.empty())
+							return;
+
+						groupSpawnChance = 5;
+						spawnChance = 5;
+					}
+
+					spawnChance += 2;
+					groupSpawnChance += 1;
+				}
+			}
+		}
+	}
+}
+
+TreeNode* CastleStage::findSmallestRoom() {
+	TreeNode* min = NULL;
+	int minSurface = 10000;
+
+	TreeNode* head = this->getMapTree();
+
+	std::stack<TreeNode*> stack;
+	while (head != NULL || !stack.empty()) {
+		while (head != NULL) {
+			stack.push(head);
+
+			head = head->l;
+		}
+
+		head = stack.top();
+		stack.pop();
+
+		if (head->l == NULL && head->r == NULL) {
+			int roomW = head->w - head->x;
+			int roomH = head->h - head->y;
+
+			int surface = roomW * roomH;
+
+			if (surface < minSurface) {
+				minSurface = surface;
+				min = head;
+			}
+		}
+
+		head = head->r;
+	}
+
+	return min;
+}
+
+void CastleStage::placeEnemy(int i, int j, char enemyType) {
+	auto v = tileMap[i][j]->getView();
+	
+	float x = v->getX() + this->tileSize / 2;
+	float y = v->getY() + this->tileSize / 2;
+
+	if (enemyType == 'H') {
+		this->enemyHeavyPositions.push_back({ x, y });
+
+		return;
+	}
+
+	this->enemyLightPositions.push_back({ x, y });
 }

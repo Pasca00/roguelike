@@ -14,8 +14,15 @@ private:
 	void createTileMap(char** stageTemplate, char** stageTiles) override;
 	void placeItems() override;
 	void placeDoors() override;
+	void placeEnemiesStartPositions() override;
+
+	TreeNode* findSmallestRoom();
+
+	void placeEnemiesInRoom(TreeNode* room);
 
 	TreeNode* getRoomForCoords(float x, float y);
+
+	void placeEnemy(int i, int j, char enemyType);
 
 public:
 	CastleStage(

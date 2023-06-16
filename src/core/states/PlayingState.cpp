@@ -113,11 +113,18 @@ void PlayingState::handleInput() {
 	
 	this->player->handleInput(input);
 
-	this->enemyTest->feedInputToEntity();
+	for (const auto& e : this->enemies) {
+		e->feedInputToEntity();
+	}
 }
 
 void PlayingState::update(float dTime) {
-	this->generalSystem->queueThreadJob([&]() {
+	this->generalSystem->queueThreadJob([
+			dTime, 
+			&player = player, 
+			&updateBarrier = updateBarrier, 
+			&levelManager = levelManager,
+			&inputSystem = inputSystem]() {
 		auto p = player->getMovableComponent();
 		levelManager->updateScoreGrid(dTime, p->hitbox->x, p->hitbox->y);
 		inputSystem->checkPlayerInteractables(p->hitbox->x, p->hitbox->y, p->hitbox->w, p->hitbox->h);
@@ -125,14 +132,46 @@ void PlayingState::update(float dTime) {
 		updateBarrier->wait();
 	});
 	
-	this->generalSystem->queueThreadJob([&]() {
-		this->physicsSystem->update(dTime);
-		
+	this->generalSystem->queueThreadJob([dTime, &physicsSystem = physicsSystem, &updateBarrier = updateBarrier, &enemies = enemies]() {
+		physicsSystem->update(dTime);
+
+		for (const auto& e : enemies) {
+			e->update(dTime);
+		}
+
 		updateBarrier->wait();
 	});
 
-	this->generalSystem->queueThreadJob([&]() {
+	this->generalSystem->queueThreadJob([
+			dTime, 
+			&player = player, 
+			&levelManager = levelManager, 
+			&updateBarrier = updateBarrier, 
+			&enemies = enemies]() {
+		player->update(dTime);
+
 		levelManager->getCurrentStage()->update(dTime);
+
+		auto tileMap = levelManager->getTileMap();
+		for (int i = 0; i < tileMap.size(); i++) {
+			for (int j = 0; j < tileMap[i].size(); j++) {
+				tileMap[i][j]->clearAdditionalViews();
+			}
+		}
+
+		auto p = player->getMovableComponent()->hitbox;
+		int i = tileMap.size() - p->y / 64;
+		int j = p->x / 64;
+
+		tileMap[i][j]->addAdditionalView(std::static_pointer_cast<IView>(player->getCurrentTexture()));
+
+		for (const auto& e : enemies) {
+			auto p = e->getEntity()->getMovableComponent()->hitbox;
+			int i = tileMap.size() - p->y / 64;
+			int j = p->x / 64;
+
+			tileMap[i][j]->addAdditionalView(std::static_pointer_cast<IView>(e->getEntity()->getCurrentTexture()));
+		}
 
 		updateBarrier->wait();
 	});
@@ -140,30 +179,42 @@ void PlayingState::update(float dTime) {
 	this->updateBarrier->wait();
 
 	this->videoSystem->updateCamera(dTime);
-
-	this->player->update(dTime);
-
-	this->enemyTest->update(dTime);
 }
 
 void PlayingState::render() {
 	auto tileMap = this->levelManager->getTileMap();
 
 	for (int i = 0; i < tileMap.size(); i++) {
-		for (int j = 0; j < tileMap[i].size(); j++) {
+		for (int j = tileMap[i].size() - 1; j >= 0 ; j--) {
 			if (tileMap[i][j] != nullptr) {
 				this->videoSystem->draw(std::static_pointer_cast<IView>(tileMap[i][j]->getView()));
 
 				auto decoration = tileMap[i][j]->getDecoration();
-				if (decoration != nullptr) {
+
+				if (tileMap[i][j]->type == IGenerator::DOOR_VERTICAL) {
+					auto adViews = tileMap[i][j]->getAdditionalViews();
+					for (auto v : adViews) {
+						this->videoSystem->draw(v);
+					}
+
 					this->videoSystem->draw(decoration);
+				
+				} else {
+					if (decoration != nullptr) {
+						this->videoSystem->draw(decoration);
+					}
+
+					auto adViews = tileMap[i][j]->getAdditionalViews();
+					for (auto v : adViews) {
+						this->videoSystem->draw(v);
+					}
 				}
 			}
 		}
 	}
 
-	this->videoSystem->draw(std::static_pointer_cast<IView>(this->enemyTest->getEntity()->getCurrentTexture()));
-	this->videoSystem->draw(std::static_pointer_cast<IView>(this->player->getCurrentTexture()));
+	//this->videoSystem->draw(std::static_pointer_cast<IView>(this->enemyTest->getEntity()->getCurrentTexture()));
+	//this->videoSystem->draw(std::static_pointer_cast<IView>(this->player->getCurrentTexture()));
 }
 
 void PlayingState::executePostLoad() {
@@ -172,13 +223,17 @@ void PlayingState::executePostLoad() {
 }
 
 void PlayingState::makeEnemies() {
-	float x = this->levelManager->getCurrentStage()->playerStartPosX;
-	float y = this->levelManager->getCurrentStage()->playerStartPosY;
-
 	auto textureManager = this->videoSystem->getTextureManager();
 	auto orcTextures = textureManager->getTexturesFromSpriteSheet(
 		Paths::CHARACTERS_DIR + "orcs.png",
 		{
+			// light
+			10, // death
+			10, // attack
+			10, // walk
+			10, // idle1
+			10, // idle2
+			// heavy
 			10, // death
 			10, // attack
 			10, // walk
@@ -187,38 +242,75 @@ void PlayingState::makeEnemies() {
 		}
 	);
 
-	auto idle1 = std::make_shared<AnimationView>(orcTextures[0], false, 0.15f, 120, 120, 3);
-	auto idle2 = std::make_shared<AnimationView>(orcTextures[1], false, 0.15f, 120, 120, 3);
-	auto walk = std::make_shared<AnimationView>(orcTextures[2], true, 0.15f, 120, 120, 3);
-	auto attack = std::make_shared<AnimationView>(orcTextures[3], false, 0.15f, 120, 120, 3);
-	auto death = std::make_shared<AnimationView>(orcTextures[4], false, 0.15f, 120, 120, 3);
-	auto hitbox = std::make_shared<Hitbox>(x, y, 40, 40);
+	for (auto p : this->levelManager->getCurrentStage()->getEnemyLightStart()) {
+		auto idle1 = std::make_shared<AnimationView>(orcTextures[0], false, 0.15f, 120, 120, 3);
+		auto idle2 = std::make_shared<AnimationView>(orcTextures[1], false, 0.15f, 120, 120, 3);
+		auto walk = std::make_shared<AnimationView>(orcTextures[2], true, 0.15f, 120, 120, 3);
+		auto attack = std::make_shared<AnimationView>(orcTextures[3], false, 0.15f, 120, 120, 3);
+		auto death = std::make_shared<AnimationView>(orcTextures[4], false, 0.15f, 120, 120, 3);
+		auto hitbox = std::make_shared<Hitbox>(p.first, p.second, 40, 40);
 
-	std::vector<std::shared_ptr<AnimationView>> idleVec = { idle1, idle2 };
-	std::vector<std::shared_ptr<AnimationView>> walkVec = { walk };
-	std::vector<std::shared_ptr<AnimationView>> attackVec = { attack };
+		std::vector<std::shared_ptr<AnimationView>> idleVec = { idle1, idle2 };
+		std::vector<std::shared_ptr<AnimationView>> walkVec = { walk };
+		std::vector<std::shared_ptr<AnimationView>> attackVec = { attack };
 
-	auto movable = std::make_shared<Movable>(hitbox, 150.f);
+		auto movable = std::make_shared<Movable>(hitbox, 150.f);
 
-	auto controllableParams = std::make_shared<ControllableParameters>(
-		this->physicsSystem->getTimeModifier(),
-		movable->maxSpeed,
-		movable->doesCollide
-	);
+		this->physicsSystem->addMovable(movable);
 
-	auto enemy = std::make_shared<Entity>(
-		movable,
-		idleVec,
-		attackVec,
-		walkVec,
-		death
-	);
+		auto enemy = std::make_shared<Entity>(
+			movable,
+			idleVec,
+			attackVec,
+			walkVec,
+			death
+		);
 
-	this->enemyTest = std::make_unique<IController>(
-		enemy,
-		this->levelManager->getScoreGrid(),
-		this->levelManager->getTileSize(),
-		this->levelManager->getH(),
-		this->levelManager->getW()
-	);
+		auto e = std::make_unique<IController>(
+			enemy,
+			this->levelManager->getScoreGrid(),
+			this->levelManager->getTileSize(),
+			this->levelManager->getH(),
+			this->levelManager->getW()
+		);
+
+		this->enemies.push_back(std::move(e));
+	}
+
+	for (auto p : this->levelManager->getCurrentStage()->getEnemyHeavyStart()) {
+		auto idle1 = std::make_shared<AnimationView>(orcTextures[5], false, 0.15f, 120, 120, 3);
+		auto idle2 = std::make_shared<AnimationView>(orcTextures[6], false, 0.15f, 120, 120, 3);
+		auto walk = std::make_shared<AnimationView>(orcTextures[7], true, 0.15f, 120, 120, 3);
+		auto attack = std::make_shared<AnimationView>(orcTextures[8], false, 0.15f, 120, 120, 3);
+		auto death = std::make_shared<AnimationView>(orcTextures[9], false, 0.15f, 120, 120, 3);
+		auto hitbox = std::make_shared<Hitbox>(p.first, p.second, 40, 40);
+
+		std::vector<std::shared_ptr<AnimationView>> idleVec = { idle1, idle2 };
+		std::vector<std::shared_ptr<AnimationView>> walkVec = { walk };
+		std::vector<std::shared_ptr<AnimationView>> attackVec = { attack };
+
+		auto movable = std::make_shared<Movable>(hitbox, 150.f);
+
+		this->physicsSystem->addMovable(movable);
+
+		auto enemy = std::make_shared<Entity>(
+			movable,
+			idleVec,
+			attackVec,
+			walkVec,
+			death
+		);
+
+		auto e = std::make_unique<IController>(
+			enemy,
+			this->levelManager->getScoreGrid(),
+			this->levelManager->getTileSize(),
+			this->levelManager->getH(),
+			this->levelManager->getW()
+		);
+
+		this->enemies.push_back(std::move(e));
+	}
+
+
 }
