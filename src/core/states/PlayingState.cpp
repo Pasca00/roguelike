@@ -46,11 +46,24 @@ PlayingState::PlayingState(
 		float playerY = this->levelManager->getCurrentStage()->playerStartPosY;
 
 		auto textureManager = this->videoSystem->getTextureManager();
+		//auto rogueTextures = textureManager->getTexturesFromSpriteSheet(
+		//	Paths::CHARACTERS_DIR + "rogue.png",
+		//	{
+		//		10, // death
+		//		10, // attack
+		//		10, // walk
+		//		10, // idle1
+		//		10, // idle2
+		//	}
+		//);
+
 		auto rogueTextures = textureManager->getTexturesFromSpriteSheet(
-			Paths::CHARACTERS_DIR + "rogue.png",
+			Paths::CHARACTERS_DIR + "rogue_.png",
 			{
 				10, // death
-				10, // attack
+				9, // attack1
+				9, // attack2
+				9, // attack3
 				10, // walk
 				10, // idle1
 				10, // idle2
@@ -60,13 +73,15 @@ PlayingState::PlayingState(
 		auto idle1 = std::make_shared<AnimationView>(rogueTextures[0], false, 0.15f, 120, 120, 3);
 		auto idle2 = std::make_shared<AnimationView>(rogueTextures[1], false, 0.15f, 120, 120, 3);
 		auto walk = std::make_shared<AnimationView>(rogueTextures[2], true, 0.15f, 120, 120, 3);
-		auto attack = std::make_shared<AnimationView>(rogueTextures[3], false, 0.15f, 120, 120, 3);
-		auto death = std::make_shared<AnimationView>(rogueTextures[4], false, 0.15f, 120, 120, 3);
+		auto attack1 = std::make_shared<AnimationView>(rogueTextures[3], false, 0.08f, 120, 120, 3);
+		auto attack2 = std::make_shared<AnimationView>(rogueTextures[4], false, 0.08f, 120, 120, 3);
+		auto attack3 = std::make_shared<AnimationView>(rogueTextures[5], false, 0.08f, 120, 120, 3);
+		auto death = std::make_shared<AnimationView>(rogueTextures[6], false, 0.15f, 120, 120, 3);
 		auto playerHitbox = std::make_shared<Hitbox>(playerX, playerY, 40, 40);
 
 		std::vector<std::shared_ptr<AnimationView>> idleVec = { idle1, idle2 };
 		std::vector<std::shared_ptr<AnimationView>> walkVec = { walk };
-		std::vector<std::shared_ptr<AnimationView>> attackVec = { attack };
+		std::vector<std::shared_ptr<AnimationView>> attackVec = { attack1, attack2, attack3 };
 
 		auto movable = std::make_shared<Movable>(playerHitbox, 150.f);
 
@@ -213,8 +228,11 @@ void PlayingState::render() {
 		}
 	}
 
-	//this->videoSystem->draw(std::static_pointer_cast<IView>(this->enemyTest->getEntity()->getCurrentTexture()));
-	//this->videoSystem->draw(std::static_pointer_cast<IView>(this->player->getCurrentTexture()));
+	/*for (const auto& e : this->enemies) {
+		this->videoSystem->draw(std::static_pointer_cast<IView>(e->getEntity()->getCurrentTexture()));
+	}
+
+	this->videoSystem->draw(std::static_pointer_cast<IView>(this->player->getCurrentTexture()));*/
 }
 
 void PlayingState::executePostLoad() {
@@ -243,11 +261,12 @@ void PlayingState::makeEnemies() {
 	);
 
 	for (auto p : this->levelManager->getCurrentStage()->getEnemyLightStart()) {
-		auto idle1 = std::make_shared<AnimationView>(orcTextures[0], false, 0.15f, 120, 120, 3);
-		auto idle2 = std::make_shared<AnimationView>(orcTextures[1], false, 0.15f, 120, 120, 3);
-		auto walk = std::make_shared<AnimationView>(orcTextures[2], true, 0.15f, 120, 120, 3);
-		auto attack = std::make_shared<AnimationView>(orcTextures[3], false, 0.15f, 120, 120, 3);
-		auto death = std::make_shared<AnimationView>(orcTextures[4], false, 0.15f, 120, 120, 3);
+		float eps = rand() % 7 / 100.f;
+		auto idle1 = std::make_shared<AnimationView>(orcTextures[5], false, 0.15f + eps, 120, 120, 3);
+		auto idle2 = std::make_shared<AnimationView>(orcTextures[6], false, 0.15f + eps, 120, 120, 3);
+		auto walk = std::make_shared<AnimationView>(orcTextures[7], true, 0.15f + eps, 120, 120, 3);
+		auto attack = std::make_shared<AnimationView>(orcTextures[8], false, 0.15f + eps, 120, 120, 3);
+		auto death = std::make_shared<AnimationView>(orcTextures[9], false, 0.15f + eps, 120, 120, 3);
 		auto hitbox = std::make_shared<Hitbox>(p.first, p.second, 40, 40);
 
 		std::vector<std::shared_ptr<AnimationView>> idleVec = { idle1, idle2 };
@@ -257,6 +276,7 @@ void PlayingState::makeEnemies() {
 		auto movable = std::make_shared<Movable>(hitbox, 150.f);
 
 		this->physicsSystem->addMovable(movable);
+		movable->maxSpeed = movable->maxSpeed - 10 - rand() % 50;
 
 		auto enemy = std::make_shared<Entity>(
 			movable,
@@ -278,11 +298,12 @@ void PlayingState::makeEnemies() {
 	}
 
 	for (auto p : this->levelManager->getCurrentStage()->getEnemyHeavyStart()) {
-		auto idle1 = std::make_shared<AnimationView>(orcTextures[5], false, 0.15f, 120, 120, 3);
-		auto idle2 = std::make_shared<AnimationView>(orcTextures[6], false, 0.15f, 120, 120, 3);
-		auto walk = std::make_shared<AnimationView>(orcTextures[7], true, 0.15f, 120, 120, 3);
-		auto attack = std::make_shared<AnimationView>(orcTextures[8], false, 0.15f, 120, 120, 3);
-		auto death = std::make_shared<AnimationView>(orcTextures[9], false, 0.15f, 120, 120, 3);
+		float eps = rand() % 10 / 100.f;
+		auto idle1 = std::make_shared<AnimationView>(orcTextures[0], false, 0.15f + eps, 120, 120, 3);
+		auto idle2 = std::make_shared<AnimationView>(orcTextures[1], false, 0.15f + eps, 120, 120, 3);
+		auto walk = std::make_shared<AnimationView>(orcTextures[2], true, 0.15f + eps, 120, 120, 3);
+		auto attack = std::make_shared<AnimationView>(orcTextures[3], false, 0.15f + eps, 120, 120, 3);
+		auto death = std::make_shared<AnimationView>(orcTextures[4], false, 0.15f + eps, 120, 120, 3);
 		auto hitbox = std::make_shared<Hitbox>(p.first, p.second, 40, 40);
 
 		std::vector<std::shared_ptr<AnimationView>> idleVec = { idle1, idle2 };
@@ -290,6 +311,7 @@ void PlayingState::makeEnemies() {
 		std::vector<std::shared_ptr<AnimationView>> attackVec = { attack };
 
 		auto movable = std::make_shared<Movable>(hitbox, 150.f);
+		movable->maxSpeed = movable->maxSpeed - rand() % 30;
 
 		this->physicsSystem->addMovable(movable);
 

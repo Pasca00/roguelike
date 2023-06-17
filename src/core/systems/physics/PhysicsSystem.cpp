@@ -24,6 +24,8 @@ void PhysicsSystem::update(float dtime) {
 			m->move(dtime);
 		}
 	}
+
+	this->checkPlayerMovablesInteractions();
 }
 
 void PhysicsSystem::addMovable(std::shared_ptr<Movable>& movable) {
@@ -51,6 +53,10 @@ void PhysicsSystem::computeMovablePosition(std::shared_ptr<Movable>& m, float dT
 
 	float potentialX = mHitbox->x + m->velocity.x * m->direction.x * dTime;
 	float potentialY = mHitbox->y + m->velocity.y * m->direction.y * dTime;
+
+	if (m->velocity.x == 0 && m->velocity.y == 0) {
+		return;
+	}
 
 	int currTileX = mHitbox->x / this->tileSize;
 	int currTileY = this->currentTilemap.size() - mHitbox->y / this->tileSize;
@@ -166,6 +172,34 @@ void PhysicsSystem::computeMovablePosition(std::shared_ptr<Movable>& m, float dT
 				mHitbox->y = view->getY() - mHitbox->h;
 			} else {
 				mHitbox->y = potentialY;
+			}
+		}
+	}
+}
+
+void PhysicsSystem::checkPlayerMovablesInteractions() {
+	// Player is always second in the movable list
+	auto& player = this->movables[1];
+
+	int iPlayer = this->currentTilemap.size() - 1 - player->hitbox->y / this->tileSize;
+	int jPlayer = player->hitbox->x / this->tileSize;
+
+	auto room = TreeNode::findRoomForCoords(this->currentMapTree, iPlayer, jPlayer);
+
+	for (int i = 2; i < this->movables.size(); i++) {
+		auto& m = this->movables[i];
+
+		int iMov = this->currentTilemap.size() - 1 - m->hitbox->y / this->tileSize;
+		int jMov = m->hitbox->x / this->tileSize;
+
+		// Only check interaction for enemies in the same room
+		if (iMov >= room->y && iMov < room->h && jMov >= room->x && jMov < room->w) {
+
+			if (m->hitbox->x <= player->hitbox->x + player->hitbox->w
+				&& m->hitbox->x + m->hitbox->w >= player->hitbox->x
+				&& m->hitbox->y <= player->hitbox->y + player->hitbox->h
+				&& m->hitbox->y + m->hitbox->h >= player->hitbox->y) {
+				// TODO
 			}
 		}
 	}

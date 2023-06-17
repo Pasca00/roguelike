@@ -106,7 +106,7 @@ void Entity::switchState(EntityState to) {
 		this->animation = idleAnimations[rand() % idleAnimations.size()];
 	} else if (to == EntityState::ATTACK) {
 		this->movableComponent->startMovement();
-		this->animation = deadAnimation;
+		this->animation = attackAnimations[rand() % attackAnimations.size()];
 	}
 
 	this->currentState = to;

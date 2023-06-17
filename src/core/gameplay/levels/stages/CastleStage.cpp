@@ -591,24 +591,7 @@ TreeNode* CastleStage::getRoomForCoords(float x, float y) {
 	int i = this->tileMap.size() - 1 - y / this->tileSize;
 	int j = x / this->tileSize;
 
-	auto currNode = this->generator->mapTree;
-	while (currNode->l != NULL && currNode->r != NULL) {
-		if (currNode->l->x == currNode->r->x) {
-			if (i < currNode->r->y) {
-				currNode = currNode->l;
-			} else {
-				currNode = currNode->r;
-			}
-		} else {
-			if (j < currNode->r->x) {
-				currNode = currNode->l;
-			} else {
-				currNode = currNode->r;
-			}
-		}
-	}
-
-	return currNode;
+	return TreeNode::findRoomForCoords(this->generator->mapTree, i, j);
 }
 
 void CastleStage::placeEnemiesInRoom(TreeNode* room) {
@@ -651,127 +634,114 @@ void CastleStage::placeEnemiesInRoom(TreeNode* room) {
 	int spawnChance = 10;
 	char enemyType;
 
-	if (numEnemies == 1) {
-		spawnChance = 10;
-		groupSpawnChance = 0;
-		enemyType = numHeavyEnemies == 1 ? 'H' : 'L';
-		for (int i = room->y; i < room->h; i++) {
-			for (int j = room->x; j < room->w; j++) {
-				if (tileMap[i][j]->type == IGenerator::EMPTY) {
-					int currPick = rand() % 100 + 1;
-					if (currPick <= spawnChance) {
-						this->placeEnemy(i, j, enemyType);
-
-						return;
-					} else if (currPick <= spawnChance + groupSpawnChance) {
-						auto v = tileMap[i][j]->getView();
-						auto dec = std::make_shared<AnimationView>(this->brasierTextures, true, 0.15f, v->getX(), v->getY(), this->tileSize / 16.f);
-						tileMap[i][j]->addDecoration(dec);
-						tileMap[i][j]->type = IGenerator::WALL;
-
-						this->animations.push_back(dec);
-
-						if (tileMap[i][j + 1]->type == IGenerator::EMPTY) {
-							this->placeEnemy(i, j + 1, enemyType);
-						} else {
-							this->placeEnemy(i, j - 1, enemyType);
-						}
-					
-						return;
-					}
-
-					spawnChance += 15;
-					groupSpawnChance += 1;
-				}
-			}
-		}
-	}
 
 	std::vector<char> enemies;
-	while (numHeavyEnemies != 0 && numLightEnemies != 0) {
-		if (rand() % 2 == 0) {
+	while (numHeavyEnemies != 0 || numLightEnemies != 0) {
+		if (rand() % 2) {
 			if (numHeavyEnemies > 0) {
-				numHeavyEnemies--;
 				enemies.push_back('H');
+				numHeavyEnemies--;
 			} else {
-				numLightEnemies--;
 				enemies.push_back('L');
+				numLightEnemies--;
 			}
 		} else {
 			if (numLightEnemies > 0) {
-				numLightEnemies--;
 				enemies.push_back('L');
+				numLightEnemies--;
+			} else {
+				enemies.push_back('H');
+				numHeavyEnemies--;
+			}
+		}
+	}
+
+	groupSpawnChance = 2;
+	spawnChance = 5;
+
+
+	while (!enemies.empty()) {
+		int i = randomInRange(room->y, room->h);
+		int j = randomInRange(room->x, room->w);
+
+		if (tileMap[i][j]->type != IGenerator::EMPTY) {
+			continue;
+		}
+
+		if (tileMap[i + 1][j]->type == IGenerator::WALL && tileMap[i - 1][j]->type == IGenerator::WALL
+			|| tileMap[i][j + 1]->type == IGenerator::WALL && tileMap[i][j - 1]->type == IGenerator::WALL) {
+			continue;
+		}
+
+		if (rand() % 100 + 1 < groupSpawnChance) {
+			printf("here\n");
+			auto v = tileMap[i][j]->getView();
+			auto dec = std::make_shared<AnimationView>(this->brasierTextures, true, 0.15f, v->getX(), v->getY(), this->tileSize / 16.f);
+			tileMap[i][j]->addDecoration(dec);
+			tileMap[i][j]->type = IGenerator::WALL;
+
+			this->animations.push_back(dec);
+
+			if (tileMap[i][j + 1]->type == IGenerator::EMPTY) {
+				this->placeEnemy(i, j + 1, enemies.back());
 			}
 			else {
-				numHeavyEnemies--;
-				enemies.push_back('H');
+				this->placeEnemy(i, j - 1, enemies.back());
 			}
+			enemies.pop_back();
+
+			if (enemies.empty())
+				return;
+
+			if (tileMap[i + 1][j]->type == IGenerator::EMPTY) {
+				this->placeEnemy(i + 1, j, enemies.back());
+			}
+			else {
+				this->placeEnemy(i - 1, j, enemies.back());
+			}
+			enemies.pop_back();
+
+			if (enemies.empty())
+				return;
+
+			groupSpawnChance = 5;
+		} else if (rand() % 100 + 1 < spawnChance) {
+			this->placeEnemy(i, j, enemies.back());
+			enemies.pop_back();
+
+			if (enemies.empty())
+				return;
+
+			spawnChance = 2;
+		} else {
+			spawnChance += 5;
+			groupSpawnChance += 1;
 		}
 	}
 
-	groupSpawnChance = 5;
-	spawnChance = 5;
-	while (!enemies.empty()) {
-		if (enemies.size() == 1) {
-			groupSpawnChance = 50;
-			spawnChance = 50;
-		}
+	//while (!enemies.empty()) {
+	//	if (enemies.size() == 1) {
+	//		groupSpawnChance = 50;
+	//		spawnChance = 50;
+	//	}
 
-		int randOffsetY = rand() % 3;
-		int randOffsetX = rand() % 3;
-		for (int i = room->y + randOffsetY; i < room->h; i++) {
-			for (int j = room->x + randOffsetX; j < room->w; j++) {
-				if (tileMap[i][j]->type == IGenerator::EMPTY) {
-					int pickChance = rand() % 100 + 1;
-					if (pickChance <= spawnChance) {
-						this->placeEnemy(i, j, enemies.back());
-						enemies.pop_back();
+	//	int randOffsetY = rand() % 3;
+	//	int randOffsetX = rand() % 3;
+	//	for (int i = room->y + randOffsetY; i < room->h; i++) {
+	//		for (int j = room->x + randOffsetX; j < room->w; j++) {
+	//			if (tileMap[i][j]->type == IGenerator::EMPTY) {
+	//				int pickChance = rand() % 100 + 1;
+	//				if (pickChance <= spawnChance) {
+	//					
+	//				} else if (pickChance <= spawnChance + groupSpawnChance) {
+	//					
+	//				}
 
-						if (enemies.empty())
-							return;
-
-						spawnChance = 2;
-						groupSpawnChance += 20;
-					} else if (pickChance <= spawnChance + groupSpawnChance) {
-						printf("here\n");
-						auto v = tileMap[i][j]->getView();
-						auto dec = std::make_shared<AnimationView>(this->brasierTextures, true, 0.15f, v->getX(), v->getY(), this->tileSize / 16.f);
-						tileMap[i][j]->addDecoration(dec);
-						tileMap[i][j]->type = IGenerator::WALL;
-
-						this->animations.push_back(dec);
-
-						if (tileMap[i][j + 1]->type == IGenerator::EMPTY) {
-							this->placeEnemy(i, j + 1, enemies.back());
-						} else {
-							this->placeEnemy(i, j - 1, enemies.back());
-						}
-						enemies.pop_back();
-
-						if (enemies.empty())
-							return;
-
-						if (tileMap[i + 1][j]->type == IGenerator::EMPTY) {
-							this->placeEnemy(i + 1, j, enemies.back());
-						}
-						else {
-							this->placeEnemy(i - 1, j, enemies.back());
-						}
-						enemies.pop_back();
-
-						if (enemies.empty())
-							return;
-
-						groupSpawnChance = 5;
-						spawnChance = 5;
-					}
-
-					spawnChance += 2;
-					groupSpawnChance += 1;
-				}
-			}
-		}
-	}
+	//				
+	//			}
+	//		}
+	//	}
+	//}
 }
 
 TreeNode* CastleStage::findSmallestRoom() {

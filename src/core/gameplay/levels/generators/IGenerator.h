@@ -13,6 +13,27 @@ struct TreeNode {
 		l = NULL;
 		r = NULL;
 	}
+
+	static TreeNode* findRoomForCoords(TreeNode* head, int i, int j) {
+		auto h = head;
+		while (h->l != NULL && h->r != NULL) {
+			if (h->l->x == h->r->x) {
+				if (i < h->r->y) {
+					h = h->l;
+				} else {
+					h = h->r;
+				}
+			} else {
+				if (j < h->r->x) {
+					h = h->l;
+				} else {
+					h = h->r;
+				}
+			}
+		}
+
+		return h;
+	}
 };
 
 class IGenerator {

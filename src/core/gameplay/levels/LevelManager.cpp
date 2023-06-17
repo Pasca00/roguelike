@@ -17,7 +17,7 @@ LevelManager::LevelManager(std::shared_ptr<CastleStage>& castleStage, int tileSi
 	this->scoreGrid = this->castleStage->getGenerator()->getScoreGrid();
 	this->visitedAdresses = std::vector<int*>();
 
-	this->noiseDampening = 10;
+	this->noiseDampening = 20;
 }
 
 std::vector<std::vector<std::shared_ptr<Tile>>> LevelManager::getTileMap() {
@@ -68,14 +68,17 @@ void LevelManager::updateScoreGrid(float dTime, float playerX, float playerY) {
 
 			this->visitedAdresses.push_back(&this->scoreGrid[pos.first][pos.second]);
 
-			if (tileMap[pos.first][pos.second]->type == IGenerator::WALL) {
+			if (tileMap[pos.first][pos.second]->type == IGenerator::WALL 
+				|| tileMap[pos.first][pos.second]->type == IGenerator::DOOR_HORIZONTAL
+				|| tileMap[pos.first][pos.second]->type == IGenerator::DOOR_VERTICAL) {
 				this->scoreGrid[pos.first][pos.second] = 0;
 			} else {
 				this->scoreGrid[pos.first][pos.second] = score;
 			}
 
 			// If we reached a score of 0, ignore all neighbours
-			if (this->scoreGrid[pos.first][pos.second] == 0) {
+			if (this->scoreGrid[pos.first][pos.second] <= 0) {
+				this->scoreGrid[pos.first][pos.second] = 0;
 				continue;
 			}
 

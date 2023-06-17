@@ -28,6 +28,7 @@ private:
 	float tileSize;
 
 	void computeMovablePosition(std::shared_ptr<Movable>& m, float dtime = 1.0f);
+	void checkPlayerMovablesInteractions();
 
 public:
 	PhysicsSystem();

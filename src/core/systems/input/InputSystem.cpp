@@ -105,6 +105,8 @@ void InputSystem::collectInput() {
 
 			case SDL_QUIT: {
 				this->input->setActionValue("QUIT", true);
+
+				break;
 			}
 
 			case SDL_MOUSEBUTTONDOWN: {
@@ -112,7 +114,10 @@ void InputSystem::collectInput() {
 					this->input->setActionValue("CLICK", true);
 					this->triggerCallbacks("CLICK");
 				}
+				
+				break;
 			}
+
 
 			case SDL_MOUSEBUTTONUP: {
 				if (e.button.button == SDL_BUTTON_LEFT) {

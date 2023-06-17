@@ -13,9 +13,7 @@ Player::Player(
 
 void Player::handleInput(std::shared_ptr<Input>& input) {
 	if (input->actions["SHIFT"]) {
-		this->controllableParams->slowTimeModifier();
-	} else {
-		this->controllableParams->restoreTimeModifier();
+		this->movableComponent->dash();
 	}
 
 	switch (this->currentState) {
@@ -34,6 +32,10 @@ void Player::handleInput(std::shared_ptr<Input>& input) {
 		break;
 
 	case EntityState::MOVE:
+		if (input->actions["CLICK"]) {
+			this->switchState(EntityState::ATTACK);
+		}
+
 		if (input->actions["LEFT"]) {
 			this->movableComponent->setXDirection(-1);
 			this->drawFlipped = true;
@@ -58,6 +60,30 @@ void Player::handleInput(std::shared_ptr<Input>& input) {
 		}
 
 		break;
+	
+	
+	case EntityState::ATTACK:
+		if (input->actions["LEFT"]) {
+			this->movableComponent->setXDirection(-1);
+			this->drawFlipped = true;
+		}
+		else if (input->actions["RIGHT"]) {
+			this->movableComponent->setXDirection(1);
+			this->drawFlipped = false;
+		}
+		else {
+			this->movableComponent->setXDirection(0);
+		}
+
+		if (input->actions["DOWN"]) {
+			this->movableComponent->setYDirection(-1);
+		}
+		else if (input->actions["UP"]) {
+			this->movableComponent->setYDirection(1);
+		}
+		else {
+			this->movableComponent->setYDirection(0);
+		}
 	}
 }
 

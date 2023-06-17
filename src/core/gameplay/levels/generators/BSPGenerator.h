@@ -4,6 +4,8 @@
 
 #include "IGenerator.h"
 
+int randomInRange(int lower, int upper);
+
 class BSPGenerator : public IGenerator {
 private:
 	int depth;

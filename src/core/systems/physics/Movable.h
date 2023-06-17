@@ -21,6 +21,11 @@ public:
 
 	bool doesCollide;
 
+	float dashCooldown;
+	float timeSinceDash;
+
+	int currentlyFacingX;
+
 public:
 	Movable(std::shared_ptr<Hitbox>& hitbox, float acceleration = 2.5f);
 
@@ -36,4 +41,6 @@ public:
 
 	void setCollision(bool collision);
 	bool collides();
+
+	void dash();
 };
