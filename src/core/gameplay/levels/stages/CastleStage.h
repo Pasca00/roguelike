@@ -4,6 +4,7 @@
 
 #include "IStage.h"
 #include "../../../Paths.h"
+#include "../../../gameplay/inventory/StatusEffect.h"
 
 class CastleStage : public IStage {
 private:

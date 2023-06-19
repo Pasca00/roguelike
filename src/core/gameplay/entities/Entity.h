@@ -4,23 +4,15 @@
 #include "../../systems/video/views/AnimationView.h"
 #include "../../systems/physics/Movable.h"
 
-//#include "../inventory/GlobalEffectManager.h"
-
-//class GlobalEffectManager;
-//class StatusEffect;
-//enum class EffectName;
+#include "../inventory/GlobalEffectManager.h"
 
 #define ENTITY_ATTACK_FRAME 5
-
-//class StatusEffect;
-//class GlobalEffectManager;
-//enum class EffectName;
 
 enum class EntityState {
 	IDLE, ATTACK, MOVE, DYING, DEAD
 };
 
-class Entity : public std::enable_shared_from_this<Entity> {
+class Entity {
 protected:
 	std::shared_ptr<Movable> movableComponent;
 
@@ -39,6 +31,9 @@ protected:
 
 	bool enabled;
 
+	/*std::vector<EffectName> onHitApplies;
+	std::vector<std::shared_ptr<StatusEffect>> activeStatusEffects;*/
+
 public:
 	Entity( // TODO: change these to pairs or maps
 		std::shared_ptr<Movable>& movableComponent,
@@ -55,8 +50,8 @@ public:
 
 	std::shared_ptr<Movable>& getMovableComponent();
 
-	//void addOnHitEffect(EffectName effectName);
-	//void addStatusEffect(EffectName effectName);
+	void addOnHitEffect(EffectName effectName);
+	void addStatusEffect(EffectName effectName);
 
 	virtual void interactWithEnemy(std::shared_ptr<Movable>& m);
 

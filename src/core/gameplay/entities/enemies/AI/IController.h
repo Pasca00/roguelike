@@ -4,7 +4,6 @@
 
 #include "../../Entity.h"
 
-
 class IController {
 protected:
 	int** scoreGrid;

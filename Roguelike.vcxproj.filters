@@ -185,6 +185,9 @@
     <ClCompile Include="src\core\gameplay\entities\Combatablec.cpp">
       <Filter>Source Files\core\gameplay\entities</Filter>
     </ClCompile>
+    <ClCompile Include="src\core\gameplay\inventory\GlobalEffectManager.cpp">
+      <Filter>Source Files\core\gameplay\inventory</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="libs\sdl\sdl2-2.24.0\include\begin_code.h">
@@ -654,6 +657,9 @@
     </ClInclude>
     <ClInclude Include="src\core\gameplay\entities\Combatable.h">
       <Filter>Source Files\core\gameplay\entities</Filter>
+    </ClInclude>
+    <ClInclude Include="src\core\gameplay\inventory\EffectName.h">
+      <Filter>Source Files\core\gameplay\inventory</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

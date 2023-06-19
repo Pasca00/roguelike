@@ -140,6 +140,7 @@
     <ClCompile Include="src\core\gameplay\entities\Entity.cpp" />
     <ClCompile Include="src\core\gameplay\entities\Player.cpp" />
     <ClCompile Include="src\core\gameplay\entities\PlayerStates.cpp" />
+    <ClCompile Include="src\core\gameplay\inventory\GlobalEffectManager.cpp" />
     <ClCompile Include="src\core\gameplay\inventory\Item.cpp" />
     <ClCompile Include="src\core\gameplay\inventory\StatusEffect.cpp" />
     <ClCompile Include="src\core\gameplay\levels\generators\BSPGenerator.cpp" />
@@ -179,6 +180,7 @@
     <ClInclude Include="src\core\gameplay\entities\Player.h" />
     <ClInclude Include="src\core\gameplay\entities\PlayerStates.h" />
     <ClInclude Include="src\core\gameplay\inventory\ControllableParameters.h" />
+    <ClInclude Include="src\core\gameplay\inventory\EffectName.h" />
     <ClInclude Include="src\core\gameplay\inventory\GlobalEffectManager.h" />
     <ClInclude Include="src\core\gameplay\inventory\Item.h" />
     <ClInclude Include="src\core\gameplay\inventory\StatusEffect.h" />

@@ -44,6 +44,15 @@ void Movable::setCombatableComponent(std::shared_ptr<Combatable>& combatableComp
 	this->combatableComponent = combatableComponent;
 }
 
+void Movable::addOnHitEffect(EffectName effectName) {
+	this->onHitApplies.push_back(effectName);
+}
+
+void Movable::addStatusEffect(EffectName effectName) {
+	auto& effect = GlobalEffectManager::makeEffect(effectName);
+	this->activeStatusEffects.push_back(effect);
+}
+
 void Movable::startMovement() {
 	this->isMoving = true;
 }
@@ -125,10 +134,10 @@ bool Movable::collides() {
 void Movable::interactWith(std::shared_ptr<Movable>& m) {
 	if (this->combatableComponent->isAttacking 
 		&& m->combatableComponent->timeSinceLastHit >= 50.f
-		&& this->combatableComponent->onInteract != nullptr) {
+		&& this->onInteract != nullptr) {
 		m->combatableComponent->timeSinceLastHit = 0.f;
 		//m->push(this->currentlyFacingX);
-		this->combatableComponent->onInteract(m);
+		this->onInteract(m);
 	}
 
 	return;

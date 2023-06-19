@@ -1,6 +1,6 @@
 #include "StatusEffect.h"
 
-#include "../inventory/GlobalEffectManager.h"
+//#include "../inventory/GlobalEffectManager.h"
 #include "../../systems/physics/Movable.h"
 
 //#include "../../.h"

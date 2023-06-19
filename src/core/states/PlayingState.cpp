@@ -88,6 +88,7 @@ PlayingState::PlayingState(
 		auto combatableComponent = std::make_shared<Combatable>(rangeVertical, rangeHorizontal, 100.f, 35.f);
 
 		auto movable = std::make_shared<Movable>(playerHitbox, combatableComponent, 150.f);
+		movable->onInteract = std::bind(&Player::interactWithEnemy, std::ref(player), std::placeholders::_1);
 
 		auto controllableParams = std::make_shared<ControllableParameters>(
 			this->physicsSystem->getTimeModifier(),
@@ -109,7 +110,6 @@ PlayingState::PlayingState(
 							: soundSystem->playSound("swoosh_2");
 		};
 
-		combatableComponent->onInteract = std::bind(&Player::interactWithEnemy, std::ref(player), std::placeholders::_1);
 		combatableComponent->onDamageTaken = []() { };
 		combatableComponent->onHitRecovery = []() { };
 		combatableComponent->onDeath = []() { };
@@ -352,6 +352,7 @@ void PlayingState::makeEnemies() {
 
 		this->physicsSystem->addMovable(movable);
 		movable->maxSpeed = movable->maxSpeed - 10 - rand() % 50;
+		movable->onInteract = [](std::shared_ptr<Movable>& m) {};
 
 		auto enemy = std::make_shared<Entity>(
 			movable,
@@ -370,7 +371,6 @@ void PlayingState::makeEnemies() {
 		);
 
 		//combatableComponent->onInteract = std::bind(&Entity::interactWithEnemy, std::ref(e), std::placeholders::_1);
-		combatableComponent->onInteract = [](std::shared_ptr<Movable>& m) {};
 		combatableComponent->onAttack = []() {};
 
 		combatableComponent->onDamageTaken = [&soundSystem = this->soundSystem, combatableComponent]() {
@@ -408,6 +408,7 @@ void PlayingState::makeEnemies() {
 
 		auto movable = std::make_shared<Movable>(hitbox, combatableComponent, 150.f);
 		movable->maxSpeed = movable->maxSpeed - rand() % 30;
+		movable->onInteract = [](std::shared_ptr<Movable>& m) {};
 
 		this->physicsSystem->addMovable(movable);
 
@@ -427,7 +428,6 @@ void PlayingState::makeEnemies() {
 			this->levelManager->getW()
 		);
 
-		combatableComponent->onInteract = [](std::shared_ptr<Movable>& m) {};
 		combatableComponent->onAttack = []() {};
 		combatableComponent->onDamageTaken = [&soundSystem = this->soundSystem, &combatableComponent = enemy->getMovableComponent()->combatableComponent]() {
 			rand() % 2 == 0 ? soundSystem->playSound("grunt_large_1")

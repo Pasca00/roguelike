@@ -2,13 +2,9 @@
 
 #include <functional>
 
-class Movable;
+//#include "../../systems/physics/Movable.h"
 
-enum class EffectName {
-	BURN,
-	SLOW,
-	FREEZE,
-};
+class Movable;
 
 class StatusEffect {
 private:

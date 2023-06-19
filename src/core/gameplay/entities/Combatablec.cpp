@@ -1,5 +1,5 @@
 #include "Combatable.h"
-#include "../../systems/physics/Movable.h"
+//#include "../../systems/physics/Movable.h"
 
 Combatable::Combatable(float rangeVertical, float rangeHorizontal, float maxHealth, float attackDamage) {
 	this->rangeVertical = rangeVertical;
@@ -18,12 +18,4 @@ Combatable::Combatable(float rangeVertical, float rangeHorizontal, float maxHeal
 
 Combatable::~Combatable() {
 	//printf("DECEMM???\n");
-}
-
-void Combatable::setInteractCallback(std::function<void(std::shared_ptr<Movable>&)> callback) {
-	this->onInteract = callback;
-}
-
-void Combatable::setDamageTakenCallback(std::function<void(void)> callback) {
-	this->onDamageTaken = callback;
 }

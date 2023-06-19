@@ -192,11 +192,11 @@ std::shared_ptr<Movable>& Entity::getMovableComponent() {
 }
 
 //void Entity::addOnHitEffect(EffectName effectName) {
-//	this->movableComponent->combatableComponent->onHitApplies.push_back(effectName);
+//	this->onHitApplies.push_back(effectName);
 //}
 //
 //void Entity::addStatusEffect(EffectName effectName) {
-//	this->movableComponent->combatableComponent->activeStatusEffects.push_back(GlobalEffectManager::makeEffect(effectName));
+//	this->activeStatusEffects.push_back(GlobalEffectManager::makeEffect(effectName));
 //}
 
 void Entity::interactWithEnemy(std::shared_ptr<Movable>& m) {

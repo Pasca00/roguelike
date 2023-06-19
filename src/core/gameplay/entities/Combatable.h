@@ -5,7 +5,7 @@
 
 #include "../Hitbox.h"
 
-class Movable;
+//class Movable;
 
 class Combatable {
 public:
@@ -24,7 +24,7 @@ public:
 	float timeSinceLastHit;
 	bool recentlyDamaged;
 
-	std::function<void(std::shared_ptr<Movable>&)> onInteract;
+	//std::function<void(std::shared_ptr<Movable>&)> onInteract;
 	std::function<void(void)> onDamageTaken;
 	std::function<void(void)> onHitRecovery;
 	std::function<void(void)> onAttack;
@@ -33,6 +33,6 @@ public:
 	Combatable(float rangeVertical, float rangeHorizontal, float maxHealth, float attackDamage);
 	~Combatable();
 
-	void setInteractCallback(std::function<void(std::shared_ptr<Movable>&)> callback);
-	void setDamageTakenCallback(std::function<void(void)> callback);
+	//void setInteractCallback(std::function<void(std::shared_ptr<Movable>&)> callback);
+	//void setDamageTakenCallback(std::function<void(void)> callback);
 };
