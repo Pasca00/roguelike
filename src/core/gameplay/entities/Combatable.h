@@ -22,9 +22,11 @@ public:
 	bool isAttacking;
 
 	float timeSinceLastHit;
+	bool recentlyDamaged;
 
 	std::function<void(std::shared_ptr<Movable>&)> onInteract;
 	std::function<void(void)> onDamageTaken;
+	std::function<void(void)> onHitRecovery;
 	std::function<void(void)> onAttack;
 	std::function<void(void)> onDeath;
 

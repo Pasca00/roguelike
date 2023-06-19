@@ -72,9 +72,14 @@ void Movable::push(int direction) {
 	this->velocity.y = -200;
 }
 
-void Movable::accelerate(float dtime) {
+void Movable::update(float dtime) {
 	this->timeSinceDash += dtime;
-	this->combatableComponent->timeSinceLastHit += dtime;
+	if (combatableComponent->timeSinceLastHit < 50.f) {
+		this->combatableComponent->timeSinceLastHit += dtime;
+		if (combatableComponent->timeSinceLastHit >= 50.f) {
+			this->combatableComponent->onHitRecovery();
+		}
+	}
 
 	if (this->isMoving) {
 		if (this->velocity.x < this->maxSpeed) {
@@ -119,10 +124,9 @@ bool Movable::collides() {
 
 void Movable::interactWith(std::shared_ptr<Movable>& m) {
 	if (this->combatableComponent->isAttacking 
-		&& this->combatableComponent->timeSinceLastHit >= 50.f
+		&& m->combatableComponent->timeSinceLastHit >= 50.f
 		&& this->combatableComponent->onInteract != nullptr) {
-		printf("here\n");
-		this->combatableComponent->timeSinceLastHit = 0.f;
+		m->combatableComponent->timeSinceLastHit = 0.f;
 		//m->push(this->currentlyFacingX);
 		this->combatableComponent->onInteract(m);
 	}

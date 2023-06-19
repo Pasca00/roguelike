@@ -20,7 +20,7 @@ void PhysicsSystem::update(float dtime) {
 		}
 
 		m->applyFriction(this->friction);
-		m->accelerate();
+		m->update();
 	
 		if (m->collides()) {
 			this->computeMovablePosition(m, dtime);

@@ -39,7 +39,7 @@ public:
 	void startMovement();
 	void stopMovement();
 
-	void accelerate(float dtime = 1.0f);
+	void update(float dtime = 1.0f);
 	void applyFriction(float friction, float dtime = 1.0f);
 	void move(float dtime);
 

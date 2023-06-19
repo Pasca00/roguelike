@@ -4,12 +4,16 @@ IView::IView(float x, float y, float w, float h, float size) {
 	this->hitbox = std::make_unique<Hitbox>(x, y, w, h);
 	this->size = size;
 	this->renderFlipped = false;
+
+	this->overlayColor = glm::vec4(0);
 }
 
 IView::IView(std::unique_ptr<Hitbox>& hitbox, float size) {
 	this->hitbox = std::move(hitbox);
 	this->size = size;
 	this->renderFlipped = false;
+
+	this->overlayColor = glm::vec4(0);
 }
 
 IView::~IView() {
@@ -52,4 +56,12 @@ void IView::flip(bool f) {
 
 bool IView::isFlipped() {
 	return this->renderFlipped;
+}
+
+void IView::setOverlayColor(glm::vec4& color) {
+	this->overlayColor = color;
+}
+
+glm::vec4& IView::getOverlayColor() {
+	return this->overlayColor;
 }

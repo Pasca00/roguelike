@@ -27,6 +27,8 @@ protected:
 
 	bool drawFlipped;
 
+	bool enabled;
+
 public:
 	Entity( // TODO: change these to pairs or maps
 		std::shared_ptr<Movable>& movableComponent,
@@ -44,4 +46,8 @@ public:
 	std::shared_ptr<Movable>& getMovableComponent();
 
 	virtual void interactWithEnemy(std::shared_ptr<Movable>& m);
+
+	void enable();
+	void disable();
+	bool isEnabled();
 };

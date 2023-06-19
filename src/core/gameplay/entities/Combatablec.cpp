@@ -13,6 +13,8 @@ Combatable::Combatable(float rangeVertical, float rangeHorizontal, float maxHeal
 	this->attackDamage = attackDamage;
 	this->isAttacking = false;
 	this->timeSinceLastHit = 50.f;
+
+	this->recentlyDamaged = false;
 }
 
 Combatable::~Combatable() {

@@ -111,6 +111,7 @@ PlayingState::PlayingState(
 
 		combatableComponent->onInteract = std::bind(&Player::interactWithEnemy, std::ref(player), std::placeholders::_1);
 		combatableComponent->onDamageTaken = []() { };
+		combatableComponent->onHitRecovery = []() { };
 		combatableComponent->onDeath = []() { };
 
 
@@ -336,10 +337,15 @@ void PlayingState::makeEnemies() {
 		combatableComponent->onInteract = [](std::shared_ptr<Movable>& m) {};
 		combatableComponent->onAttack = []() {};
 
-		combatableComponent->setDamageTakenCallback([&soundSystem = this->soundSystem]() {
+		combatableComponent->onDamageTaken = [&soundSystem = this->soundSystem, combatableComponent]() {
 			rand() % 2 == 0 ? soundSystem->playSound("grunt_large_1") 
 							: soundSystem->playSound("grunt_large_2");
-		});
+		
+			combatableComponent->recentlyDamaged = true;
+		};
+		combatableComponent->onHitRecovery = [combatableComponent]() {
+			combatableComponent->recentlyDamaged = false;
+		};
 		combatableComponent->onDeath = [&physicsSystem = this->physicsSystem, &movable = enemy->getMovableComponent()]() {
 			physicsSystem->removeMovable(movable);
 		};
@@ -387,9 +393,14 @@ void PlayingState::makeEnemies() {
 
 		combatableComponent->onInteract = [](std::shared_ptr<Movable>& m) {};
 		combatableComponent->onAttack = []() {};
-		combatableComponent->onDamageTaken = [&soundSystem = this->soundSystem]() {
+		combatableComponent->onDamageTaken = [&soundSystem = this->soundSystem, &combatableComponent = enemy->getMovableComponent()->combatableComponent]() {
 			rand() % 2 == 0 ? soundSystem->playSound("grunt_large_1")
 							: soundSystem->playSound("grunt_large_2");
+
+			combatableComponent->recentlyDamaged = true;
+		};
+		combatableComponent->onHitRecovery = [&combatableComponent = enemy->getMovableComponent()->combatableComponent]() {
+			combatableComponent->recentlyDamaged = false;
 		};
 
 		combatableComponent->onDeath = [&physicsSystem = this->physicsSystem, &movable = enemy->getMovableComponent()]() {

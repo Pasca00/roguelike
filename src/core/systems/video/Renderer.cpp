@@ -110,6 +110,9 @@ void Renderer::draw(
 
 	glUniform1i(shader->getUniformLocation("render_flipped"), view->isFlipped() ? 1 : 0);
 
+	auto c = view->getOverlayColor();
+	glUniform4fv(shader->getUniformLocation("overlay_color"), 1, &c[0]);
+
 	this->setUintUniforms(shader, uintUniforms);
 	this->setIntUniforms(shader, intUniforms);
 	this->setFloatUniforms(shader, floatUniforms);

@@ -23,12 +23,16 @@ float staticLightSourceRadius = 500.f;
 vec3 staticLightColor = vec3(213, 72, 1);
 float staticLightIntensity = 0.01;
 
+uniform vec4 overlay_color;
+
 void main() {
 	if (render_flipped == 1) {
 		out_color = texture2D(in_texture, vec2(1 - tex_coord.x, tex_coord.y));
 	} else {
 		out_color = texture2D(in_texture, tex_coord);
 	}
+
+	out_color.rgb += overlay_color.rgb * overlay_color.a;
 
 	float d = distance(pos, vec2(playerX, playerY));
 
@@ -39,7 +43,6 @@ void main() {
 
 	for (int i = 0; i < nLightSources; i++) {
 		d = distance(pos, vec2(uPointLightPositions[i].x, uPointLightPositions[i].y));
-
 
 		value = 1.0 - smoothstep(0, staticLightSourceRadius, d);
 		intensity += clamp(value, 0.0, 1.0) * staticLightColor * staticLightIntensity;

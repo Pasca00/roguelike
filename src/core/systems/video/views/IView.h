@@ -3,6 +3,8 @@
 #include <functional>
 #include <memory>
 
+#include "../../../../glm/glm.hpp"
+
 #include "../../../gameplay/Hitbox.h"
 #include "../textures/Texture.h"
 
@@ -14,6 +16,7 @@ private:
 
 	float size;
 
+	glm::vec4 overlayColor;
 
 public:
 	IView(float x = 0, float y = 0, float w = 0, float h = 0, float size = 1);
@@ -37,6 +40,9 @@ public:
 
 	void flip(bool flip);
 	bool isFlipped();
+
+	void setOverlayColor(glm::vec4& color);
+	glm::vec4& getOverlayColor();
 
 	std::function<void(void)> onDrawCallback;
 };

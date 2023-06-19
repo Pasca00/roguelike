@@ -17,6 +17,10 @@ Entity::Entity(
 }
 
 void Entity::handleInput(std::shared_ptr<Input>& input) {
+	if (!this->enabled) {
+		return;
+	}
+
 	switch (this->currentState) {
 	case EntityState::IDLE:
 		if (input->actions["CLICK"]) {
@@ -139,6 +143,11 @@ std::shared_ptr<AnimationView> Entity::getCurrentTexture() {
 	this->animation->setY(this->movableComponent->hitbox->y);
 
 	this->animation->flip(this->drawFlipped);
+	if (this->movableComponent->combatableComponent->recentlyDamaged) {
+		this->animation->setOverlayColor(glm::vec4(0.8, 0.2, 0.2, 0.5));
+	} else {
+		this->animation->setOverlayColor(glm::vec4(0));
+	}
 
 	return this->animation;
 }
@@ -179,4 +188,16 @@ std::shared_ptr<Movable>& Entity::getMovableComponent() {
 
 void Entity::interactWithEnemy(std::shared_ptr<Movable>& m) {
 
+}
+
+void Entity::enable() {
+	this->enabled = true;
+}
+
+void Entity::disable() {
+	this->enabled = false;
+}
+
+bool Entity::isEnabled() {
+	return this->enabled;
 }
