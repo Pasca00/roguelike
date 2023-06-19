@@ -1,5 +1,7 @@
 #pragma once
 
+#include "../../../../glm/glm.hpp"
+
 #include "../../../systems/sound/SoundSystem.h"
 #include "../../../systems/input/IInteractable.h"
 #include "../../../systems/video/textures/TextureManager.h"
@@ -33,6 +35,8 @@ protected:
 	std::vector<std::shared_ptr<Texture>> doorTextures;
 
 	std::vector<std::unique_ptr<IInteractable>> interactables;
+
+	std::vector<glm::vec2> lightPositions;
 
 	int tileSize;
 
@@ -92,5 +96,9 @@ public:
 
 	std::vector<std::pair<float, float>>& getEnemyLightStart() {
 		return this->enemyLightPositions;
+	}
+
+	std::vector<glm::vec2>& getLightSourcePositions() {
+		return this->lightPositions;
 	}
 };

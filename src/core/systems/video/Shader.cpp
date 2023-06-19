@@ -106,6 +106,10 @@ void Shader::setProjectionMatrix(glm::mat4& projectionMatrix) {
 	glUniformMatrix4fv(getUniformLocation("Projection"), 1, GL_FALSE, glm::value_ptr(projectionMatrix));
 }
 
+void Shader::setViewMatrix(glm::mat4& viewMatrix) {
+	glUniformMatrix4fv(getUniformLocation("View"), 1, GL_FALSE, glm::value_ptr(viewMatrix));
+}
+
 void Shader::setTimeUniform(float time) {
 	glUniform1f(getUniformLocation("time"), time);
 }

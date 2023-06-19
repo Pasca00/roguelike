@@ -95,6 +95,8 @@ public:
 	void setIntUniform(std::string key, int value);
 	void setFloatUniform(std::string key, float value);
 
+	std::shared_ptr<Shader>& getShader(std::string shaderName);
+
 	glm::ivec2 getTextDimensions(std::string text);
 	glm::ivec2 getCenteredTextPosition(std::string& text, std::shared_ptr<Hitbox> rect = NULL);
 
@@ -103,7 +105,6 @@ public:
 	void updateTransition(float dTime);
 	void drawTransition();
 	int8_t getTransition();
-	/* TODO: HANDLE TRANSITION EFFECT (EASE IN, HOLD, EASE OUT) */
 
 	std::shared_ptr<Camera>& getCamera();
 	void updateCamera(float dTime);

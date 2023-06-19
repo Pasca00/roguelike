@@ -19,6 +19,8 @@ Camera::Camera(int windowWidth, int windowHeight) {
 
 	this->focus_x_diff = hb->x;
 	this->focus_y_diff = hb->y;
+
+	this->viewMatrix = glm::mat4(1.f);
 }
 
 void Camera::setSubject(std::shared_ptr<Hitbox>& subject) {
@@ -52,6 +54,8 @@ void Camera::update(float dTime) {
 	} else {
 		this->focusZone->setYDirection(0);
 	}
+
+	this->viewMatrix = glm::translate(glm::mat4(1.f), glm::vec3(-this->viewArea->x, -this->viewArea->y, 0));
 }
 
 std::shared_ptr<Movable>& Camera::getFocusZone() {
@@ -64,4 +68,8 @@ float Camera::getX(){
 
 float Camera::getY(){
 	return this->viewArea->y;
+}
+
+glm::mat4& Camera::getViewMatrix() {
+	return this->viewMatrix;
 }

@@ -184,19 +184,19 @@ void VideoSystem::clearScreen() {
 }
 
 bool VideoSystem::viewIsOnScreen(std::shared_ptr<IView>& view) {
-	if (view->getX() + view->getWidth() * view->getSize() < 0) {
+	if (view->getX() + view->getWidth() * view->getSize() < camera->getX()) {
 		return false;
 	}
 
-	if (view->getY() + view->getHeight() * view->getSize() < 0) {
+	if (view->getY() + view->getHeight() * view->getSize() < camera->getY()) {
 		return false;
 	}
 	
-	if (view->getX() > this->getWindowWidth()) {
+	if (view->getX() > camera->getX() + this->getWindowWidth()) {
 		return false;
 	}
 	
-	if (view->getY() > this->getWindowHeight()) {
+	if (view->getY() > camera->getY() + this->getWindowHeight()) {
 		return false;
 	}
 
@@ -204,30 +204,31 @@ bool VideoSystem::viewIsOnScreen(std::shared_ptr<IView>& view) {
 }
 
 void VideoSystem::draw(std::shared_ptr<IView>& view, std::string shaderName) {
-	auto prevX = view->getX();
+	/*auto prevX = view->getX();
 	auto prevY = view->getY();
 
 	if (this->drawWithCamera) {
 		view->setX(prevX - this->camera->getX());
 		view->setY(prevY - this->camera->getY());
-	}
+	}*/
 
 	if (this->viewIsOnScreen(view)) {
 		this->renderer->draw(
 			view,
 			this->shaders[shaderName],
+			this->camera->getViewMatrix(),
 			this->uintUniforms,
 			this->intUniforms,
 			this->floatUniforms
 		);
 	}
 
-	this->clearUniforms();
+	//this->clearUniforms();
 
-	if (this->drawWithCamera) {
+	/*if (this->drawWithCamera) {
 		view->setX(prevX);
 		view->setY(prevY);
-	}
+	}*/
 }
 
 void VideoSystem::draw(std::shared_ptr<Texture>& texture, std::string shaderName) {
@@ -239,7 +240,7 @@ void VideoSystem::draw(std::shared_ptr<Texture>& texture, std::string shaderName
 		this->floatUniforms
 	);
 
-	this->clearUniforms();
+	//this->clearUniforms();
 }
 
 void VideoSystem::drawEntity(std::shared_ptr<Texture>& texture, std::string shaderName) {
@@ -251,7 +252,7 @@ void VideoSystem::drawEntity(std::shared_ptr<Texture>& texture, std::string shad
 		this->floatUniforms
 	);
 
-	this->clearUniforms();
+	//this->clearUniforms();
 }
 
 void VideoSystem::drawText(std::shared_ptr<TextView>& textView, std::string shaderName) {
@@ -313,6 +314,12 @@ void VideoSystem::setIntUniform(std::string key, int value) {
 
 void VideoSystem::setFloatUniform(std::string key, float value) {
 	this->floatUniforms[key] = value;
+}
+
+std::shared_ptr<Shader>& VideoSystem::getShader(std::string shaderName) {
+	auto s = this->shaders[shaderName];
+
+	return s;
 }
 
 glm::ivec2 VideoSystem::getTextDimensions(std::string text) {

@@ -2,6 +2,8 @@
 
 #include <memory>
 
+#include "../../../glm/glm.hpp"
+#include "../../../glm/gtc/matrix_transform.hpp"
 //#include "../../gameplay/Hitbox.h"
 #include "../physics/Movable.h"
 
@@ -14,6 +16,8 @@ private:
 	//std::shared_ptr<Hitbox> focusZone;
 	std::shared_ptr<Movable> focusZone;
 	std::shared_ptr<Hitbox> viewArea;
+
+	glm::mat4 viewMatrix;
 
 	float focus_x_diff;
 	float focus_y_diff;
@@ -28,4 +32,6 @@ public:
 
 	float getX();
 	float getY();
+
+	glm::mat4& getViewMatrix();
 };

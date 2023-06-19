@@ -28,6 +28,7 @@ public:
 
 	void setModelMatrix(glm::mat4& modelMatrix);
 	void setProjectionMatrix(glm::mat4& projectionMatrix);
+	void setViewMatrix(glm::mat4& viewMatrix);
 
 	void setTimeUniform(float time);
 

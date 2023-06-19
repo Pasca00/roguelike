@@ -94,6 +94,7 @@ void Renderer::draw(
 void Renderer::draw(
 	std::shared_ptr<IView>& view,
 	std::shared_ptr<Shader>& shader,
+	glm::mat4& viewMatrix,
 	std::unordered_map<std::string, unsigned int>& uintUniforms,
 	std::unordered_map<std::string, int>& intUniforms,
 	std::unordered_map<std::string, float>& floatUniforms
@@ -105,6 +106,7 @@ void Renderer::draw(
 	shader->use();
 	shader->setModelMatrix(modelMatrix);
 	shader->setProjectionMatrix(this->projectionMatrix);
+	shader->setViewMatrix(viewMatrix);
 
 	glUniform1i(shader->getUniformLocation("render_flipped"), view->isFlipped() ? 1 : 0);
 
@@ -120,6 +122,10 @@ void Renderer::draw(
 	glDrawArrays(GL_QUADS, 0, quad->getIndices().size());
 
 	glBindVertexArray(0);
+
+	/*float f;
+	glGetUniformfv(shader->getProgram(), shader->getUniformLocation("playerX"), &f);
+	printf("x: %f\n", f);*/
 }
 
 void Renderer::drawText(

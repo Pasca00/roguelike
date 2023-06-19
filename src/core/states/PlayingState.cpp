@@ -133,6 +133,19 @@ PlayingState::PlayingState(
 			this->inputSystem->addEventCallback(i);
 		}
 	}
+
+	// Setting static light sources
+	{
+		auto lights = this->levelManager->getCurrentStage()->getLightSourcePositions();
+
+		auto shader = this->videoSystem->getShader("base");
+		shader->use();
+		
+		auto loc = shader->getUniformLocation("uPointLightPositions");
+		glUniform2fv(loc, lights.size(), glm::value_ptr(lights[0]));
+		
+		glUniform1i(shader->getUniformLocation("nLightSources"), lights.size());
+	}
 }
 
 PlayingState::~PlayingState() {}
@@ -212,9 +225,13 @@ void PlayingState::update(float dTime) {
 
 void PlayingState::render() {
 	auto tileMap = this->levelManager->getTileMap();
+	const auto& ph = this->player->getMovableComponent()->hitbox;
 
-	auto px = this->player->getMovableComponent()->hitbox->x;
-	auto py = this->player->getMovableComponent()->hitbox->y;
+	auto px = ph->x;
+	auto py = ph->y;
+
+	this->videoSystem->setFloatUniform("playerX", px);
+	this->videoSystem->setFloatUniform("playerY", py);
 
 	for (int i = 0; i < tileMap.size(); i++) {
 		for (int j = tileMap[i].size() - 1; j >= 0 ; j--) {

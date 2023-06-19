@@ -424,6 +424,8 @@ void CastleStage::createTileMap(char** stageTemplate, char** stageTiles) {
 						this->tileSize / 16
 					);
 
+					this->lightPositions.push_back(glm::vec2(tileX, tileY));
+
 					this->animations.push_back(v);
 					this->tileMap[i][j]->addDecoration(std::static_pointer_cast<IView>(v));
 				}
@@ -674,11 +676,12 @@ void CastleStage::placeEnemiesInRoom(TreeNode* room) {
 		}
 
 		if (rand() % 100 + 1 < groupSpawnChance) {
-			printf("here\n");
 			auto v = tileMap[i][j]->getView();
 			auto dec = std::make_shared<AnimationView>(this->brasierTextures, true, 0.15f, v->getX(), v->getY(), this->tileSize / 16.f);
 			tileMap[i][j]->addDecoration(dec);
 			tileMap[i][j]->type = IGenerator::WALL;
+
+			this->lightPositions.push_back(glm::vec2(v->getX(), v->getY()));
 
 			this->animations.push_back(dec);
 

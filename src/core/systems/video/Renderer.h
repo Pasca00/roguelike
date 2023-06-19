@@ -71,6 +71,7 @@ public:
 	void draw(
 		std::shared_ptr<IView>& view, 
 		std::shared_ptr<Shader>& shader,
+		glm::mat4& viewMatrix,
 		std::unordered_map<std::string, unsigned int>& uintUniforms,
 		std::unordered_map<std::string, int>& intUniforms,
 		std::unordered_map<std::string, float>& floatUniforms
