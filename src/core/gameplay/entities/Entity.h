@@ -4,8 +4,10 @@
 #include "../../systems/video/views/AnimationView.h"
 #include "../../systems/physics/Movable.h"
 
+#define ENTITY_ATTACK_FRAME 5
+
 enum class EntityState {
-	IDLE, ATTACK, MOVE, DEAD
+	IDLE, ATTACK, MOVE, DYING, DEAD
 };
 
 class Entity {
@@ -40,4 +42,6 @@ public:
 	std::shared_ptr<AnimationView> getCurrentTexture();
 
 	std::shared_ptr<Movable>& getMovableComponent();
+
+	virtual void interactWithEnemy(std::shared_ptr<Movable>& m);
 };

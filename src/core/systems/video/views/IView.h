@@ -1,5 +1,6 @@
 #pragma once
 
+#include <functional>
 #include <memory>
 
 #include "../../../gameplay/Hitbox.h"
@@ -12,6 +13,7 @@ private:
 	bool renderFlipped;
 
 	float size;
+
 
 public:
 	IView(float x = 0, float y = 0, float w = 0, float h = 0, float size = 1);
@@ -35,5 +37,7 @@ public:
 
 	void flip(bool flip);
 	bool isFlipped();
+
+	std::function<void(void)> onDrawCallback;
 };
 

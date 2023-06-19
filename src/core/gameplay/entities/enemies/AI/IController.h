@@ -28,7 +28,7 @@ public:
 		int tileSize,
 		int mapH,
 		int mapW,
-		float updateInterval = 0.15f
+		float updateInterval = 0.08f
 	);
 
 	virtual void update(float dtime);

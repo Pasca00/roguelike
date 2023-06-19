@@ -39,7 +39,15 @@ GLuint AnimationView::getTextureId() {
 	return this->frames[this->currentFrame]->getTextureId();
 }
 
+uint8_t AnimationView::getCurrentFrame() {
+	return this->currentFrame;
+}
+
 void AnimationView::update(float dTime) {
+	if (!this->repeat && this->isDone()) {
+		return;
+	}
+
 	this->timeSinceLastFrame += dTime;
 	if (this->timeSinceLastFrame >= this->frameTime) {
 		this->currentFrame++;
@@ -53,7 +61,7 @@ void AnimationView::update(float dTime) {
 }
 
 bool AnimationView::isDone() {
-	return this->currentFrame == this->frames.size();
+	return this->currentFrame == this->frames.size() - 1;
 }
 
 void AnimationView::reset() {

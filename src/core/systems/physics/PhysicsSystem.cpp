@@ -15,6 +15,10 @@ void PhysicsSystem::init() {
 
 void PhysicsSystem::update(float dtime) {
 	for (auto& m : this->movables) {
+		if (m->disabled) {
+			continue;
+		}
+
 		m->applyFriction(this->friction);
 		m->accelerate();
 	
@@ -30,6 +34,20 @@ void PhysicsSystem::update(float dtime) {
 
 void PhysicsSystem::addMovable(std::shared_ptr<Movable>& movable) {
 	this->movables.push_back(movable);
+}
+
+void PhysicsSystem::removeMovable(std::shared_ptr<Movable>& movable) {
+	auto it = std::find_if(
+		movables.begin(), 
+		movables.end(),
+		[&movable](const std::shared_ptr<Movable> elem) {
+			return elem == movable;
+		}
+	);
+
+	if (it != movables.end()) {
+		this->movables.erase(it);
+	}
 }
 
 void PhysicsSystem::computeFrameDeltaTime() {
@@ -178,8 +196,8 @@ void PhysicsSystem::computeMovablePosition(std::shared_ptr<Movable>& m, float dT
 }
 
 void PhysicsSystem::checkPlayerMovablesInteractions() {
-	// Player is always second in the movable list
-	auto& player = this->movables[1];
+	// Player is always first in the movable list
+	auto& player = this->movables[0];
 
 	int iPlayer = this->currentTilemap.size() - 1 - player->hitbox->y / this->tileSize;
 	int jPlayer = player->hitbox->x / this->tileSize;
@@ -189,17 +207,29 @@ void PhysicsSystem::checkPlayerMovablesInteractions() {
 	for (int i = 2; i < this->movables.size(); i++) {
 		auto& m = this->movables[i];
 
+		if (m->combatableComponent == nullptr || player->combatableComponent == nullptr) {
+			continue;
+		}
+
 		int iMov = this->currentTilemap.size() - 1 - m->hitbox->y / this->tileSize;
 		int jMov = m->hitbox->x / this->tileSize;
 
 		// Only check interaction for enemies in the same room
 		if (iMov >= room->y && iMov < room->h && jMov >= room->x && jMov < room->w) {
+			auto& pCombat = player->combatableComponent;
+			float px1 = player->hitbox->x - pCombat->rangeHorizontal;
+			float px2 = player->hitbox->x + player->hitbox->w + pCombat->rangeHorizontal;
+			float py1 = player->hitbox->y - pCombat->rangeVertical;
+			float py2 = player->hitbox->y + player->hitbox->h + pCombat->rangeVertical;
 
-			if (m->hitbox->x <= player->hitbox->x + player->hitbox->w
-				&& m->hitbox->x + m->hitbox->w >= player->hitbox->x
-				&& m->hitbox->y <= player->hitbox->y + player->hitbox->h
-				&& m->hitbox->y + m->hitbox->h >= player->hitbox->y) {
-				// TODO
+			float mx1 = m->hitbox->x - m->combatableComponent->rangeHorizontal;
+			float mx2 = m->hitbox->x + m->hitbox->w + m->combatableComponent->rangeHorizontal;
+			float my1 = m->hitbox->y - m->combatableComponent->rangeVertical;
+			float my2 = m->hitbox->y + m->hitbox->h + m->combatableComponent->rangeVertical;
+
+			if (mx1 <= px2 && mx2 >= px1 && my1 <= py2 && my2 >= py2) {
+				player->interactWith(m);
+				m->interactWith(player);
 			}
 		}
 	}

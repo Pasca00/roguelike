@@ -99,11 +99,23 @@ void Player::update(float dtime) {
 		break;
 
 	case EntityState::ATTACK:
+		uint8_t currAttackFrame = this->animation->getCurrentFrame();
+		if (currAttackFrame == ENTITY_ATTACK_FRAME || currAttackFrame == ENTITY_ATTACK_FRAME + 1) {
+			this->movableComponent->combatableComponent->isAttacking = true;
+		} else {
+			this->movableComponent->combatableComponent->isAttacking = false;
+		}
+
 		if (this->animation->isDone()) {
 			this->currentState = EntityState::IDLE;
-			this->animation = this->attackAnimations[rand() % attackAnimations.size()];
+			this->animation = this->idleAnimations[rand() % idleAnimations.size()];
 			this->animation->reset();
 		}
 		break;
 	}
+}
+
+void Player::interactWithEnemy(std::shared_ptr<Movable>& m) {
+	m->combatableComponent->onDamageTaken();
+	m->combatableComponent->currHealth -= this->movableComponent->combatableComponent->attackDamage;
 }

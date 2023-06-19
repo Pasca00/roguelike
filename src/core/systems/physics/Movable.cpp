@@ -6,7 +6,11 @@
 #define FACING_UP	 3
 #define FACING_DOWN	 4
 
-Movable::Movable(std::shared_ptr<Hitbox>& hitbox, float acceleration) : hitbox(hitbox) {
+Movable::Movable(
+	std::shared_ptr<Hitbox>& hitbox, 
+	std::shared_ptr<Combatable>& combatableComponent, 
+	float acceleration
+) : hitbox(hitbox), combatableComponent(combatableComponent) {
 	this->direction = glm::vec2(1, 0);
 	this->velocity = glm::vec2(0, 0);
 
@@ -23,6 +27,8 @@ Movable::Movable(std::shared_ptr<Hitbox>& hitbox, float acceleration) : hitbox(h
 	this->timeSinceDash = 50.f;
 
 	this->currentlyFacingX = FACING_RIGHT;
+
+	this->disabled = false;
 }
 
 void Movable::setXDirection(float dir) {
@@ -32,6 +38,10 @@ void Movable::setXDirection(float dir) {
 
 void Movable::setYDirection(float dir) {
 	this->direction.y = dir;
+}
+
+void Movable::setCombatableComponent(std::shared_ptr<Combatable>& combatableComponent) {
+	this->combatableComponent = combatableComponent;
 }
 
 void Movable::startMovement() {
@@ -57,8 +67,14 @@ void Movable::dash() {
 	}
 }
 
+void Movable::push(int direction) {
+	this->velocity.x = -200;
+	this->velocity.y = -200;
+}
+
 void Movable::accelerate(float dtime) {
 	this->timeSinceDash += dtime;
+	this->combatableComponent->timeSinceLastHit += dtime;
 
 	if (this->isMoving) {
 		if (this->velocity.x < this->maxSpeed) {
@@ -99,4 +115,17 @@ void Movable::setCollision(bool collision) {
 
 bool Movable::collides() {
 	return this->doesCollide;
+}
+
+void Movable::interactWith(std::shared_ptr<Movable>& m) {
+	if (this->combatableComponent->isAttacking 
+		&& this->combatableComponent->timeSinceLastHit >= 50.f
+		&& this->combatableComponent->onInteract != nullptr) {
+		printf("here\n");
+		this->combatableComponent->timeSinceLastHit = 0.f;
+		//m->push(this->currentlyFacingX);
+		this->combatableComponent->onInteract(m);
+	}
+
+	return;
 }

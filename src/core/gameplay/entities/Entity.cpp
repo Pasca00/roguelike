@@ -34,6 +34,10 @@ void Entity::handleInput(std::shared_ptr<Input>& input) {
 		break;
 
 	case EntityState::MOVE:
+		if (input->actions["CLICK"]) {
+			this->switchState(EntityState::ATTACK);
+		}
+
 		if (input->actions["LEFT"]) {
 			this->movableComponent->setXDirection(-1);
 			this->drawFlipped = true;
@@ -62,11 +66,48 @@ void Entity::handleInput(std::shared_ptr<Input>& input) {
 		}
 
 		break;
+
+	case EntityState::ATTACK:
+		if (input->actions["LEFT"]) {
+			this->movableComponent->setXDirection(-1);
+			this->drawFlipped = true;
+		}
+		else if (input->actions["RIGHT"]) {
+			this->movableComponent->setXDirection(1);
+			this->drawFlipped = false;
+		}
+		else {
+			this->movableComponent->setXDirection(0);
+		}
+
+		if (input->actions["DOWN"]) {
+			this->movableComponent->setYDirection(-1);
+		}
+		else if (input->actions["UP"]) {
+			this->movableComponent->setYDirection(1);
+		}
+		else {
+			this->movableComponent->setYDirection(0);
+		}
 	}
 }
 
 void Entity::update(float dtime) {
 	this->animation->update(dtime);
+	if (this->currentState == EntityState::DEAD) {
+		return;
+	}
+
+	if (this->currentState == EntityState::DYING) {
+		if (this->animation->isDone()) {
+			this->switchState(EntityState::DEAD);
+		}
+		return;
+	}
+
+	if (this->movableComponent->combatableComponent->currHealth <= 0) {
+		this->switchState(EntityState::DYING);
+	}
 
 	switch (this->currentState) {
 	case EntityState::IDLE:
@@ -77,6 +118,13 @@ void Entity::update(float dtime) {
 		break;
 
 	case EntityState::ATTACK:
+		uint8_t currAttackFrame = this->animation->getCurrentFrame();
+		if (currAttackFrame == ENTITY_ATTACK_FRAME || currAttackFrame == ENTITY_ATTACK_FRAME + 1) {
+			this->movableComponent->combatableComponent->isAttacking = true;
+		} else {
+			this->movableComponent->combatableComponent->isAttacking = false;
+		}
+
 		if (this->animation->isDone()) {
 			this->currentState = EntityState::IDLE;
 			this->animation = this->attackAnimations[rand() % attackAnimations.size()];
@@ -99,20 +147,36 @@ void Entity::switchState(EntityState to) {
 	if (to == EntityState::MOVE) {
 		this->movableComponent->startMovement();
 		this->animation = moveAnimations[rand() % moveAnimations.size()];
+		this->animation->reset();
 	} else if (to == EntityState::IDLE) {
 		this->movableComponent->stopMovement();
 		this->movableComponent->setXDirection(0);
 		this->movableComponent->setYDirection(0);
 		this->animation = idleAnimations[rand() % idleAnimations.size()];
+		this->animation->reset();
 	} else if (to == EntityState::ATTACK) {
+		this->movableComponent->combatableComponent->onAttack();
 		this->movableComponent->startMovement();
 		this->animation = attackAnimations[rand() % attackAnimations.size()];
+		this->animation->reset();
+	} else if (to == EntityState::DYING) {
+		this->movableComponent->stopMovement();
+		this->movableComponent->setXDirection(0);
+		this->movableComponent->setYDirection(0);
+
+		this->animation = deadAnimation;
+		this->animation->reset();
+	} else if (to == EntityState::DEAD) {
+		this->movableComponent->combatableComponent->onDeath();
 	}
 
 	this->currentState = to;
-	this->animation->reset();
 }
 
 std::shared_ptr<Movable>& Entity::getMovableComponent() {
 	return this->movableComponent;
+}
+
+void Entity::interactWithEnemy(std::shared_ptr<Movable>& m) {
+
 }

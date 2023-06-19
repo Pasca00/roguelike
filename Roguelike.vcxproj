@@ -133,6 +133,7 @@
     </ClCompile>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="src\core\gameplay\entities\Combatablec.cpp" />
     <ClCompile Include="src\core\gameplay\entities\enemies\AI\IController.cpp" />
     <ClCompile Include="src\core\gameplay\entities\enemies\EnemyHeavy.cpp" />
     <ClCompile Include="src\core\gameplay\entities\enemies\EnemyRogue.cpp" />
@@ -170,6 +171,7 @@
     <ClCompile Include="src\main.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="src\core\gameplay\entities\Combatable.h" />
     <ClInclude Include="src\core\gameplay\entities\enemies\AI\IController.h" />
     <ClInclude Include="src\core\gameplay\entities\enemies\EnemyHeavy.h" />
     <ClInclude Include="src\core\gameplay\entities\enemies\EnemyRogue.h" />

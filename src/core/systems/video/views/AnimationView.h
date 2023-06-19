@@ -33,6 +33,8 @@ public:
 
 	GLuint getTextureId();
 
+	uint8_t getCurrentFrame();
+
 	void update(float dTime) override;
 
 	bool isDone();

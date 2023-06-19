@@ -4,10 +4,12 @@
 
 #include "../../../glm/glm.hpp"
 #include "../../gameplay/Hitbox.h"
+#include "../../gameplay/entities/Combatable.h"
 
 class Movable {
 public:
 	std::shared_ptr<Hitbox> hitbox;
+	std::shared_ptr<Combatable> combatableComponent;
 
 	glm::vec2 velocity;
 	glm::vec2 direction;
@@ -26,8 +28,10 @@ public:
 
 	int currentlyFacingX;
 
+	bool disabled;
+
 public:
-	Movable(std::shared_ptr<Hitbox>& hitbox, float acceleration = 2.5f);
+	Movable(std::shared_ptr<Hitbox>& hitbox, std::shared_ptr<Combatable>& combatableComponent, float acceleration = 2.5f);
 
 	void setXDirection(float dir);
 	void setYDirection(float dir);
@@ -43,4 +47,9 @@ public:
 	bool collides();
 
 	void dash();
+	void push(int direction);
+
+	void interactWith(std::shared_ptr<Movable>& m);
+	void setCombatableComponent(std::shared_ptr<Combatable>& combatableComponent);
+
 };

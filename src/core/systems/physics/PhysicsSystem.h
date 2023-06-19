@@ -7,6 +7,7 @@
 
 #include "../ISystem.h"
 #include "Movable.h"
+#include "../../gameplay/entities/Combatable.h"
 #include "../../gameplay/levels/tiles/Tile.h"
 #include "../../gameplay/levels/generators/IGenerator.h"
 
@@ -44,6 +45,7 @@ public:
 	unsigned int getTotalTime();
 
 	void addMovable(std::shared_ptr<Movable>& movable);
+	void removeMovable(std::shared_ptr<Movable>& movable);
 
 	void setMap(std::vector<std::vector<std::shared_ptr<Tile>>>& tilemap, TreeNode* mapTree, float tileSize = 64.f);
 

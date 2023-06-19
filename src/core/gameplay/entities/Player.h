@@ -21,6 +21,8 @@ public:
 	void update(float dtime) override;
 	//std::shared_ptr<AnimationView> getCurrentTexture();
 
+	void interactWithEnemy(std::shared_ptr<Movable>& m) override;
+
 	static const Uint8 STATE_IDLE		= 0;
 	static const Uint8 STATE_WALKING	= 1;
 	static const Uint8 STATE_ATTACKING	= 2;

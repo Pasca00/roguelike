@@ -94,6 +94,10 @@ void IController::findNextMove() {
 		nextPos = LOWER_RIGHT;
 	}
 
+	if (maxScore >= 90) {
+		this->simulatedInput->setActionValue("CLICK", true);
+	}
+
 	switch (nextPos) {
 	case UPPER_LEFT:
 		this->simulatedInput->setActionValue("UP", true);
