@@ -1,9 +1,14 @@
 #include "StatusEffect.h"
 
+#include "../inventory/GlobalEffectManager.h"
+#include "../../systems/physics/Movable.h"
+
+//#include "../../.h"
+
 StatusEffect::StatusEffect(
 	float totalDuration,
 	float applyInterval, 
-	std::function<void(std::shared_ptr<Entity>&)> callback
+	std::function<void(std::shared_ptr<Movable>&)> callback
 ) {
 	this->totalDuration = totalDuration;
 	this->applyInterval = applyInterval;
@@ -11,10 +16,10 @@ StatusEffect::StatusEffect(
 
 	this->timeSinceLastTick = 0.0;
 
-	this->totalDuration = false;
+	this->done = false;
 }
 
-void StatusEffect::apply(float dtime, std::shared_ptr<Entity>& target) {
+void StatusEffect::apply(float dtime, std::shared_ptr<Movable>& target) {
 	if (this->done) {
 		return;
 	}
@@ -34,7 +39,7 @@ void StatusEffect::apply(float dtime, std::shared_ptr<Entity>& target) {
 	}
 }
 
-void StatusEffect::setCallback(std::function<void(std::shared_ptr<Entity>&)> callback) {
+void StatusEffect::setCallback(std::function<void(std::shared_ptr<Movable>&)> callback) {
 	this->callback = callback;
 }
 

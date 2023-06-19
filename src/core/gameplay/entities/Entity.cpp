@@ -1,4 +1,5 @@
 #include "Entity.h"
+//#include "../inventory/GlobalEffectManager.h"
 
 Entity::Entity(
 	std::shared_ptr<Movable>& movableComponent,
@@ -97,6 +98,10 @@ void Entity::handleInput(std::shared_ptr<Input>& input) {
 }
 
 void Entity::update(float dtime) {
+	/*for (auto& e : this->movableComponent->combatableComponent->activeStatusEffects) {
+		e->apply(dtime, shared_from_this());
+	}*/
+
 	this->animation->update(dtime);
 	if (this->currentState == EntityState::DEAD) {
 		return;
@@ -185,6 +190,14 @@ void Entity::switchState(EntityState to) {
 std::shared_ptr<Movable>& Entity::getMovableComponent() {
 	return this->movableComponent;
 }
+
+//void Entity::addOnHitEffect(EffectName effectName) {
+//	this->movableComponent->combatableComponent->onHitApplies.push_back(effectName);
+//}
+//
+//void Entity::addStatusEffect(EffectName effectName) {
+//	this->movableComponent->combatableComponent->activeStatusEffects.push_back(GlobalEffectManager::makeEffect(effectName));
+//}
 
 void Entity::interactWithEnemy(std::shared_ptr<Movable>& m) {
 

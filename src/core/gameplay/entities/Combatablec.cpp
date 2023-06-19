@@ -1,7 +1,6 @@
 #include "Combatable.h"
 #include "../../systems/physics/Movable.h"
 
-
 Combatable::Combatable(float rangeVertical, float rangeHorizontal, float maxHealth, float attackDamage) {
 	this->rangeVertical = rangeVertical;
 	this->rangeHorizontal = rangeHorizontal;

@@ -4,13 +4,23 @@
 #include "../../systems/video/views/AnimationView.h"
 #include "../../systems/physics/Movable.h"
 
+//#include "../inventory/GlobalEffectManager.h"
+
+//class GlobalEffectManager;
+//class StatusEffect;
+//enum class EffectName;
+
 #define ENTITY_ATTACK_FRAME 5
+
+//class StatusEffect;
+//class GlobalEffectManager;
+//enum class EffectName;
 
 enum class EntityState {
 	IDLE, ATTACK, MOVE, DYING, DEAD
 };
 
-class Entity {
+class Entity : public std::enable_shared_from_this<Entity> {
 protected:
 	std::shared_ptr<Movable> movableComponent;
 
@@ -44,6 +54,9 @@ public:
 	std::shared_ptr<AnimationView> getCurrentTexture();
 
 	std::shared_ptr<Movable>& getMovableComponent();
+
+	//void addOnHitEffect(EffectName effectName);
+	//void addStatusEffect(EffectName effectName);
 
 	virtual void interactWithEnemy(std::shared_ptr<Movable>& m);
 

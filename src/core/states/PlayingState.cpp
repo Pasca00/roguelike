@@ -170,7 +170,7 @@ PlayingState::PlayingState(
 				i->getScrollView()->getY() - 64.f,
 				(i->getScrollView()->getWidth() + 64.f)* i->getScrollView()->getSize(),
 				(i->getScrollView()->getHeight() + 64.f)* i->getScrollView()->getSize(),
-				100,
+				2,
 				false
 			);
 

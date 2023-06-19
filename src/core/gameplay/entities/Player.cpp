@@ -118,4 +118,8 @@ void Player::update(float dtime) {
 void Player::interactWithEnemy(std::shared_ptr<Movable>& m) {
 	m->combatableComponent->onDamageTaken();
 	m->combatableComponent->currHealth -= this->movableComponent->combatableComponent->attackDamage;
+
+	/*for (auto effectName : this->movableComponent->onHitApplies) {
+		
+	}*/
 }

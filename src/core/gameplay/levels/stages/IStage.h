@@ -22,7 +22,7 @@ protected:
 	std::vector<ItemIds> itemPool = {
 		ItemIds::RUNE_OF_FIRE,
 		ItemIds::RUNE_OF_ICE,
-		ItemIds::GHOSTWALK,
+		//ItemIds::GHOSTWALK,
 	};
 
 	std::shared_ptr<SoundSystem> soundSystem;

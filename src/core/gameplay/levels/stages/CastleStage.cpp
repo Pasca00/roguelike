@@ -2,6 +2,8 @@
 
 #include <stack>
 
+#include "../../../gameplay/inventory/StatusEffect.h"
+
 CastleStage::CastleStage(
 	std::shared_ptr<IGenerator>& generator,
 	std::shared_ptr<TextureManager>& textureManager,
@@ -845,7 +847,9 @@ std::shared_ptr<Item> CastleStage::makeRandomItem(int i, int j) {
 			x, y
 		);
 
-		item->onPickup = [](std::unique_ptr<Player> const&) {};
+		item->onPickup = [](std::unique_ptr<Player> const& p) {
+			//p->getMovableComponent()->onHitApplies.push_back(EffectName::BURN);
+		};
 
 		break;
 
@@ -857,7 +861,9 @@ std::shared_ptr<Item> CastleStage::makeRandomItem(int i, int j) {
 			x, y
 		);
 
-		item->onPickup = [](std::unique_ptr<Player> const&) {};
+		item->onPickup = [](std::unique_ptr<Player> const& p) {
+			//p->getMovableComponent()->onHitApplies.push_back(EffectName::SLOW);
+		};
 
 		break;
 

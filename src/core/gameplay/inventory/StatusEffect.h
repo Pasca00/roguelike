@@ -2,7 +2,7 @@
 
 #include <functional>
 
-#include "../entities/Entity.h"
+class Movable;
 
 enum class EffectName {
 	BURN,
@@ -12,7 +12,7 @@ enum class EffectName {
 
 class StatusEffect {
 private:
-	std::function<void(std::shared_ptr<Entity>&)> callback;
+	std::function<void(std::shared_ptr<Movable>&)> callback;
 
 	float totalDuration;
 	float applyInterval;
@@ -25,12 +25,12 @@ public:
 	StatusEffect(
 		float totalDuration = 5000.f,
 		float applyInterval = 500.f,
-		std::function<void(std::shared_ptr<Entity>&)> callback = nullptr
+		std::function<void(std::shared_ptr<Movable>&)> callback = nullptr
 	);
 
-	void apply(float dtime, std::shared_ptr<Entity>& target);
+	void apply(float dtime, std::shared_ptr<Movable>& target);
 
-	void setCallback(std::function<void(std::shared_ptr<Entity>&)> callback);
+	void setCallback(std::function<void(std::shared_ptr<Movable>&)> callback);
 
 	bool isDone();
 };

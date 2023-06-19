@@ -133,3 +133,7 @@ void Movable::interactWith(std::shared_ptr<Movable>& m) {
 
 	return;
 }
+
+//void Movable::addStatusEffect(EffectName effectName) {
+//	this->activeStatusEffects.push_back(GlobalEffectManager::makeEffect(effectName));
+//}
