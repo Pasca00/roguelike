@@ -41,6 +41,11 @@ void CastleStage::update(float dtime) {
 	for (auto& t : this->animations) {
 		t->update(dtime);
 	}
+
+	for (auto& i : this->items) {
+		if (i->isEnabled())
+			i->update(dtime);
+	}
 }
 
 char** CastleStage::findTileType(char** stageTemplate) {
@@ -373,6 +378,15 @@ void CastleStage::loadTextures() {
 		16,
 		32
 	)[0];
+
+	this->scrollsTextures = this->textureManager->getTexturesFromSpriteSheet(
+		this->texturesDir + "scrolls.png",
+		{
+			6
+		},
+		16,
+		16
+	)[0];
 }
 
 void CastleStage::createTileMap(char** stageTemplate, char** stageTiles) {
@@ -463,22 +477,34 @@ void CastleStage::placeItems() {
 	this->tileMap[iItem][jItem]->addDecoration(dec);
 	this->tileMap[iItem][jItem]->type = IGenerator::WALL;
 
+	auto item = this->makeRandomItem(iItem, jItem);
+
 	auto interactable = std::make_unique<IInteractable>(
 		"INTERACT",
-		[dec, &chestTextures = this->chestTextures, &soundSystem = this->soundSystem]() {
+		[
+			dec,
+			item,
+			&chestTextures = this->chestTextures, 
+			&soundSystem = this->soundSystem, 
+			&tile = tileMap[iItem][jItem]
+		]() {
 			dec->setTexture(chestTextures[1]);
 
 			soundSystem->playSound("chest");
+			
+			item->enable();
 		},
 		x - interactRange,
 		y - interactRange,
-		v->getWidth() * v->getSize() + interactRange,
-		v->getHeight() * v->getSize() + interactRange,
+		(v->getWidth() + interactRange) * v->getSize(),
+		(v->getHeight() + interactRange) * v->getSize(),
 		1,
 		false
 	);
 
 	this->interactables.push_back(std::move(interactable));
+
+	this->items.push_back(item);
 }
 
 void CastleStage::placeDoors() {
@@ -795,4 +821,65 @@ void CastleStage::placeEnemy(int i, int j, char enemyType) {
 	}
 
 	this->enemyLightPositions.push_back({ x, y });
+}
+
+std::shared_ptr<Item> CastleStage::makeRandomItem(int i, int j) {
+	int randItem = rand() % this->itemPool.size();
+	auto randTexture = this->scrollsTextures[rand() % this->scrollsTextures.size()];
+
+	auto& tile = this->tileMap[i][j]->getView();
+
+	float x = tile->getX();
+	float y = tile->getY() + 48.f;
+
+	auto& itemId = this->itemPool[randItem];
+
+	std::shared_ptr<Item> item;
+
+	switch (itemId) {
+	case ItemIds::RUNE_OF_FIRE:
+		item = std::make_shared<Item>(
+			randTexture,
+			"Rune of Fire",
+			"Set Your Enemies Ablaze",
+			x, y
+		);
+
+		item->onPickup = [](std::unique_ptr<Player> const&) {};
+
+		break;
+
+	case ItemIds::RUNE_OF_ICE:
+		item = std::make_shared<Item>(
+			randTexture,
+			"Rune of Ice",
+			"Freeze Your Enemies",
+			x, y
+		);
+
+		item->onPickup = [](std::unique_ptr<Player> const&) {};
+
+		break;
+
+	case ItemIds::GHOSTWALK:
+		item = std::make_shared<Item>(
+			randTexture,
+			"Ghostwalk",
+			"Speed Up + Walk Through Walls",
+			x, y
+		);
+
+		item->onPickup = [](std::unique_ptr<Player> const&) {};
+
+		break;
+	}
+
+	for (auto it = this->itemPool.begin(); it != this->itemPool.end(); it++) {
+		if (*it == itemId) {
+			this->itemPool.erase(it);
+			break;
+		}
+	}
+
+	return item;
 }

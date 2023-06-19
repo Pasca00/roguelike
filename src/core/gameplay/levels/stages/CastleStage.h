@@ -24,6 +24,8 @@ private:
 
 	void placeEnemy(int i, int j, char enemyType);
 
+	std::shared_ptr<Item> makeRandomItem(int i, int j) override;
+
 public:
 	CastleStage(
 		std::shared_ptr<IGenerator>& generator,

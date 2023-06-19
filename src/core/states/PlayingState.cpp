@@ -147,6 +147,36 @@ PlayingState::PlayingState(
 		
 		glUniform1i(shader->getUniformLocation("nLightSources"), lights.size());
 	}
+
+	// Setting items
+	{
+		for (auto& i : this->levelManager->getCurrentStage()->getItems()) {
+			auto pickup = std::make_unique<IInteractable>(
+				"INTERACT",
+				[
+					i,
+					&player = this->player,
+					&sousndSystem = this->soundSystem
+				]() {
+					if (!i->canPickup()) {
+						return;
+					}
+
+					i->onPickup(player);
+					// soundSystem->playSound("pickup");
+					i->disable();
+				},
+				i->getScrollView()->getX() - 64.f,
+				i->getScrollView()->getY() - 64.f,
+				(i->getScrollView()->getWidth() + 64.f)* i->getScrollView()->getSize(),
+				(i->getScrollView()->getHeight() + 64.f)* i->getScrollView()->getSize(),
+				100,
+				false
+			);
+
+			this->inputSystem->addEventCallback(std::move(pickup));
+		}
+	}
 }
 
 PlayingState::~PlayingState() {}
@@ -260,6 +290,12 @@ void PlayingState::render() {
 					}
 				}
 			}
+		}
+	}
+
+	for (auto& i : this->levelManager->getCurrentStage()->getItems()) {
+		if (i->isEnabled()) {
+			this->videoSystem->draw(std::static_pointer_cast<IView>(i->getScrollView()));
 		}
 	}
 

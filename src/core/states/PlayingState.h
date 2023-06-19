@@ -13,6 +13,7 @@ private:
 	std::vector<std::unique_ptr<IController>> enemies;
 
 	void makeEnemies();
+	void makeItems();
 
 	std::unique_ptr<Barrier> updateBarrier;
 

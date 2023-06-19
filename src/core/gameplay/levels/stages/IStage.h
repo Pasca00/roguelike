@@ -6,12 +6,25 @@
 #include "../../../systems/input/IInteractable.h"
 #include "../../../systems/video/textures/TextureManager.h"
 #include "../../../systems/video/views/AnimationView.h"
+#include "../../../gameplay/inventory/Item.h"
 #include "../generators/IGenerator.h"
 #include "../generators/BSPGenerator.h"
 #include "../tiles/Tile.h"
 
+enum class ItemIds {
+	RUNE_OF_FIRE,
+	RUNE_OF_ICE,
+	GHOSTWALK,
+};
+
 class IStage {
 protected:
+	std::vector<ItemIds> itemPool = {
+		ItemIds::RUNE_OF_FIRE,
+		ItemIds::RUNE_OF_ICE,
+		ItemIds::GHOSTWALK,
+	};
+
 	std::shared_ptr<SoundSystem> soundSystem;
 
 	std::shared_ptr<IGenerator> generator;
@@ -34,9 +47,13 @@ protected:
 
 	std::vector<std::shared_ptr<Texture>> doorTextures;
 
+	std::vector<std::shared_ptr<Texture>> scrollsTextures;
+
 	std::vector<std::unique_ptr<IInteractable>> interactables;
 
 	std::vector<glm::vec2> lightPositions;
+
+	std::vector<std::shared_ptr<Item>> items;
 
 	int tileSize;
 
@@ -50,6 +67,8 @@ protected:
 	virtual void placeItems() = 0;
 	virtual void placeDoors() = 0;
 	virtual void placeEnemiesStartPositions() = 0;
+
+	virtual std::shared_ptr<Item> makeRandomItem(int i, int j) = 0;
 
 public:
 	float playerStartPosX;
@@ -100,5 +119,9 @@ public:
 
 	std::vector<glm::vec2>& getLightSourcePositions() {
 		return this->lightPositions;
+	}
+
+	std::vector<std::shared_ptr<Item>>& getItems() {
+		return this->items;
 	}
 };
