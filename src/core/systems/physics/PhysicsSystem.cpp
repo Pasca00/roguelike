@@ -8,6 +8,8 @@ void PhysicsSystem::init() {
 	this->prevTime = 0;
 	this->dTime = 0;
 
+	this->timeSnapshot = 0;
+
 	this->friction = 120.f;
 
 	this->timeModifier = 1.0;
@@ -19,9 +21,13 @@ void PhysicsSystem::update(float dtime) {
 			continue;
 		}
 
+		if (!m->canBeTimeSlowed) {
+			dtime = this->dTime;
+		}
+
 		m->applyFriction(this->friction);
 		m->update();
-	
+
 		if (m->collides()) {
 			this->computeMovablePosition(m, dtime);
 		} else {
@@ -67,10 +73,14 @@ void PhysicsSystem::setMap(std::vector<std::vector<std::shared_ptr<Tile>>>& tile
 }
 
 void PhysicsSystem::computeMovablePosition(std::shared_ptr<Movable>& m, float dTime) {
+	if (this->timeModifier == 0 && m->canBeTimeSlowed) {
+		return;
+	}
+
 	auto& mHitbox = m->hitbox;
 
-	float potentialX = mHitbox->x + m->velocity.x * m->direction.x * dTime;
-	float potentialY = mHitbox->y + m->velocity.y * m->direction.y * dTime;
+	float potentialX = mHitbox->x + m->velocity.x * m->direction.x * dTime * m->timeModifier;
+	float potentialY = mHitbox->y + m->velocity.y * m->direction.y * dTime * m->timeModifier;
 
 	if (m->velocity.x == 0 && m->velocity.y == 0) {
 		return;
@@ -207,6 +217,10 @@ void PhysicsSystem::checkPlayerMovablesInteractions() {
 	for (int i = 2; i < this->movables.size(); i++) {
 		auto& m = this->movables[i];
 
+		if (m->disabled) {
+			continue;
+		}
+
 		if (m->combatableComponent == nullptr || player->combatableComponent == nullptr) {
 			continue;
 		}
@@ -237,6 +251,14 @@ void PhysicsSystem::checkPlayerMovablesInteractions() {
 	
 float PhysicsSystem::getFrameDeltaTime() {
 	return dTime * this->timeModifier;
+}
+
+float PhysicsSystem::getRealFrameTime() {
+	return this->dTime;
+}
+
+void PhysicsSystem::captureTime() {
+	this->timeSnapshot = SDL_GetTicks();
 }
 
 unsigned int PhysicsSystem::getTotalTime() {

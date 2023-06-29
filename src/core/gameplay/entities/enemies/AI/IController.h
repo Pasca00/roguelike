@@ -36,20 +36,20 @@ public:
 
 	std::shared_ptr<Entity> getEntity();
 
-private:
+protected:
 	void findNextMove();
 
-	// 1 2 3
-	// 4 0 5
-	// 6 7 8
-	static const int UPPER_LEFT  = 1;
-	static const int UP			 = 2;
-	static const int UPPER_RIGHT = 3;
-	static const int RIGHT		 = 4;
+	// -3 -2 -1
+	// -4  0  4
+	//  1  2  3
+	static const int UPPER_LEFT  = -3;
+	static const int UP			 = -2;
+	static const int UPPER_RIGHT = -1;
+	static const int RIGHT		 = -4;
 	static const int NONE		 = 0;
-	static const int LEFT		 = 5;
-	static const int LOWER_LEFT  = 6;
-	static const int DOWN		 = 7;
-	static const int LOWER_RIGHT = 8;
+	static const int LEFT		 = 4;
+	static const int LOWER_LEFT  = 1;
+	static const int DOWN		 = 2;
+	static const int LOWER_RIGHT = 3;
 
 };

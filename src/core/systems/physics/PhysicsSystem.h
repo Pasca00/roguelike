@@ -20,6 +20,8 @@ private:
 	float totalTime;
 	float timeModifier;
 
+	uint64_t timeSnapshot;
+
 	std::vector<std::shared_ptr<Movable>> movables;
 
 	float friction;
@@ -42,7 +44,11 @@ public:
 	float getFrameDeltaTime();
 	float& getTimeModifier();
 	
+	float getRealFrameTime();
+
 	unsigned int getTotalTime();
+
+	void captureTime();
 
 	void addMovable(std::shared_ptr<Movable>& movable);
 	void removeMovable(std::shared_ptr<Movable>& movable);

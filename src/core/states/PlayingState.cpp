@@ -88,7 +88,13 @@ PlayingState::PlayingState(
 		auto combatableComponent = std::make_shared<Combatable>(rangeVertical, rangeHorizontal, 100.f, 35.f);
 
 		auto movable = std::make_shared<Movable>(playerHitbox, combatableComponent, 150.f);
+		movable->canBeTimeSlowed = false;
 		movable->onInteract = std::bind(&Player::interactWithEnemy, std::ref(player), std::placeholders::_1);
+		movable->combatableComponent->onDamageTaken = []() {
+			//videoSystem->updatePlayerHealth(movable->combatableComponent->maxHealth, movable->combatableComponent->currHealth);
+		};
+		movable->combatableComponent->onHitRecovery = []() {};
+		movable->combatableComponent->onDeath = []() {};
 
 		auto controllableParams = std::make_shared<ControllableParameters>(
 			this->physicsSystem->getTimeModifier(),
@@ -110,8 +116,18 @@ PlayingState::PlayingState(
 							: soundSystem->playSound("swoosh_2");
 		};
 
-		combatableComponent->onDamageTaken = []() { };
-		combatableComponent->onHitRecovery = []() { };
+		combatableComponent->onDamageTaken = [
+			&videoSystem = this->videoSystem, 
+			&combatableComponent = this->player->getMovableComponent()->combatableComponent
+		]() {
+			videoSystem->updatePlayerHealth(combatableComponent->maxHealth, combatableComponent->currHealth);
+			combatableComponent->recentlyDamaged = true;
+		};
+		combatableComponent->onHitRecovery = [
+			&combatableComponent = this->player->getMovableComponent()->combatableComponent
+		]() {
+			combatableComponent->recentlyDamaged = false;
+		};
 		combatableComponent->onDeath = []() { };
 
 
@@ -159,6 +175,7 @@ PlayingState::PlayingState(
 					&sousndSystem = this->soundSystem
 				]() {
 					if (!i->canPickup()) {
+
 						return;
 					}
 
@@ -170,12 +187,17 @@ PlayingState::PlayingState(
 				i->getScrollView()->getY() - 64.f,
 				(i->getScrollView()->getWidth() + 64.f)* i->getScrollView()->getSize(),
 				(i->getScrollView()->getHeight() + 64.f)* i->getScrollView()->getSize(),
-				2,
+				3,
 				false
 			);
 
 			this->inputSystem->addEventCallback(std::move(pickup));
 		}
+	}
+
+	// Creating HUD
+	{
+		this->videoSystem->initHUD();
 	}
 }
 
@@ -217,11 +239,12 @@ void PlayingState::update(float dTime) {
 
 	this->generalSystem->queueThreadJob([
 			dTime, 
+			dTimeReal = this->physicsSystem->getRealFrameTime(),
 			&player = player, 
 			&levelManager = levelManager, 
 			&updateBarrier = updateBarrier, 
 			&enemies = enemies]() {
-		player->update(dTime);
+		player->update(dTimeReal);
 
 		levelManager->getCurrentStage()->update(dTime);
 
@@ -264,6 +287,14 @@ void PlayingState::render() {
 	this->videoSystem->setFloatUniform("playerX", px);
 	this->videoSystem->setFloatUniform("playerY", py);
 
+	if (this->player->controllableParams->physicsTimeModifier == 0) {
+		this->videoSystem->setIntUniform("time_stop", 1);
+		this->videoSystem->setIntUniform("time", this->physicsSystem->getTotalTime() - player->controllableParams->timeSnapshot);
+	}
+	else {
+		this->videoSystem->setIntUniform("time_stop", 0);
+	}
+
 	for (int i = 0; i < tileMap.size(); i++) {
 		for (int j = tileMap[i].size() - 1; j >= 0 ; j--) {
 			if (tileMap[i][j] != nullptr) {
@@ -296,8 +327,14 @@ void PlayingState::render() {
 	for (auto& i : this->levelManager->getCurrentStage()->getItems()) {
 		if (i->isEnabled()) {
 			this->videoSystem->draw(std::static_pointer_cast<IView>(i->getScrollView()));
+			this->videoSystem->drawText(i->getNameView());
+			this->videoSystem->drawText(i->getDescriptionView());
+		
+			break;
 		}
 	}
+
+	this->videoSystem->drawHUD();
 
 	/*for (const auto& e : this->enemies) {
 		this->videoSystem->draw(std::static_pointer_cast<IView>(e->getEntity()->getCurrentTexture()));
@@ -336,7 +373,7 @@ void PlayingState::makeEnemies() {
 		auto idle1 = std::make_shared<AnimationView>(orcTextures[5], false, 0.15f + eps, 120, 120, 3);
 		auto idle2 = std::make_shared<AnimationView>(orcTextures[6], false, 0.15f + eps, 120, 120, 3);
 		auto walk = std::make_shared<AnimationView>(orcTextures[7], true, 0.15f + eps, 120, 120, 3);
-		auto attack = std::make_shared<AnimationView>(orcTextures[8], false, 0.11f + eps, 120, 120, 3);
+		auto attack = std::make_shared<AnimationView>(orcTextures[8], false, 0.12f + eps, 120, 120, 3);
 		auto death = std::make_shared<AnimationView>(orcTextures[9], false, 0.15f + eps, 120, 120, 3);
 		auto hitbox = std::make_shared<Hitbox>(p.first, p.second, 40, 40);
 
@@ -346,21 +383,26 @@ void PlayingState::makeEnemies() {
 
 		float rangeVertical = 24;
 		float rangeHorizontal = 24;
-		auto combatableComponent = std::make_shared<Combatable>(rangeVertical, rangeHorizontal, 100.f, 15.f);
+		auto combatableComponent = std::make_shared<Combatable>(rangeVertical, rangeHorizontal, 100.f, 8.f);
 
 		auto movable = std::make_shared<Movable>(hitbox, combatableComponent, 150.f);
 
 		this->physicsSystem->addMovable(movable);
 		movable->maxSpeed = movable->maxSpeed - 10 - rand() % 50;
-		movable->onInteract = [](std::shared_ptr<Movable>& m) {};
 
 		auto enemy = std::make_shared<Entity>(
 			movable,
 			idleVec,
 			attackVec,
 			walkVec,
-			death
+			death,
+			7
 		);
+
+		movable->onInteract = [&movable = enemy->getMovableComponent()](std::shared_ptr<Movable>& target) {
+			target->combatableComponent->currHealth -= movable->combatableComponent->attackDamage;
+			target->combatableComponent->onDamageTaken();
+		};
 
 		auto e = std::make_unique<IController>(
 			enemy,
@@ -394,7 +436,7 @@ void PlayingState::makeEnemies() {
 		auto idle1 = std::make_shared<AnimationView>(orcTextures[0], false, 0.15f + eps, 120, 120, 3);
 		auto idle2 = std::make_shared<AnimationView>(orcTextures[1], false, 0.15f + eps, 120, 120, 3);
 		auto walk = std::make_shared<AnimationView>(orcTextures[2], true, 0.15f + eps, 120, 120, 3);
-		auto attack = std::make_shared<AnimationView>(orcTextures[3], false, 0.12f + eps, 120, 120, 3);
+		auto attack = std::make_shared<AnimationView>(orcTextures[3], false, 0.13f + eps, 120, 120, 3);
 		auto death = std::make_shared<AnimationView>(orcTextures[4], false, 0.15f + eps, 120, 120, 3);
 		auto hitbox = std::make_shared<Hitbox>(p.first, p.second, 40, 40);
 
@@ -408,8 +450,6 @@ void PlayingState::makeEnemies() {
 
 		auto movable = std::make_shared<Movable>(hitbox, combatableComponent, 150.f);
 		movable->maxSpeed = movable->maxSpeed - rand() % 30;
-		movable->onInteract = [](std::shared_ptr<Movable>& m) {};
-
 		this->physicsSystem->addMovable(movable);
 
 		auto enemy = std::make_shared<Entity>(
@@ -417,7 +457,8 @@ void PlayingState::makeEnemies() {
 			idleVec,
 			attackVec,
 			walkVec,
-			death
+			death,
+			5
 		);
 
 		auto e = std::make_unique<IController>(
@@ -427,6 +468,11 @@ void PlayingState::makeEnemies() {
 			this->levelManager->getH(),
 			this->levelManager->getW()
 		);
+
+		movable->onInteract = [&movable = enemy->getMovableComponent()](std::shared_ptr<Movable>& target) {
+			target->combatableComponent->currHealth -= movable->combatableComponent->attackDamage;
+			target->combatableComponent->onDamageTaken();
+		};
 
 		combatableComponent->onAttack = []() {};
 		combatableComponent->onDamageTaken = [&soundSystem = this->soundSystem, &combatableComponent = enemy->getMovableComponent()->combatableComponent]() {
@@ -438,7 +484,6 @@ void PlayingState::makeEnemies() {
 		combatableComponent->onHitRecovery = [&combatableComponent = enemy->getMovableComponent()->combatableComponent]() {
 			combatableComponent->recentlyDamaged = false;
 		};
-
 		combatableComponent->onDeath = [&physicsSystem = this->physicsSystem, &movable = enemy->getMovableComponent()]() {
 			physicsSystem->removeMovable(movable);
 		};
@@ -446,5 +491,83 @@ void PlayingState::makeEnemies() {
 		this->enemies.push_back(std::move(e));
 	}
 
+	auto guardianTextures = textureManager->getTexturesFromSpriteSheet(
+		Paths::CHARACTERS_DIR + "statue.png",
+		{
+			6, // death
+			5, // attack
+			8, // walk
+			4, // wake up
+			2, // idle
+		},
+		64,
+		64
+	);
 
+	for (auto p : this->levelManager->getCurrentStage()->getEnemyGuardiantStart()) {
+		float eps = rand() % 10 / 100.f;
+
+		auto dormantTextures = std::vector<std::shared_ptr<Texture>>();
+		dormantTextures.push_back(guardianTextures[1][0]);
+
+		auto idle = std::make_shared<AnimationView>(guardianTextures[0], false, 0.3f + eps, 120, 120, 2);
+		auto dormant = std::make_shared<AnimationView>(dormantTextures, false, 0.3f + eps, 120, 120, 2);
+		auto wakeUp = std::make_shared<AnimationView>(guardianTextures[1], false, 0.15f + eps, 120, 120, 2);
+		auto walk = std::make_shared<AnimationView>(guardianTextures[2], true, 0.15f + eps, 120, 120, 2);
+		auto attack = std::make_shared<AnimationView>(guardianTextures[3], false, 0.25f + eps, 120, 120, 2);
+		auto death = std::make_shared<AnimationView>(guardianTextures[4], false, 0.15f + eps, 120, 120, 2);
+		auto hitbox = std::make_shared<Hitbox>(p.first, p.second, 40, 40);
+
+		std::vector<std::shared_ptr<AnimationView>> idleVec = { idle };
+		std::vector<std::shared_ptr<AnimationView>> walkVec = { walk };
+		std::vector<std::shared_ptr<AnimationView>> attackVec = { attack };
+
+		float rangeVertical = 24;
+		float rangeHorizontal = 24;
+		auto combatableComponent = std::make_shared<Combatable>(rangeVertical, rangeHorizontal, 250.f, 30.f);
+
+		auto movable = std::make_shared<Movable>(hitbox, combatableComponent, 150.f);
+		movable->maxSpeed = movable->maxSpeed * 0.5f;
+		this->physicsSystem->addMovable(movable);
+
+		auto enemy = std::make_shared<GuardianEntity>(
+			movable,
+			dormant,
+			wakeUp,
+			idleVec,
+			attackVec,
+			walkVec,
+			death,
+			2
+		);
+
+		auto e = std::make_unique<GuardianController>(
+			enemy,
+			this->levelManager->getScoreGrid(),
+			this->levelManager->getTileSize(),
+			this->levelManager->getH(),
+			this->levelManager->getW()
+		);
+
+		movable->onInteract = [&movable = enemy->getMovableComponent()](std::shared_ptr<Movable>& target) {
+			target->combatableComponent->currHealth -= movable->combatableComponent->attackDamage;
+			target->combatableComponent->onDamageTaken();
+		};
+
+		combatableComponent->onAttack = []() {};
+		combatableComponent->onDamageTaken = [&soundSystem = this->soundSystem, &combatableComponent = enemy->getMovableComponent()->combatableComponent]() {
+			rand() % 2 == 0 ? soundSystem->playSound("grunt_large_1")
+							: soundSystem->playSound("grunt_large_2");
+
+			combatableComponent->recentlyDamaged = true;
+		};
+		combatableComponent->onHitRecovery = [&combatableComponent = enemy->getMovableComponent()->combatableComponent]() {
+			combatableComponent->recentlyDamaged = false;
+		};
+		combatableComponent->onDeath = [&physicsSystem = this->physicsSystem, &movable = enemy->getMovableComponent()]() {
+			physicsSystem->removeMovable(movable);
+		};
+
+		this->enemies.push_back(std::move(e));
+	}
 }

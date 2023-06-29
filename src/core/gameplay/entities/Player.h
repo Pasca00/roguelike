@@ -2,10 +2,14 @@
 
 #include "Entity.h"
 #include "../inventory/ControllableParameters.h"
+#include "../inventory/UsableItem.h"
 
-class Player : public Entity {
+class Player : public Entity, std::enable_shared_from_this<Player> {
 private:
-	std::shared_ptr<ControllableParameters> controllableParams;
+	float energyResource;
+
+	std::shared_ptr<UsableItem> currItem;
+	std::shared_ptr<UsableItem> potions;
 
 public:
 	Player(
@@ -22,6 +26,12 @@ public:
 	//std::shared_ptr<AnimationView> getCurrentTexture();
 
 	void interactWithEnemy(std::shared_ptr<Movable>& m) override;
+
+	void increaseAttackSpeed(float percent = 0.2);
+
+	void addUsableItem(std::shared_ptr<UsableItem>& i);
+
+	std::shared_ptr<ControllableParameters> controllableParams;
 
 	static const Uint8 STATE_IDLE		= 0;
 	static const Uint8 STATE_WALKING	= 1;

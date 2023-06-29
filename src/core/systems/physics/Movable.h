@@ -20,7 +20,11 @@ public:
 	float maxSpeed;
 	float acceleration;
 
+	float timeModifier;
+
 	bool isMoving;
+
+	bool canBeTimeSlowed;
 
 	bool doesCollide;
 
@@ -34,7 +38,7 @@ public:
 	std::function<void(std::shared_ptr<Movable>&)> onInteract;
 
 	std::vector<EffectName> onHitApplies;
-	std::vector<std::shared_ptr<StatusEffect>> activeStatusEffects;
+	std::unordered_map<EffectName, std::shared_ptr<StatusEffect>> activeStatusEffects;
 
 public:
 	Movable(std::shared_ptr<Hitbox>& hitbox, std::shared_ptr<Combatable>& combatableComponent, float acceleration = 2.5f);

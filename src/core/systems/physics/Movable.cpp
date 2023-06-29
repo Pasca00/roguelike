@@ -29,6 +29,10 @@ Movable::Movable(
 	this->currentlyFacingX = FACING_RIGHT;
 
 	this->disabled = false;
+
+	this->timeModifier = 1.f;
+
+	this->canBeTimeSlowed = true;
 }
 
 void Movable::setXDirection(float dir) {
@@ -49,8 +53,14 @@ void Movable::addOnHitEffect(EffectName effectName) {
 }
 
 void Movable::addStatusEffect(EffectName effectName) {
+	if (this->activeStatusEffects.find(effectName) != activeStatusEffects.end()) {
+		return;
+	}
+	
 	auto& effect = GlobalEffectManager::makeEffect(effectName);
-	this->activeStatusEffects.push_back(effect);
+	if (effect != nullptr) {
+		this->activeStatusEffects[effectName] = effect;
+	}
 }
 
 void Movable::startMovement() {
@@ -82,9 +92,9 @@ void Movable::push(int direction) {
 }
 
 void Movable::update(float dtime) {
-	this->timeSinceDash += dtime;
+	this->timeSinceDash += dtime * timeModifier;
 	if (combatableComponent->timeSinceLastHit < 50.f) {
-		this->combatableComponent->timeSinceLastHit += dtime;
+		this->combatableComponent->timeSinceLastHit += dtime * timeModifier;
 		if (combatableComponent->timeSinceLastHit >= 50.f) {
 			this->combatableComponent->onHitRecovery();
 		}
@@ -92,14 +102,14 @@ void Movable::update(float dtime) {
 
 	if (this->isMoving) {
 		if (this->velocity.x < this->maxSpeed) {
-			this->velocity.x += this->acceleration * dtime;
+			this->velocity.x += this->acceleration * dtime * timeModifier;
 			if (this->velocity.x > this->maxSpeed) {
 				this->velocity.x = this->maxSpeed;
 			}
 		}
 
 		if (this->velocity.y < this->maxSpeed) {
-			this->velocity.y += this->acceleration * dtime;
+			this->velocity.y += this->acceleration * dtime * timeModifier;
 			if (this->velocity.y > this->maxSpeed) {
 				this->velocity.y = this->maxSpeed;
 			}
@@ -108,7 +118,7 @@ void Movable::update(float dtime) {
 }
 
 void Movable::applyFriction(float friction, float dtime) {
-	this->velocity -= friction * dtime;
+	this->velocity -= friction * dtime * timeModifier;
 	if (this->velocity.x < 0) {
 		this->velocity.x = 0;
 	}

@@ -3,7 +3,9 @@
 #include "IState.h"
 #include "../gameplay/levels/LevelManager.h"
 #include "../gameplay/entities/Player.h"
+#include "../gameplay/entities/GuardianEntity.h"
 #include "../gameplay/entities/enemies/AI/IController.h"
+#include "../gameplay/entities/enemies/AI/GuardianController.h"
 
 class PlayingState : public IState {
 private:

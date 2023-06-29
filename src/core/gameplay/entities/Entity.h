@@ -9,7 +9,7 @@
 #define ENTITY_ATTACK_FRAME 5
 
 enum class EntityState {
-	IDLE, ATTACK, MOVE, DYING, DEAD
+	DORMANT, WAKING, IDLE, ATTACK, MOVE, DYING, DEAD
 };
 
 class Entity {
@@ -25,14 +25,13 @@ protected:
 	std::vector<std::shared_ptr<AnimationView>> moveAnimations;
 	std::shared_ptr<AnimationView> deadAnimation;
 
-	void switchState(EntityState to);
+	virtual void switchState(EntityState to);
 
 	bool drawFlipped;
 
 	bool enabled;
 
-	/*std::vector<EffectName> onHitApplies;
-	std::vector<std::shared_ptr<StatusEffect>> activeStatusEffects;*/
+	int attackFrame;
 
 public:
 	Entity( // TODO: change these to pairs or maps
@@ -40,7 +39,8 @@ public:
 		std::vector<std::shared_ptr<AnimationView>>& idleAnimations,
 		std::vector<std::shared_ptr<AnimationView>>& attackAnimations,
 		std::vector<std::shared_ptr<AnimationView>>& moveAnimations,
-		std::shared_ptr<AnimationView>& deadAnimation
+		std::shared_ptr<AnimationView>& deadAnimation,
+		int attackFrame
 	);
 
 	virtual void handleInput(std::shared_ptr<Input>& input);
@@ -58,4 +58,6 @@ public:
 	void enable();
 	void disable();
 	bool isEnabled();
+
+	EntityState getCurrentState();
 };

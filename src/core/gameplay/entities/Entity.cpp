@@ -1,24 +1,38 @@
 #include "Entity.h"
 //#include "../inventory/GlobalEffectManager.h"
 
+namespace colors {
+	glm::vec4 red_hit		= glm::vec4(0.8f, 0.2f, 0.2f, 0.5f);
+	glm::vec4 fire_burn		= glm::vec4(0.906f, 0.38f, 0.11f, 0.5f);
+	glm::vec4 ice_slow		= glm::vec4(0.187f, 0.55f, 0.93f, 0.5f);
+	glm::vec4 time_freeze	= glm::vec4(0.2f, 0.91f, 0.44f, 0.75f);
+	glm::vec4 feared		= glm::vec4(0.39f, 0.2f, 0.92f, 0.75f);
+	glm::vec4 none			= glm::vec4(0);
+};
+
 Entity::Entity(
 	std::shared_ptr<Movable>& movableComponent,
 	std::vector<std::shared_ptr<AnimationView>>& idleAnimations,
 	std::vector<std::shared_ptr<AnimationView>>& attackAnimations,
 	std::vector<std::shared_ptr<AnimationView>>& moveAnimations,
-	std::shared_ptr<AnimationView>& deadAnimation
+	std::shared_ptr<AnimationView>& deadAnimation,
+	int attackFrame
 ) : movableComponent(movableComponent),
 	animation(idleAnimations[0]),
 	idleAnimations(idleAnimations),
 	attackAnimations(attackAnimations),
 	moveAnimations(moveAnimations),
 	deadAnimation(deadAnimation) {
+
 	this->currentState = EntityState::IDLE;
 	this->drawFlipped = false;
+	this->attackFrame = attackFrame;
+	this->enabled = true;
+
 }
 
 void Entity::handleInput(std::shared_ptr<Input>& input) {
-	if (!this->enabled) {
+	if (!this->isEnabled()) {
 		return;
 	}
 
@@ -98,14 +112,26 @@ void Entity::handleInput(std::shared_ptr<Input>& input) {
 }
 
 void Entity::update(float dtime) {
-	/*for (auto& e : this->movableComponent->combatableComponent->activeStatusEffects) {
-		e->apply(dtime, shared_from_this());
-	}*/
-
-	this->animation->update(dtime);
+	this->animation->update(dtime * this->movableComponent->timeModifier);
 	if (this->currentState == EntityState::DEAD) {
 		return;
 	}
+
+	for (auto& e = this->movableComponent->activeStatusEffects.begin(); e != this->movableComponent->activeStatusEffects.end();) {
+		(*e).second->apply(dtime, this->movableComponent);
+		if ((*e).second->isDone()) {
+			e = this->movableComponent->activeStatusEffects.erase(e);
+		} else {
+			e++;
+		}
+	}
+
+	/*for (auto& e : this->movableComponent->activeStatusEffects) {
+		e.second->apply(dtime, this->movableComponent);
+		if (e.second->isDone()) {
+			this->movableComponent->activeStatusEffects.erase(e.first);
+		}
+	}*/
 
 	if (this->currentState == EntityState::DYING) {
 		if (this->animation->isDone()) {
@@ -128,7 +154,7 @@ void Entity::update(float dtime) {
 
 	case EntityState::ATTACK:
 		uint8_t currAttackFrame = this->animation->getCurrentFrame();
-		if (currAttackFrame == ENTITY_ATTACK_FRAME || currAttackFrame == ENTITY_ATTACK_FRAME + 1) {
+		if (currAttackFrame == this->attackFrame) {
 			this->movableComponent->combatableComponent->isAttacking = true;
 		} else {
 			this->movableComponent->combatableComponent->isAttacking = false;
@@ -148,10 +174,24 @@ std::shared_ptr<AnimationView> Entity::getCurrentTexture() {
 	this->animation->setY(this->movableComponent->hitbox->y);
 
 	this->animation->flip(this->drawFlipped);
-	if (this->movableComponent->combatableComponent->recentlyDamaged) {
-		this->animation->setOverlayColor(glm::vec4(0.8, 0.2, 0.2, 0.5));
-	} else {
-		this->animation->setOverlayColor(glm::vec4(0));
+
+	if (this->movableComponent->activeStatusEffects.count(EffectName::TIME_RIFT)) {
+		this->animation->setOverlayColor(colors::time_freeze);
+	}
+	else if (this->movableComponent->combatableComponent->recentlyDamaged) {
+		this->animation->setOverlayColor(colors::red_hit);
+	}
+	else if (this->movableComponent->activeStatusEffects.count(EffectName::BURN)) {
+		this->animation->setOverlayColor(colors::fire_burn);
+	}
+	else if (this->movableComponent->activeStatusEffects.count(EffectName::SLOW)) {
+		this->animation->setOverlayColor(colors::ice_slow);
+	}
+	else if (this->movableComponent->activeStatusEffects.count(EffectName::FEAR)) {
+		this->animation->setOverlayColor(colors::feared);
+	}
+	else {
+		this->animation->setOverlayColor(colors::none);
 	}
 
 	return this->animation;
@@ -180,7 +220,8 @@ void Entity::switchState(EntityState to) {
 
 		this->animation = deadAnimation;
 		this->animation->reset();
-	} else if (to == EntityState::DEAD) {
+	}
+	else if (to == EntityState::DEAD) {
 		this->movableComponent->combatableComponent->onDeath();
 	}
 
@@ -191,26 +232,23 @@ std::shared_ptr<Movable>& Entity::getMovableComponent() {
 	return this->movableComponent;
 }
 
-//void Entity::addOnHitEffect(EffectName effectName) {
-//	this->onHitApplies.push_back(effectName);
-//}
-//
-//void Entity::addStatusEffect(EffectName effectName) {
-//	this->activeStatusEffects.push_back(GlobalEffectManager::makeEffect(effectName));
-//}
-
 void Entity::interactWithEnemy(std::shared_ptr<Movable>& m) {
-
+	m->combatableComponent->onDamageTaken();
+	m->combatableComponent->currHealth -= this->movableComponent->combatableComponent->attackDamage;
 }
 
 void Entity::enable() {
-	this->enabled = true;
+	this->movableComponent->disabled = false;
 }
 
 void Entity::disable() {
-	this->enabled = false;
+	this->movableComponent->disabled = true;
 }
 
 bool Entity::isEnabled() {
-	return this->enabled;
+	return !this->movableComponent->disabled;
+}
+
+EntityState Entity::getCurrentState() {
+	return this->currentState;
 }

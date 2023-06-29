@@ -34,7 +34,9 @@ void CastleStage::generateStage() {
 
 	this->placeDoors();
 	this->placeItems();
+	this->placePotions();
 	this->placeEnemiesStartPositions();
+	this->placeExit();
 }
 
 void CastleStage::update(float dtime) {
@@ -361,6 +363,24 @@ void CastleStage::loadTextures() {
 		16
 	)[0];
 
+	this->crateTextures = this->textureManager->getTexturesFromSpriteSheet(
+		this->texturesDir + "crate.png",
+		{
+			2
+		},
+		16,
+		16
+	)[0];
+
+	this->barrelTextures = this->textureManager->getTexturesFromSpriteSheet(
+		this->texturesDir + "barrel.png",
+		{
+			2
+		},
+		16,
+		16
+	)[0];
+
 	this->doorTextures = this->textureManager->getTexturesFromSpriteSheet(
 		this->texturesDir + "iron_door.png",
 		{
@@ -381,6 +401,15 @@ void CastleStage::loadTextures() {
 
 	this->scrollsTextures = this->textureManager->getTexturesFromSpriteSheet(
 		this->texturesDir + "scrolls.png",
+		{
+			6
+		},
+		16,
+		16
+	)[0];
+
+	this->potionTextures = this->textureManager->getTexturesFromSpriteSheet(
+		this->texturesDir + "potions.png",
 		{
 			6
 		},
@@ -507,6 +536,30 @@ void CastleStage::placeItems() {
 	this->items.push_back(item);
 }
 
+void CastleStage::placePotions() {
+	TreeNode* head = this->getMapTree();
+
+	auto playerRoom = this->getRoomForCoords(this->playerStartPosX, this->playerStartPosY);
+
+	std::stack<TreeNode*> stack;
+	while (head != NULL || !stack.empty()) {
+		while (head != NULL) {
+			stack.push(head);
+
+			head = head->l;
+		}
+
+		head = stack.top();
+		stack.pop();
+
+		if (head->l == NULL && head->r == NULL) {
+			this->placePotionInRoom(head);
+		}
+
+		head = head->r;
+	}
+}
+
 void CastleStage::placeDoors() {
 	for (int i = 0; i < this->tileMap.size(); i++) {
 		for (int j = 0; j < this->tileMap[i].size(); j++) {
@@ -586,6 +639,31 @@ void CastleStage::placeDoors() {
 					);
 
 				this->interactables.push_back(std::move(interactable));
+			}
+		}
+	}
+}
+
+void CastleStage::placeExit() {
+	for (int i = 0; i < tileMap.size(); i++) {
+		for (int j = 0; j < tileMap[i].size(); j++) {
+			if (tileMap[i][j]->type == IGenerator::EMPTY && tileMap[i - 1][j]->type == IGenerator::WALL) {
+				auto& exitTile = tileMap[i - 1][j + 1];
+
+				this->exitPosition = { exitTile->getView()->getX(), exitTile->getView()->getY() };
+
+				auto v = std::make_shared<View>(
+					this->wallTextures[this->wall_stairway][0], 
+					exitTile->getView()->getX(), 
+					exitTile->getView()->getY(),
+					this->tileSize / 16.f
+				);
+				exitTile->addDecoration(v);
+
+				this->placeEnemy(i, j, 'G');
+				this->placeEnemy(i, j + 2, 'G');
+
+				return;
 			}
 		}
 	}
@@ -697,7 +775,11 @@ void CastleStage::placeEnemiesInRoom(TreeNode* room) {
 		}
 
 		if (tileMap[i + 1][j]->type == IGenerator::WALL && tileMap[i - 1][j]->type == IGenerator::WALL
-			|| tileMap[i][j + 1]->type == IGenerator::WALL && tileMap[i][j - 1]->type == IGenerator::WALL) {
+			|| tileMap[i][j + 1]->type == IGenerator::WALL && tileMap[i][j - 1]->type == IGenerator::WALL
+			|| tileMap[i + 1][j - 1]->type == IGenerator::WALL && tileMap[i + 1][j + 1]->type == IGenerator::WALL
+			|| tileMap[i - 1][j - 1]->type == IGenerator::WALL && tileMap[i - 1][j + 1]->type == IGenerator::WALL
+			|| tileMap[i + 1][j - 1]->type == IGenerator::WALL && tileMap[i - 1][j - 1]->type == IGenerator::WALL
+			|| tileMap[i + 1][j + 1]->type == IGenerator::WALL && tileMap[i - 1][j + 1]->type == IGenerator::WALL) {
 			continue;
 		}
 
@@ -747,30 +829,6 @@ void CastleStage::placeEnemiesInRoom(TreeNode* room) {
 			groupSpawnChance += 1;
 		}
 	}
-
-	//while (!enemies.empty()) {
-	//	if (enemies.size() == 1) {
-	//		groupSpawnChance = 50;
-	//		spawnChance = 50;
-	//	}
-
-	//	int randOffsetY = rand() % 3;
-	//	int randOffsetX = rand() % 3;
-	//	for (int i = room->y + randOffsetY; i < room->h; i++) {
-	//		for (int j = room->x + randOffsetX; j < room->w; j++) {
-	//			if (tileMap[i][j]->type == IGenerator::EMPTY) {
-	//				int pickChance = rand() % 100 + 1;
-	//				if (pickChance <= spawnChance) {
-	//					
-	//				} else if (pickChance <= spawnChance + groupSpawnChance) {
-	//					
-	//				}
-
-	//				
-	//			}
-	//		}
-	//	}
-	//}
 }
 
 TreeNode* CastleStage::findSmallestRoom() {
@@ -819,8 +877,147 @@ void CastleStage::placeEnemy(int i, int j, char enemyType) {
 
 		return;
 	}
+	else if (enemyType == 'G') {
+		this->enemyGuardianPositions.push_back({ x - 32, y });
+		
+		return;
+	}
 
 	this->enemyLightPositions.push_back({ x, y });
+}
+
+void CastleStage::placePotionInRoom(TreeNode* room) {
+	int roomW = room->w - room->x;
+	int roomH = room->h - room->y;
+
+	int surface = roomW * roomH;
+	int surfaceChanceMod = surface / 100;
+
+	int sign;
+
+	if (surfaceChanceMod >= 4) {
+		// If we have a lot of objects we can only decrease
+		sign = rand() % 2 == 0 ? 0 : -1;
+	}
+	else if (surfaceChanceMod == 0) {
+		sign = rand() % 2 == 0 ? 0 : 1;
+	}
+	else {
+		sign = rand() % 2 == 0 ? -1 : 1;
+	}
+
+	// Can add or remove one object max
+	int numObj = surface / 100 + sign * rand() % 2;
+
+	if (numObj == 0) {
+		return;
+	}
+	
+	while (numObj) {
+		int i = randomInRange(room->y, room->h);
+		int j = randomInRange(room->x, room->w);
+
+		if (tileMap[i][j]->type != IGenerator::EMPTY) {
+			continue;
+		}
+
+		if (tileMap[i + 1][j]->type == IGenerator::WALL && tileMap[i - 1][j]->type == IGenerator::WALL
+			|| tileMap[i][j + 1]->type == IGenerator::WALL && tileMap[i][j - 1]->type == IGenerator::WALL
+			|| tileMap[i + 1][j - 1]->type == IGenerator::WALL && tileMap[i + 1][j + 1]->type == IGenerator::WALL
+			|| tileMap[i - 1][j - 1]->type == IGenerator::WALL && tileMap[i - 1][j + 1]->type == IGenerator::WALL
+			|| tileMap[i + 1][j - 1]->type == IGenerator::WALL && tileMap[i - 1][j - 1]->type == IGenerator::WALL
+			|| tileMap[i + 1][j + 1]->type == IGenerator::WALL && tileMap[i - 1][j + 1]->type == IGenerator::WALL) {
+			continue;
+		}
+
+		auto t = this->tileMap[i][j];
+		auto& v = t->getView();
+
+		auto x = v->getX();
+		auto y = v->getY();
+
+		numObj--;
+
+		if (rand() % 100 < 50) {
+			auto dec = std::make_shared<View>(this->crateTextures[0], x, y, this->tileSize / 16);
+			this->tileMap[i][j]->addDecoration(dec);
+			this->tileMap[i][j]->type = IGenerator::WALL;
+
+			std::shared_ptr<Item> item;
+			if (rand() % 100 < 50) {
+				item = this->makePotionItem(i, j);
+			}
+
+			auto interactable = std::make_unique<IInteractable>(
+				"INTERACT",
+				[
+					dec,
+					item,
+					&crateTextures = this->crateTextures,
+					&soundSystem = this->soundSystem,
+					&tile = tileMap[i][j]
+				]() {
+					dec->setTexture(crateTextures[1]);
+
+					soundSystem->playSound("chest");
+
+					if (item != nullptr) {
+						item->enable();
+					}
+				},
+				x - interactRange,
+				y - interactRange,
+				(v->getWidth() + interactRange)* v->getSize(),
+				(v->getHeight() + interactRange)* v->getSize(),
+				1,
+				false
+			);
+
+			this->interactables.push_back(std::move(interactable));
+
+			if (item != nullptr)
+				this->items.push_back(item);
+		} else {
+			auto dec = std::make_shared<View>(this->barrelTextures[0], x, y, this->tileSize / 16);
+			this->tileMap[i][j]->addDecoration(dec);
+			this->tileMap[i][j]->type = IGenerator::WALL;
+
+			std::shared_ptr<Item> item;
+			if (rand() % 100 < 50) {
+				item = this->makePotionItem(i, j);
+			}
+
+			auto interactable = std::make_unique<IInteractable>(
+				"INTERACT",
+				[
+					dec,
+					item,
+					&barrelTextures = this->barrelTextures,
+					&soundSystem = this->soundSystem,
+					&tile = tileMap[i][j]
+				]() {
+					dec->setTexture(barrelTextures[1]);
+
+					soundSystem->playSound("chest");
+
+					if (item != nullptr) {
+						item->enable();
+					}
+				},
+				x - interactRange,
+				y - interactRange,
+				(v->getWidth() + interactRange)* v->getSize(),
+				(v->getHeight() + interactRange)* v->getSize(),
+				1,
+				false
+			);
+
+			this->interactables.push_back(std::move(interactable));
+
+			if (item != nullptr)
+				this->items.push_back(item);
+		}
+	}
 }
 
 std::shared_ptr<Item> CastleStage::makeRandomItem(int i, int j) {
@@ -837,45 +1034,182 @@ std::shared_ptr<Item> CastleStage::makeRandomItem(int i, int j) {
 	std::shared_ptr<Item> item;
 
 	switch (itemId) {
-	case ItemIds::RUNE_OF_FIRE:
-		item = std::make_shared<Item>(
-			randTexture,
-			"Rune of Fire",
-			"Set Your Enemies Ablaze",
-			x, y
-		);
+		case ItemIds::RUNE_OF_FIRE: {
+			item = std::make_shared<Item>(
+				randTexture,
+				"Rune of Fire",
+				"Set Your Enemies Ablaze",
+				x, y
+			);
 
-		item->onPickup = [](std::unique_ptr<Player> const& p) {
-			p->getMovableComponent()->addOnHitEffect(EffectName::BURN);
-		};
 
-		break;
+			item->onPickup = [](std::unique_ptr<Player> const& p) {
+				p->getMovableComponent()->addOnHitEffect(EffectName::BURN);
+			};
 
-	case ItemIds::RUNE_OF_ICE:
-		item = std::make_shared<Item>(
-			randTexture,
-			"Rune of Ice",
-			"Freeze Your Enemies",
-			x, y
-		);
+			break;
+		}
 
-		item->onPickup = [](std::unique_ptr<Player> const& p) {
-			p->getMovableComponent()->addOnHitEffect(EffectName::SLOW);
-		};
+		case ItemIds::RUNE_OF_ICE: {
+			item = std::make_shared<Item>(
+				randTexture,
+				"Rune of Ice",
+				"Freeze Your Enemies",
+				x, y
+			);
 
-		break;
+			item->onPickup = [](std::unique_ptr<Player> const& p) {
+				p->getMovableComponent()->addOnHitEffect(EffectName::SLOW);
+			};
 
-	case ItemIds::GHOSTWALK:
-		item = std::make_shared<Item>(
-			randTexture,
-			"Ghostwalk",
-			"Speed Up + Walk Through Walls",
-			x, y
-		);
+			break;
+		}
 
-		item->onPickup = [](std::unique_ptr<Player> const&) {};
+		case ItemIds::QUICK_HANDS: {
+			item = std::make_shared<Item>(
+				randTexture,
+				"Quick Hands",
+				"Fastest Hand in The West",
+				x, y
+			);
 
-		break;
+			item->onPickup = [](std::unique_ptr<Player> const& p) {
+				p->increaseAttackSpeed(0.3f);
+			};
+
+			break;
+		}
+
+		case ItemIds::EAGLE_EYES: {
+			item = std::make_shared<Item>(
+				randTexture,
+				"Eagle Eyes",
+				"Increase Critical Strike Chance",
+				x, y
+			);
+
+			item->onPickup = [](std::unique_ptr<Player> const& p) {
+				p->getMovableComponent()->combatableComponent->critChance += 15.f;
+			};
+
+			break;
+		}
+
+		case ItemIds::TIME_RIFT: {
+			item = std::make_shared<Item>(
+				randTexture,
+				"Time Rift",
+				"Chance to Freeze Enemies In Time",
+				x, y
+			);
+
+			item->onPickup = [](std::unique_ptr<Player> const& p) {
+				p->getMovableComponent()->addOnHitEffect(EffectName::TIME_RIFT);
+			};
+
+			break;
+		}
+
+		case ItemIds::SERRATED_BLADE: {
+			item = std::make_shared<Item>(
+				randTexture,
+				"Serrated Blade",
+				"Internal Damage",
+				x, y
+			);
+
+
+			item->onPickup = [](std::unique_ptr<Player> const& p) {
+				p->getMovableComponent()->addOnHitEffect(EffectName::BLEED);
+			};
+
+			break;
+		}
+		
+		case ItemIds::PARANOIA: {
+			item = std::make_shared<Item>(
+				randTexture,
+				"Paranoia",
+				"They Fear You",
+				x, y
+			);
+
+
+			item->onPickup = [](std::unique_ptr<Player> const& p) {
+				p->getMovableComponent()->addOnHitEffect(EffectName::FEAR);
+			};
+
+			break;
+		}
+		
+		case ItemIds::CREATINE_POWDER: {
+			item = std::make_shared<Item>(
+				randTexture,
+				"Creatine Powder",
+				"Increased Damage",
+				x, y
+			);
+
+
+			item->onPickup = [](std::unique_ptr<Player> const& p) {
+				p->getMovableComponent()->combatableComponent->attackDamage += .15f * p->getMovableComponent()->combatableComponent->attackDamage;
+			};
+
+			break;
+		}
+
+		case ItemIds::GHOSTWALK: {
+			item = std::make_shared<Item>(
+				randTexture,
+				"Ghostwalk",
+				"Speed Up + Walk Through Walls",
+				x, y
+			);
+
+			item->onPickup = [](std::unique_ptr<Player> const& p) {
+				auto i = std::make_shared<UsableItem>();
+				i->energyCost = 20.f;
+				i->onEffectStart = [](Player* p) {
+					p->controllableParams->playerCollisionIsEnabled = false;
+					p->controllableParams->playerMaxSpeed += .25f * p->controllableParams->playerMaxSpeed;
+				};
+
+				i->onEffectEnd = [](Player* p) {
+					p->controllableParams->playerCollisionIsEnabled = true;
+					p->controllableParams->playerMaxSpeed = p->controllableParams->playerMaxSpeed / (1 + .25f);
+				};
+
+				p->addUsableItem(i);
+			};
+
+			break;
+		}
+
+		case ItemIds::TIMEWALK: {
+			item = std::make_shared<Item>(
+				randTexture,
+				"Timewalk",
+				"Stop time around you",
+				x, y
+			);
+
+			item->onPickup = [](std::unique_ptr<Player> const& p) {
+				auto i = std::make_shared<UsableItem>();
+				i->energyCost = 10.f;
+				i->onEffectStart = [](Player* p) {
+					p->controllableParams->physicsTimeModifier = 0.f;
+					p->controllableParams->timeSnapshot = SDL_GetTicks();
+				};
+
+				i->onEffectEnd = [](Player* p) {
+					p->controllableParams->physicsTimeModifier = 1.f;
+				};
+
+				p->addUsableItem(i);
+			};
+
+			break;
+		}
 	}
 
 	for (auto it = this->itemPool.begin(); it != this->itemPool.end(); it++) {
@@ -884,6 +1218,26 @@ std::shared_ptr<Item> CastleStage::makeRandomItem(int i, int j) {
 			break;
 		}
 	}
+
+	return item;
+}
+
+std::shared_ptr<Item> CastleStage::makePotionItem(int i, int j) {
+	auto& tile = this->tileMap[i][j]->getView();
+
+	float x = tile->getX();
+	float y = tile->getY() + 48.f;
+
+	auto item = std::make_shared<Item>(
+		this->potionTextures[0],
+		"Health Potion",
+		"Restores Health",
+		x, y
+	);
+
+	item->onPickup = [](std::unique_ptr<Player> const& p) {
+		// add potion to player.
+	};
 
 	return item;
 }

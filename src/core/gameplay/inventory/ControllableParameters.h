@@ -4,6 +4,8 @@ struct ControllableParameters {
 	float& physicsTimeModifier;
 	float& playerMaxSpeed;
 	
+	uint64_t timeSnapshot = 0;
+
 	// float& playerAttackPower;
 	
 	bool& playerCollisionIsEnabled;

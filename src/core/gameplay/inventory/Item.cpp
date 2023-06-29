@@ -8,8 +8,8 @@ Item::Item(std::shared_ptr<Texture>& scrollTexture, std::string name, std::strin
 	this->enabled = false;
 
 	// TODO
-	this->nameView = std::make_shared<TextView>(name, 64, 128, false, 0.5f);
-	this->descriptionView = std::make_shared<TextView>(description, 64, 64, false, 0.3f);
+	this->nameView = std::make_shared<TextView>(name, 64, 64, false, 0.75f);
+	this->descriptionView = std::make_shared<TextView>(description, 64, 32, false, 0.5f);
 
 	this->timeSinceEnabled = 0.f;
 }

@@ -31,6 +31,8 @@ public:
 
 	void setX(float x);
 	void setY(float y);
+	void setWidth(float w);
+	void setHeight(float h);
 
 	float getSize();
 

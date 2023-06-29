@@ -14,7 +14,9 @@ private:
 	void loadTextures() override;
 	void createTileMap(char** stageTemplate, char** stageTiles) override;
 	void placeItems() override;
+	void placePotions() override;
 	void placeDoors() override;
+	void placeExit() override;
 	void placeEnemiesStartPositions() override;
 
 	TreeNode* findSmallestRoom();
@@ -26,6 +28,9 @@ private:
 	void placeEnemy(int i, int j, char enemyType);
 
 	std::shared_ptr<Item> makeRandomItem(int i, int j) override;
+	std::shared_ptr<Item> makePotionItem(int i, int j);
+
+	void placePotionInRoom(TreeNode* node);
 
 public:
 	CastleStage(

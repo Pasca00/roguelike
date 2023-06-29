@@ -11,6 +11,9 @@ Input::Input() {
 		{"INTERACT", false},
 		{"CLICK",	 false},
 		{"SHIFT",	 false},
+		{"USE_ITEM", false},
+
+		{"WAKE_UP",  false},
 
 		{"ENTER",	 false},
 
@@ -74,6 +77,8 @@ void InputSystem::createDefaultKeyMappings() {
 		{SDLK_d, "RIGHT"},
 		{SDLK_e, "INTERACT"},
 
+		{SDLK_q, "USE_ITEM"},
+
 		{SDLK_LSHIFT, "SHIFT"},
 
 		{SDLK_RETURN, "ENTER"},
@@ -83,7 +88,7 @@ void InputSystem::createDefaultKeyMappings() {
 }
 
 void InputSystem::collectInput() {
-	SDL_GetMouseState(&this->input->mouseX, &this->input->mouseY);
+	//SDL_GetMouseState(&this->input->mouseX, &this->input->mouseY);
 
 	SDL_Event e;
 	while (SDL_PollEvent(&e)) {

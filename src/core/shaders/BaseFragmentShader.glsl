@@ -4,7 +4,6 @@ in vec2 tex_coord;
 in vec2 pos;
 
 uniform sampler2D in_texture;
-uniform float time;
 
 uniform float playerX;
 uniform float playerY;
@@ -22,6 +21,9 @@ uniform int nLightSources;
 float staticLightSourceRadius = 500.f;
 vec3 staticLightColor = vec3(213, 72, 1);
 float staticLightIntensity = 0.01;
+
+uniform int time_stop;
+uniform int time;
 
 uniform vec4 overlay_color;
 
@@ -49,4 +51,12 @@ void main() {
 	}
 
 	out_color = vec4(out_color.rgb * intensity, out_color.a);
+
+	if (time_stop == 1) {
+		vec3 gray = vec3((out_color.r + out_color.g + out_color.b) / 3);
+		float d = clamp(1 - time / 1500.f, 0, 1);
+		out_color = vec4(mix(gray, out_color.rgb, d), out_color.a);
+
+		return;
+	}
 }

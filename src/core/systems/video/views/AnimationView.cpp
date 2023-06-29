@@ -60,6 +60,14 @@ void AnimationView::update(float dTime) {
 	}
 }
 
+float AnimationView::getFrameTime() {
+	return this->frameTime;
+}
+
+void AnimationView::setFrameTime(float frameTime) {
+	this->frameTime = frameTime;
+}
+
 bool AnimationView::isDone() {
 	return this->currentFrame == this->frames.size() - 1;
 }

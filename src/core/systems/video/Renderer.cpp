@@ -171,6 +171,36 @@ void Renderer::drawText(
 
 }
 
+void Renderer::draw(std::shared_ptr<IView>& view,
+	std::shared_ptr<Shader>& shader,
+	std::unordered_map<std::string, unsigned int>& uintUniforms,
+	std::unordered_map<std::string, int>& intUniforms,
+	std::unordered_map<std::string, float>& floatUniforms
+) {
+	glm::mat4 modelMatrix(1);
+	modelMatrix = glm::translate(modelMatrix, glm::vec3(view->getX(), view->getY(), 0));
+	modelMatrix = glm::scale(modelMatrix, glm::vec3(view->getWidth() * view->getSize(), view->getHeight() * view->getSize(), 1));
+
+	shader->use();
+	shader->setModelMatrix(modelMatrix);
+	shader->setProjectionMatrix(this->projectionMatrix);
+
+	glUniform1i(shader->getUniformLocation("render_flipped"), view->isFlipped() ? 1 : 0);
+
+	this->setUintUniforms(shader, uintUniforms);
+	this->setIntUniforms(shader, intUniforms);
+	this->setFloatUniforms(shader, floatUniforms);
+
+	glActiveTexture(GL_TEXTURE0);
+	glBindTexture(GL_TEXTURE_2D, view->getTextureId());
+
+	glBindVertexArray(quad->getVAO());
+
+	glDrawArrays(GL_QUADS, 0, quad->getIndices().size());
+
+	glBindVertexArray(0);
+}
+
 void Renderer::setUintUniforms(std::shared_ptr<Shader>& shader, std::unordered_map<std::string, unsigned int>& uniforms) {
 	for (const auto& u : uniforms) {
 		glUniform1ui(shader->getUniformLocation(u.first), u.second);

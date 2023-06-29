@@ -44,6 +44,14 @@ void IView::setY(float y) {
 	this->hitbox->y = y;
 }
 
+void IView::setWidth(float w) {
+	this->hitbox->w = w;
+}
+
+void IView::setHeight(float h) {
+	this->hitbox->h = h;
+}
+
 float IView::getSize() {
 	return this->size;
 }

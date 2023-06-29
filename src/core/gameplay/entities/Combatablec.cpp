@@ -14,6 +14,18 @@ Combatable::Combatable(float rangeVertical, float rangeHorizontal, float maxHeal
 	this->timeSinceLastHit = 50.f;
 
 	this->recentlyDamaged = false;
+
+	this->critChance = 0.f;
+
+	this->feared = 0;
+}
+
+float Combatable::getDamageDealt() {
+	if (rand() % 100 <= this->critChance) {
+		return this->attackDamage * 2;
+	}
+
+	return this->attackDamage;
 }
 
 Combatable::~Combatable() {

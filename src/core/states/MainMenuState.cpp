@@ -61,7 +61,7 @@ void MainMenuState::update(float dTime) {
 void MainMenuState::render() {
 	this->videoSystem->bindFrameBuffer();
 
-	this->videoSystem->draw(this->views["titlescreen"]);
+	this->videoSystem->draw(this->views["titlescreen"], "texture");
 
 	this->videoSystem->unbindFramebuffer();
 

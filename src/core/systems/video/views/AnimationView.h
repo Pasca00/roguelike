@@ -37,6 +37,9 @@ public:
 
 	void update(float dTime) override;
 
+	float getFrameTime();
+	void setFrameTime(float);
+
 	bool isDone();
 	void reset();
 };

@@ -28,6 +28,7 @@ void IController::update(float dtime) {
 	if (this->timeSinceLastUpdate >= this->updateInterval) {
 		this->timeSinceLastUpdate = 0;
 
+		this->simulatedInput->clear();
 		this->findNextMove();
 	}
 }
@@ -41,7 +42,11 @@ std::shared_ptr<Entity> IController::getEntity() {
 }
 
 void IController::findNextMove() {
-	this->simulatedInput->clear();
+	if (!controlledEntity->isEnabled()) {
+		return;
+	}
+
+	auto feared = this->controlledEntity->getMovableComponent()->combatableComponent->feared;
 
 	auto h = this->controlledEntity->getMovableComponent()->hitbox;
 
@@ -94,9 +99,11 @@ void IController::findNextMove() {
 		nextPos = LOWER_RIGHT;
 	}
 
-	if (maxScore >= 90) {
+	if (maxScore >= 90 && !feared) {
 		this->simulatedInput->setActionValue("CLICK", true);
 	}
+
+	nextPos *= feared ? -1 : 1;
 
 	switch (nextPos) {
 	case UPPER_LEFT:

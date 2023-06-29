@@ -12,8 +12,9 @@ Camera::Camera(int windowWidth, int windowHeight) {
 		focusWidth, 
 		focusHeight
 	);
-	this->focusZone = std::make_shared<Movable>(hb, std::make_shared<Combatable>(0, 0, 0, 0), 200.f);
+	this->focusZone = std::make_shared<Movable>(hb, std::make_shared<Combatable>(0, 0, 0, 0), 150.f);
 	this->focusZone->setCollision(false);
+	this->focusZone->canBeTimeSlowed = false;
 
 	this->viewArea = std::make_shared<Hitbox>(0, 0, windowWidth, windowHeight);
 
@@ -28,6 +29,8 @@ void Camera::setSubject(std::shared_ptr<Hitbox>& subject) {
 }
 
 void Camera::update(float dTime) {
+	this->focusZone->maxSpeed = 200 + abs(subject->x - focusZone->hitbox->x);
+
 	this->viewArea->x = this->focusZone->hitbox->x - this->focus_x_diff;
 	this->viewArea->y = this->focusZone->hitbox->y - this->focus_y_diff;
 

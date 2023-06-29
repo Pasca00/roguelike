@@ -7,13 +7,20 @@ Player::Player(
 	std::vector<std::shared_ptr<AnimationView>>& moveAnimations,
 	std::shared_ptr<AnimationView>& deadAnimation,
 	std::shared_ptr<ControllableParameters>& controllableParams
-) : Entity(movableComponent, idleAnimations, attackAnimations, moveAnimations, deadAnimation) {
+) : Entity(movableComponent, idleAnimations, attackAnimations, moveAnimations, deadAnimation, 4) {
 	this->controllableParams = controllableParams;
+
+	this->energyResource = 100.f;
 }
 
 void Player::handleInput(std::shared_ptr<Input>& input) {
 	if (input->actions["SHIFT"]) {
 		this->movableComponent->dash();
+	}
+
+	if (input->actions["USE_ITEM"] && this->currItem != nullptr && !this->currItem->inUse && this->energyResource >= 100.f) {
+		this->currItem->inUse = true;
+		this->currItem->onEffectStart(this);
 	}
 
 	switch (this->currentState) {
@@ -90,6 +97,22 @@ void Player::handleInput(std::shared_ptr<Input>& input) {
 void Player::update(float dtime) {
 	this->animation->update(dtime);
 
+	if (this->currItem != nullptr) {
+		if (!this->currItem->inUse) {
+			if (this->energyResource < 100) {
+				this->energyResource += 5 * dtime;
+			}
+		}
+		else {
+			if (this->energyResource <= 0) {
+				this->currItem->inUse = false;
+				this->currItem->onEffectEnd(this);
+			}
+			
+			this->energyResource -= this->currItem->energyCost * dtime;
+		}
+	}
+
 	switch (this->currentState) {
 	case EntityState::IDLE:
 		if (this->animation->isDone()) {
@@ -100,7 +123,7 @@ void Player::update(float dtime) {
 
 	case EntityState::ATTACK:
 		uint8_t currAttackFrame = this->animation->getCurrentFrame();
-		if (currAttackFrame == ENTITY_ATTACK_FRAME || currAttackFrame == ENTITY_ATTACK_FRAME + 1) {
+		if (currAttackFrame == this->attackFrame || currAttackFrame == this->attackFrame + 1) {
 			this->movableComponent->combatableComponent->isAttacking = true;
 		} else {
 			this->movableComponent->combatableComponent->isAttacking = false;
@@ -116,11 +139,20 @@ void Player::update(float dtime) {
 }
 
 void Player::interactWithEnemy(std::shared_ptr<Movable>& m) {
+	m->combatableComponent->currHealth -= this->movableComponent->combatableComponent->getDamageDealt();
 	m->combatableComponent->onDamageTaken();
-	m->combatableComponent->currHealth -= this->movableComponent->combatableComponent->attackDamage;
 
 	for (auto effectName : this->movableComponent->onHitApplies) {
-		printf("%d\n", effectName);
 		m->addStatusEffect(effectName);
 	}
+}
+
+void Player::increaseAttackSpeed(float percent) {
+	for (auto anim : this->attackAnimations) {
+		anim->setFrameTime(anim->getFrameTime() * (1 - percent));
+	}
+}
+
+void Player::addUsableItem(std::shared_ptr<UsableItem>& i) {
+	this->currItem = i;
 }

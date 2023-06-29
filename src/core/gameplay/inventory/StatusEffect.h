@@ -9,6 +9,7 @@ class Movable;
 class StatusEffect {
 private:
 	std::function<void(std::shared_ptr<Movable>&)> callback;
+	std::function<void(std::shared_ptr<Movable>&)> onDoneCallback;
 
 	float totalDuration;
 	float applyInterval;
@@ -21,7 +22,8 @@ public:
 	StatusEffect(
 		float totalDuration = 5000.f,
 		float applyInterval = 500.f,
-		std::function<void(std::shared_ptr<Movable>&)> callback = nullptr
+		std::function<void(std::shared_ptr<Movable>&)> callback = nullptr,
+		std::function<void(std::shared_ptr<Movable>&)> onDoneCallback = nullptr
 	);
 
 	void apply(float dtime, std::shared_ptr<Movable>& target);

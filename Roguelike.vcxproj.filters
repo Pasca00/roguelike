@@ -75,6 +75,9 @@
     <Filter Include="Source Files\core\gameplay\entities\enemies\AI">
       <UniqueIdentifier>{fa530d46-bfe8-482b-9268-01b1d2690b22}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\core\systems\video\hud">
+      <UniqueIdentifier>{65ef3d57-9ac6-4c33-b943-88f9dd351dd8}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\main.cpp">
@@ -187,6 +190,18 @@
     </ClCompile>
     <ClCompile Include="src\core\gameplay\inventory\GlobalEffectManager.cpp">
       <Filter>Source Files\core\gameplay\inventory</Filter>
+    </ClCompile>
+    <ClCompile Include="src\core\systems\video\hud\PlayerHUD.cpp">
+      <Filter>Source Files\core\systems\video\hud</Filter>
+    </ClCompile>
+    <ClCompile Include="src\core\gameplay\inventory\UsableItem.cpp">
+      <Filter>Source Files\core\gameplay\inventory</Filter>
+    </ClCompile>
+    <ClCompile Include="src\core\gameplay\entities\GuardianEntity.cpp">
+      <Filter>Source Files\core\gameplay\entities</Filter>
+    </ClCompile>
+    <ClCompile Include="src\core\gameplay\entities\enemies\AI\GuardianController.cpp">
+      <Filter>Source Files\core\gameplay\entities\enemies\AI</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -661,6 +676,18 @@
     <ClInclude Include="src\core\gameplay\inventory\EffectName.h">
       <Filter>Source Files\core\gameplay\inventory</Filter>
     </ClInclude>
+    <ClInclude Include="src\core\systems\video\hud\PlayerHUD.h">
+      <Filter>Source Files\core\systems\video\hud</Filter>
+    </ClInclude>
+    <ClInclude Include="src\core\gameplay\inventory\UsableItem.h">
+      <Filter>Source Files\core\gameplay\inventory</Filter>
+    </ClInclude>
+    <ClInclude Include="src\core\gameplay\entities\GuardianEntity.h">
+      <Filter>Source Files\core\gameplay\entities</Filter>
+    </ClInclude>
+    <ClInclude Include="src\core\gameplay\entities\enemies\AI\GuardianController.h">
+      <Filter>Source Files\core\gameplay\entities\enemies\AI</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Text Include="src\glm\CMakeLists.txt">
@@ -690,6 +717,12 @@
       <Filter>Source Files\core\shaders</Filter>
     </None>
     <None Include="src\core\shaders\TransitionVertexShader.glsl">
+      <Filter>Source Files\core\shaders</Filter>
+    </None>
+    <None Include="src\core\shaders\TextureFragmentShader.glsl">
+      <Filter>Source Files\core\shaders</Filter>
+    </None>
+    <None Include="src\core\shaders\TextureVertexShader.glsl">
       <Filter>Source Files\core\shaders</Filter>
     </None>
   </ItemGroup>

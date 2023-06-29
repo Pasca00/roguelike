@@ -134,15 +134,18 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="src\core\gameplay\entities\Combatablec.cpp" />
+    <ClCompile Include="src\core\gameplay\entities\enemies\AI\GuardianController.cpp" />
     <ClCompile Include="src\core\gameplay\entities\enemies\AI\IController.cpp" />
     <ClCompile Include="src\core\gameplay\entities\enemies\EnemyHeavy.cpp" />
     <ClCompile Include="src\core\gameplay\entities\enemies\EnemyRogue.cpp" />
     <ClCompile Include="src\core\gameplay\entities\Entity.cpp" />
+    <ClCompile Include="src\core\gameplay\entities\GuardianEntity.cpp" />
     <ClCompile Include="src\core\gameplay\entities\Player.cpp" />
     <ClCompile Include="src\core\gameplay\entities\PlayerStates.cpp" />
     <ClCompile Include="src\core\gameplay\inventory\GlobalEffectManager.cpp" />
     <ClCompile Include="src\core\gameplay\inventory\Item.cpp" />
     <ClCompile Include="src\core\gameplay\inventory\StatusEffect.cpp" />
+    <ClCompile Include="src\core\gameplay\inventory\UsableItem.cpp" />
     <ClCompile Include="src\core\gameplay\levels\generators\BSPGenerator.cpp" />
     <ClCompile Include="src\core\gameplay\levels\LevelManager.cpp" />
     <ClCompile Include="src\core\gameplay\levels\stages\CastleStage.cpp" />
@@ -156,6 +159,7 @@
     <ClCompile Include="src\core\systems\sound\SoundSystem.cpp" />
     <ClCompile Include="src\core\systems\video\Camera.cpp" />
     <ClCompile Include="src\core\systems\video\Framebuffer.cpp" />
+    <ClCompile Include="src\core\systems\video\hud\PlayerHUD.cpp" />
     <ClCompile Include="src\core\systems\video\views\IView.cpp" />
     <ClCompile Include="src\core\systems\video\views\AnimationView.cpp" />
     <ClCompile Include="src\core\Game.cpp" />
@@ -173,10 +177,12 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\core\gameplay\entities\Combatable.h" />
+    <ClInclude Include="src\core\gameplay\entities\enemies\AI\GuardianController.h" />
     <ClInclude Include="src\core\gameplay\entities\enemies\AI\IController.h" />
     <ClInclude Include="src\core\gameplay\entities\enemies\EnemyHeavy.h" />
     <ClInclude Include="src\core\gameplay\entities\enemies\EnemyRogue.h" />
     <ClInclude Include="src\core\gameplay\entities\Entity.h" />
+    <ClInclude Include="src\core\gameplay\entities\GuardianEntity.h" />
     <ClInclude Include="src\core\gameplay\entities\Player.h" />
     <ClInclude Include="src\core\gameplay\entities\PlayerStates.h" />
     <ClInclude Include="src\core\gameplay\inventory\ControllableParameters.h" />
@@ -184,6 +190,7 @@
     <ClInclude Include="src\core\gameplay\inventory\GlobalEffectManager.h" />
     <ClInclude Include="src\core\gameplay\inventory\Item.h" />
     <ClInclude Include="src\core\gameplay\inventory\StatusEffect.h" />
+    <ClInclude Include="src\core\gameplay\inventory\UsableItem.h" />
     <ClInclude Include="src\core\gameplay\levels\generators\BSPGenerator.h" />
     <ClInclude Include="src\core\gameplay\levels\generators\IGenerator.h" />
     <ClInclude Include="src\core\gameplay\levels\LevelManager.h" />
@@ -199,6 +206,7 @@
     <ClInclude Include="src\core\systems\sound\SoundSystem.h" />
     <ClInclude Include="src\core\systems\video\Camera.h" />
     <ClInclude Include="src\core\systems\video\Framebuffer.h" />
+    <ClInclude Include="src\core\systems\video\hud\PlayerHUD.h" />
     <ClInclude Include="src\core\systems\video\views\IView.h" />
     <ClInclude Include="src\core\systems\video\views\AnimationView.h" />
     <ClInclude Include="libs\sdl\sdl2-2.24.0\include\begin_code.h" />
@@ -339,6 +347,8 @@
     <None Include="src\core\shaders\RainFragmentShader.glsl" />
     <None Include="src\core\shaders\RainVertexShader.glsl" />
     <None Include="src\core\shaders\TextFragmentShader.glsl" />
+    <None Include="src\core\shaders\TextureFragmentShader.glsl" />
+    <None Include="src\core\shaders\TextureVertexShader.glsl" />
     <None Include="src\core\shaders\TextVertexShader.glsl" />
     <None Include="src\core\shaders\TransitionFragmentShader.glsl" />
     <None Include="src\core\shaders\TransitionVertexShader.glsl" />

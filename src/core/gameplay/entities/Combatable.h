@@ -15,11 +15,15 @@ public:
 
 	float attackDamage;
 
+	float critChance;
+
 	//std::unique_ptr<Hitbox> combatHitbox;
 	float rangeVertical;
 	float rangeHorizontal;
 
 	bool isAttacking;
+
+	bool feared;
 
 	float timeSinceLastHit;
 	bool recentlyDamaged;
@@ -32,6 +36,8 @@ public:
 
 	Combatable(float rangeVertical, float rangeHorizontal, float maxHealth, float attackDamage);
 	~Combatable();
+
+	float getDamageDealt();
 
 	//void setInteractCallback(std::function<void(std::shared_ptr<Movable>&)> callback);
 	//void setDamageTakenCallback(std::function<void(void)> callback);

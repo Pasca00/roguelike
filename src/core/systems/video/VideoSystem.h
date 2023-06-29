@@ -19,6 +19,7 @@
 #include "../../Paths.h"
 #include "Framebuffer.h"
 #include "Camera.h"
+#include "hud/PlayerHUD.h"
 
 #define TRANSITION_NONE		 0
 #define TRANSITION_EASE_IN   1
@@ -31,6 +32,7 @@ private:
 	std::unique_ptr<Renderer> renderer;
 	std::shared_ptr<TextureManager> textureManager;
 	std::shared_ptr<Camera> camera;
+	std::shared_ptr<PlayerHUD> playerHUD;
 
 	bool drawWithCamera;
 
@@ -110,4 +112,8 @@ public:
 	void updateCamera(float dTime);
 	void setCameraSubject(std::shared_ptr<Hitbox>& hitbox);
 	void drawRelativeToCamera(bool v);
+
+	void initHUD();
+	void drawHUD();
+	void updatePlayerHealth(float maxHealth, float currHeatlh);
 };

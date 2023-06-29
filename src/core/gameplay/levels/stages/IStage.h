@@ -14,15 +14,37 @@
 enum class ItemIds {
 	RUNE_OF_FIRE,
 	RUNE_OF_ICE,
+	TIME_RIFT,
+	SERRATED_BLADE,
+	DEADLY_POISON,
+	PARANOIA,
+
+	QUICK_HANDS,
+	CREATINE_POWDER,
+	EAGLE_EYES,
+
+	// Usables
 	GHOSTWALK,
+	TIMEWALK,
 };
 
 class IStage {
 protected:
 	std::vector<ItemIds> itemPool = {
-		ItemIds::RUNE_OF_FIRE,
+		/*ItemIds::RUNE_OF_FIRE,
 		ItemIds::RUNE_OF_ICE,
-		//ItemIds::GHOSTWALK,
+		ItemIds::QUICK_HANDS,
+		ItemIds::EAGLE_EYES,
+		ItemIds::TIME_RIFT,*/
+		//ItemIds::SERRATED_BLADE,
+		//ItemIds::PARANOIA,
+		//ItemIds::CREATINE_POWDER,
+		ItemIds::TIMEWALK,
+	};
+
+	std::vector<ItemIds> usableItemPool = {
+		ItemIds::GHOSTWALK,
+		ItemIds::TIMEWALK,
 	};
 
 	std::shared_ptr<SoundSystem> soundSystem;
@@ -44,10 +66,13 @@ protected:
 	std::vector<std::shared_ptr<Texture>> floorDecorations;
 
 	std::vector<std::shared_ptr<Texture>> chestTextures;
+	std::vector<std::shared_ptr<Texture>> crateTextures;
+	std::vector<std::shared_ptr<Texture>> barrelTextures;
 
 	std::vector<std::shared_ptr<Texture>> doorTextures;
 
 	std::vector<std::shared_ptr<Texture>> scrollsTextures;
+	std::vector<std::shared_ptr<Texture>> potionTextures;
 
 	std::vector<std::unique_ptr<IInteractable>> interactables;
 
@@ -62,10 +87,15 @@ protected:
 	std::vector<std::pair<float, float>> enemyHeavyPositions;
 	std::vector<std::pair<float, float>> enemyLightPositions;
 
+	std::vector<std::pair<float, float>> enemyGuardianPositions;
+	std::pair<float, float> exitPosition;
+
 	virtual void loadTextures() = 0;
 	virtual void createTileMap(char** stageTemplate, char** stageTiles) = 0;
 	virtual void placeItems() = 0;
+	virtual void placePotions() = 0;
 	virtual void placeDoors() = 0;
+	virtual void placeExit() = 0;
 	virtual void placeEnemiesStartPositions() = 0;
 
 	virtual std::shared_ptr<Item> makeRandomItem(int i, int j) = 0;
@@ -115,6 +145,14 @@ public:
 
 	std::vector<std::pair<float, float>>& getEnemyLightStart() {
 		return this->enemyLightPositions;
+	}
+
+	std::vector<std::pair<float, float>>& getEnemyGuardiantStart() {
+		return this->enemyGuardianPositions;
+	}
+
+	std::pair<float, float>& getExitPosition() {
+		return this->exitPosition;
 	}
 
 	std::vector<glm::vec2>& getLightSourcePositions() {

@@ -83,6 +83,7 @@ void VideoSystem::initShaders() {
 	this->shaders["base"] = std::make_shared<Shader>(Paths::SHADERS_DIR.c_str(), "Base");
 	this->shaders["rain"] = std::make_shared<Shader>(Paths::SHADERS_DIR.c_str(), "Rain");
 	this->shaders["text"] = std::make_shared<Shader>(Paths::SHADERS_DIR.c_str(), "Text");
+	this->shaders["texture"] = std::make_shared<Shader>(Paths::SHADERS_DIR.c_str(), "Texture");
 	this->shaders["transition"] = std::make_shared<Shader>(Paths::SHADERS_DIR.c_str(), "Transition");
 }
 
@@ -109,6 +110,19 @@ void VideoSystem::initTransitionUtils() {
 void VideoSystem::initCamera() {
 	this->drawWithCamera = false;
 	this->camera = std::make_shared<Camera>(this->getWindowWidth(), this->getWindowHeight());
+}
+
+void VideoSystem::initHUD() {
+	float size = 1;
+	auto healthbarContainerTex = this->textureManager->getSingleTextureFromFile(Paths::HUD_DIR + "healthbar_container.png");
+	auto healthbarTex = this->textureManager->getSingleTextureFromFile(Paths::HUD_DIR + "healthbar.png");
+	auto energybarTex = this->textureManager->getSingleTextureFromFile(Paths::HUD_DIR + "energybar.png");
+
+	auto healthbarContainer = std::make_shared<View>(healthbarContainerTex, 32.f, (float)this->getWindowHeight() - 64.f - 32.f * size, size);
+	auto healthbar = std::make_shared<View>(healthbarTex, 32.f + 57.f*size, (float)this->getWindowHeight() - 64.f - 32.f * size, size);
+	auto energybar = std::make_shared<View>(energybarTex, 32.f + 43.f * size, (float)getWindowHeight() - 64.f - 32.f * size, size);
+
+	this->playerHUD = std::make_shared<PlayerHUD>(healthbarContainer, healthbar, energybar);
 }
 
 void VideoSystem::loadGlyphs() {
@@ -229,6 +243,34 @@ void VideoSystem::draw(std::shared_ptr<IView>& view, std::string shaderName) {
 		view->setX(prevX);
 		view->setY(prevY);
 	}*/
+}
+
+void VideoSystem::drawHUD() {
+	//auto v = ;
+
+	this->renderer->draw(
+		std::static_pointer_cast<IView>(this->playerHUD->getHealthbar()),
+		shaders["texture"],
+		this->uintUniforms,
+		this->intUniforms,
+		this->floatUniforms
+	);
+
+	this->renderer->draw(
+		std::static_pointer_cast<IView>(this->playerHUD->getEnergybar()),
+		shaders["texture"],
+		this->uintUniforms,
+		this->intUniforms,
+		this->floatUniforms
+	);
+
+	this->renderer->draw(
+		std::static_pointer_cast<IView>(this->playerHUD->getHealthbarContainer()),
+		shaders["texture"],
+		this->uintUniforms,
+		this->intUniforms,
+		this->floatUniforms
+	);
 }
 
 void VideoSystem::draw(std::shared_ptr<Texture>& texture, std::string shaderName) {
@@ -435,4 +477,8 @@ void VideoSystem::setCameraSubject(std::shared_ptr<Hitbox>& hitbox) {
 
 void VideoSystem::drawRelativeToCamera(bool v) {
 	this->drawWithCamera = v;
+}
+
+void VideoSystem::updatePlayerHealth(float maxHealth, float currHeatlh) {
+	this->playerHUD->updateHealth(maxHealth, currHeatlh);
 }
